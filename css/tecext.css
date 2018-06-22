@@ -1,0 +1,16 @@
+body {
+  min-width: 357px;
+  overflow-x: hidden;
+}
+
+input[type="text"] {
+  padding-left: 3px;
+}
+
+.message-input {
+  width: 221px;
+}
+
+#actionArea {
+  margin-top: 10px;
+}
