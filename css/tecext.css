@@ -1,5 +1,5 @@
 body {
-  min-width: 357px;
+  min-width: 400px;
   overflow-x: hidden;
 }
 
@@ -13,4 +13,8 @@ input[type="text"] {
 
 #actionArea {
   margin-top: 10px;
+}
+
+.container {
+    margin-top: 15px;
 }

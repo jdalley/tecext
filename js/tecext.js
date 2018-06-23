@@ -29,4 +29,17 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("stopRepeat").addEventListener("click", function () {
         chrome.extension.getBackgroundPage().stopRepeat();
     });
+
+    document.getElementById("twoHandBasic").addEventListener("click", function () {
+        var input = document.getElementById("targetInput");
+
+        if (input.value) {
+            chrome.extension.getBackgroundPage().twoHandBasic(input.value);
+        }
+    });
+
+    document.getElementById("stopScripts").addEventListener("click", function () {
+        chrome.extension.getBackgroundPage().killCommandScript();
+    });
+
 });
