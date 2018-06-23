@@ -110,6 +110,11 @@ function combatScript(data) {
     if (data.indexOf('is not close enough') >= 0) {
         setTimeout(function() {
             sendCommand('app ' + target);
+
+            setTimeout(function() {
+                sendCommand(commandList[currentCmdIndex].command + ' ' + target);
+                commandOverride = '';
+            }, 2000);
         }, 1000);
     }
 
