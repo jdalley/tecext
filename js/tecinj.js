@@ -7,29 +7,29 @@
 
 // orchil.js - doReceive(msg)
 var orig = doReceive;
-doReceive = function(msg) {
-  doReceiveOverride(msg);
-  var ret = orig.apply(this, arguments);
-  return ret;
+doReceive = function (msg) {
+    doReceiveOverride(msg);
+    var ret = orig.apply(this, arguments);
+    return ret;
 };
 
 function doReceiveOverride(msg) {
-  console.log(msg);
-  document.dispatchEvent(new CustomEvent('tecReceiveMessage', {
-    detail: {
-      timestamp: new Date().toISOString(),
-      data: msg
-    }
-  }));
+    console.log(msg);
+    document.dispatchEvent(new CustomEvent('tecReceiveMessage', {
+        detail: {
+            timestamp: new Date().toISOString(),
+            data: msg
+        }
+    }));
 }
 
-document.addEventListener('tecSendMessage', function(e) {
-  var msg = e.detail.data;
-  if (msg) {
-    // orchil.js - doSend(message, noecho)
-    console.log('Sending command: ' + msg);
-    doSend(msg, true);
-  }
+document.addEventListener('tecSendMessage', function (e) {
+    var msg = e.detail.data;
+    if (msg) {
+        // orchil.js - doSend(message, noecho)
+        console.log('Sending command: ' + msg);
+        doSend(msg, true);
+    }
 });
 
 

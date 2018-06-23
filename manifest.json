@@ -15,11 +15,12 @@
     "128": "images/logo128.png"
   },
   "background": {
-    "scripts": ["js/background.js"]
+    "scripts": ["js/background.js"],
+    "persistent": false
   },
   "content_scripts": [
     {
-      "matches": ["http://*.skotos.net/*/tec.htm"],
+      "matches": ["*://*.skotos.net/*"],
       "js": ["js/teccontent.js"],
       "run_at": "document_end"
     }
