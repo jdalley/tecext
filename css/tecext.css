@@ -1,18 +1,18 @@
 body {
-  min-width: 400px;
-  overflow-x: hidden;
+    min-width: 400px;
+    overflow-x: hidden;
 }
 
 input[type="text"] {
-  padding-left: 3px;
+    padding-left: 3px;
 }
 
 .message-input {
-  width: 221px;
+    width: 221px;
 }
 
 #actionArea {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .container {

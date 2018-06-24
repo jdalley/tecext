@@ -4,6 +4,7 @@
 */
 
 document.addEventListener("DOMContentLoaded", function () {
+
     document.getElementById("sendMessage").addEventListener("click", function () {
         var input = document.getElementById("messageInput");
 
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.value = '';
         }
     });
+
     document.getElementById("sendRepeat").addEventListener("click", function () {
         var input = document.getElementById("repeatInput");
 
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
             chrome.extension.getBackgroundPage().startRepeat(input.value);
         }
     });
+
     document.getElementById("stopRepeat").addEventListener("click", function () {
         chrome.extension.getBackgroundPage().stopRepeat();
     });
@@ -34,12 +37,13 @@ document.addEventListener("DOMContentLoaded", function () {
         var input = document.getElementById("targetInput");
 
         if (input.value) {
-            chrome.extension.getBackgroundPage().twoHandBasic(input.value);
+            var endIt = document.getElementById("endIt").checked;
+            chrome.extension.getBackgroundPage().twoHandBasic(input.value, endIt);
         }
     });
 
     document.getElementById("stopScripts").addEventListener("click", function () {
-        chrome.extension.getBackgroundPage().killCommandScript();
+        chrome.extension.getBackgroundPage().killCurrentScript();
     });
 
 });

@@ -20,6 +20,7 @@ var commandOverride;
 var endIt = false;
 var endItParse;
 var weapon;
+var addAtt;
 
 // Add the context menu for selections and links.
 chrome.contextMenus.create({
@@ -74,7 +75,14 @@ function parseMessage(data) {
 // TODO: Figure out how to make this more composable and dynamic.
 function combatScript(data) {
     if (data.indexOf(commandList[currentCmdIndex].parse) >= 0) {
+        // Move the command list index forward...
         currentCmdIndex++;
+    }
+
+    // Handle addAtt commandOverride off-switch
+    if (commandOverride.indexOf('att') >= 0 &&
+        (data.indexOf('You hit') >= 0 || data.indexOf('You miss') >= 0)) {
+        commandOverride = '';
     }
 
     if (endIt) {
@@ -86,47 +94,51 @@ function combatScript(data) {
             commandOverride = 'kill ' + target;
         }
 
-        if (data.indexOf(endItParse) >= 0) {
+        // Detect weapon-specific kill echo and wipe the override for next no longer busy.
+        if (data.indexOf(endItParse) >= 0 && commandOverride.indexOf('kill') >= 0) {
             commandOverride = '';
         }
     }
 
-    // Handle fumble
+    // Handle sweeped/knocked down after failed attack attempt:
+    if (data.indexOf('You must be standing') >= 0) {
+        setTimeout(function() {
+            sendCommand('stand');
+        }, Math.floor(Math.random() * 300) + 200)
+    }
+
+    // Handle fumble:
     if (data.indexOf('You fumble!') >= 0) {
+        // Just set override since fumble requires waiting for no longer busy anyway.
         commandOverride = 'take ' + weapon;
     }
     if (data.indexOf('You take a') >= 0) {
-        setTimeout(function() {
-            sendCommand('wield ' + weapon);
-
-            setTimeout(function() {
-                sendCommand(commandList[currentCmdIndex].command + ' ' + target);
-                commandOverride = '';
-            }, Math.floor(Math.random() * 300) + 200);
-        }, Math.floor(Math.random() * 300) + 200);
+        sendDelayedCommands([
+            'wield ' + weapon,
+            commandList[currentCmdIndex].command + ' ' + target
+        ]);
     }
 
     // Handle distance/approaching
     if (data.indexOf('is not close enough') >= 0) {
-        setTimeout(function() {
-            sendCommand('app ' + target);
-
-            setTimeout(function() {
-                sendCommand(commandList[currentCmdIndex].command + ' ' + target);
-                commandOverride = '';
-            }, 2000);
-        }, 1000);
+        sendDelayedCommands([
+            'app ' + target,
+            commandOverride ? commandOverride : commandList[currentCmdIndex].command + ' ' + target
+        ]);
     }
 
-    // Main work
-    if (data.indexOf('You are no longer busy.') >= 0 || data.indexOf('walks in') >= 0) {
-        var next = commandOverride ?
-            commandOverride : commandList[currentCmdIndex].command + ' ' + target;
-
+    // Main work for combat loop after 'NLB'
+    if (data.indexOf('You are no longer busy.') >= 0) {
         setTimeout(function() {
-            sendCommand(next);
+            var nextCommand =
+                commandOverride ? commandOverride : commandList[currentCmdIndex].command + ' ' + target;
+
+            sendCommand(nextCommand);
 
             if (currentCmdIndex === (commandList.length - 1)) {
+                if (addAtt) {
+                    commandOverride = 'att ' + target;
+                }
                 currentCmdIndex = 0;
             }
         }, Math.floor(Math.random() * 300) + 200);
@@ -154,6 +166,36 @@ function sendCommand(msg) {
     });
 }
 
+// Send a list of commands with an offset belay between them.
+function sendDelayedCommands(commands) {
+    if (commands && commands.length > 0) {
+        var offsetMs = 1000;
+        commands.forEach(function(command, index) {
+            setTimeout(function() {
+                sendCommand(command);
+            }, offsetMs * (index + 2))
+        });
+        // This may cause bugs... but for now.
+        commandOverride = '';
+    }
+}
+
+/*
+    Utility
+*/
+var delay = ( function() {
+    var timer = 0;
+    return function(callback, ms) {
+        clearTimeout (timer);
+        timer = setTimeout(callback, ms);
+    };
+})();
+
+
+/*****************************************************************************************/
+/* Temporary manual scripts */
+
+
 // Simple repeat support:
 function startRepeat(command) {
     bkg.console.log("Repeat started.");
@@ -168,10 +210,7 @@ function stopRepeat() {
     bkg.console.log("Repeat stopped.");
 }
 
-/*****************************************************************************************/
-/* Temporary manual scripts */
-
-function killCommandScript() {
+function killCurrentScript() {
     target = '';
     commandList = [];
     endIt = false;
@@ -179,39 +218,29 @@ function killCommandScript() {
     weapon = '';
     commandOverride = '';
     currentCmdIndex = 0;
-    bkg.console.log("Scripts killed.");
+    bkg.console.log("Script killed.");
 }
 
-function twoHandBasic(tgt) {
-    target = tgt;
+function twoHandBasic(theTarget, shouldEndIt) {
+    target = theTarget;
     commandList = [];
-    endIt = true;
+    endIt = shouldEndIt;
     endItParse = 'With massive force';
     weapon = 'axe';
+    addAtt = true; // Adds a regular attack into the end of the command list.
     commandOverride = '';
     currentCmdIndex = 0;
 
     commandList.push({ command: 'chop', parse: 'You raise your'});
     commandList.push({ command: 'slash', parse: 'You make a wide horizontal'});
-    commandList.push({ command: 'bstrike', parse: 'With your weapon turned'});
+    // commandList.push({ command: 'bstrike', parse: 'With your weapon turned'});
     commandList.push({ command: 'swat', parse: 'Shifting your grip'});
     commandList.push({ command: 'strike', parse: 'You slide your lower hand'});
 
-    var first = commandList[0].command + ' ' + tgt;
+    var first = commandList[0].command + ' ' + theTarget;
     sendCommand(first);
 }
 
 /* Temporary manual scripts */
 /*****************************************************************************************/
 
-
-/*
-    Utility
-*/
-var delay = ( function() {
-    var timer = 0;
-    return function(callback, ms) {
-        clearTimeout (timer);
-        timer = setTimeout(callback, ms);
-    };
-})();
