@@ -1,26 +1,25 @@
-/*
-  Extension popup logic: event wireup and UI stuff.
-
-*/
-
+/**
+ * Extension popup logic: event wireup and UI logic.
+ * Events call functions directly in the background script.
+ */
 document.addEventListener("DOMContentLoaded", function () {
 
-    document.getElementById("sendMessage").addEventListener("click", function (e) {
-        var input = document.getElementById("messageInput");
+    // Plain message input:
+    document.getElementById("sendCommand").addEventListener("click", function (e) {
+        var command = document.getElementById("commandInput").value;
 
-        if (input.value) {
-            chrome.extension.getBackgroundPage().sendCommand(input.value);
+        if (command) {
+            chrome.extension.getBackgroundPage().sendCommand(command);
         }
     });
-
-    document.getElementById("messageInput").addEventListener("keydown", function (e) {
+    document.getElementById("commandInput").addEventListener("keydown", function (e) {
         if (e.keyCode == 13 && this.value) {
             chrome.extension.getBackgroundPage().sendCommand(this.value);
-
             this.value = '';
         }
     });
 
+    // Simple command repeat, checks for no longer busy:
     document.getElementById("sendRepeat").addEventListener("click", function (e) {
         // Grab value of repeat button:
         var scriptName = e.srcElement.value;
@@ -35,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Run the selected script by name, with options:
     document.getElementById("runScript").addEventListener("click", function (e) {
         var scriptName = document.getElementById("scriptSelect").value;
         var target = document.getElementById("targetInput").value;

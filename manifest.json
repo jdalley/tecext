@@ -5,7 +5,7 @@
   "description": "Extensions and goodies for TEC",
   "version": "1",
   "browser_action": {
-    "default_icon": "images/icon32.png" //, "default_popup": "popup.html"
+    "default_icon": "images/icon32.png"
   },
   "icons": {
     "16": "images/icon16.png",

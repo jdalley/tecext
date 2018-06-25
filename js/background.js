@@ -35,7 +35,9 @@ var nonCom = false;
 /*********************************************************************************************/
 /* Extension setup and Chrome things */
 
-// Setup popout window
+/**
+ * Setup popout window
+ */
 function openPopupWindow(tab) {
     chrome.windows.create({
             url: chrome.runtime.getURL("popup.html"),
@@ -66,7 +68,7 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 });
 
 /*********************************************************************************************/
-/* Communication with content scripts to send/receive messages to/from the game */
+/** Communication with content scripts to send/receive messages to/from the game **/
 
 // Listen for received messages from teccontent.js (ultimately from tecinj.js)
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -78,7 +80,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
-// Entry point for figuring out what to do with messages received from the server.
+/**
+ * Entry point for figuring out what to do with messages received from the server.
+ */
 function parseMessage(data) {
     // TODO: Hook in a decision tree here based on settings/current state as this expands.
     if (runRepeat) {
@@ -98,7 +102,9 @@ function parseMessage(data) {
     }
 }
 
-// Send a command to the content script, which will forward it to the injected script.
+/**
+ * Send a command to the content script, which will forward it to the injected script.
+ */
 function sendCommand(msg) {
     bkg.console.log("Sending message: " + msg);
 
@@ -119,25 +125,13 @@ function sendCommand(msg) {
     });
 }
 
-// Send a list of commands with an offset belay between them.
-function sendDelayedCommands(commands) {
-    if (commands && commands.length > 0) {
-        var offsetMs = 1000;
-        commands.forEach(function(command, index) {
-            setTimeout(function() {
-                sendCommand(command);
-            }, offsetMs * (index + 2))
-        });
-        // This may cause bugs... but for now.
-        commandOverride = '';
-    }
-}
-
 /*********************************************************************************************/
-/* Scripting: setting up and executing defined scripts */
+/** Scripting: setting up and executing defined scripts **/
 
-// Naive function to manage and act on the current script:
-// TODO: Figure out how to make this more composable and dynamic.
+/**
+ * Naive function to manage and act on the current combat script:
+ * TODO: Figure out how to make this more composable and dynamic to work with JSON 'scripts'
+ */
 function combatScript(data) {
     if (data.indexOf(commandList[currentCmdIndex].parse) >= 0) {
         // Move the command list index forward...
@@ -169,7 +163,7 @@ function combatScript(data) {
     if (data.indexOf('You must be standing') >= 0) {
         setTimeout(function() {
             sendCommand('stand');
-        }, Math.floor(Math.random() * 300) + 400)
+        }, getCommandDelayInMs())
     }
 
     // Handle fumble:
@@ -193,21 +187,18 @@ function combatScript(data) {
         ]);
     }
 
-    //You are not in the correct stance
+    // Handle stance when not auto:
     if (data.indexOf('You are not in the correct stance') >= 0) {
         if (stance) {
             sendDelayedCommands([stance]);
         }
     }
 
-    // Main work for combat loop after 'NLB'
+    // Main work for combat loop:
     if (data.indexOf('You are no longer busy.') >= 0) {
         setTimeout(function() {
-            var nextCommand =
-                commandOverride ?
-                    commandOverride : commandList[currentCmdIndex].command + ' ' + target;
-
-            sendCommand(nextCommand);
+            sendCommand(commandOverride ?
+                commandOverride : commandList[currentCmdIndex].command + ' ' + target);
 
             if (currentCmdIndex === (commandList.length - 1)) {
                 if (addAttack) {
@@ -215,12 +206,14 @@ function combatScript(data) {
                 }
                 currentCmdIndex = 0;
             }
-        }, Math.floor(Math.random() * 300) + 400);
+        }, getCommandDelayInMs());
     }
 }
 
-// Naive function to manage and act on the current script:
-// TODO: Figure out how to make this more composable and dynamic.
+/**
+ * Naive function to manage and act on the current script:
+ * TODO: Figure out how to make this more composable and dynamic.
+ */
 function nonComScript(data) {
     if (data.indexOf(commandList[currentCmdIndex].parse) >= 0) {
         // Move the command list index forward...
@@ -239,12 +232,12 @@ function nonComScript(data) {
             if (currentCmdIndex === (commandList.length - 1)) {
                 currentCmdIndex = 0;
             }
-        }, Math.floor(Math.random() * 300) + 400);
+        }, getCommandDelayInMs());
     }
 }
 
 /*********************************************************************************************/
-/* Utility */
+/** Utility **/
 
 var delay = ( function() {
     var timer = 0;
@@ -254,10 +247,33 @@ var delay = ( function() {
     };
 })();
 
-/*********************************************************************************************/
-/* Scripting and stuff */
+/**
+ * Send a list of commands with an offset belay between them.
+ */
+function sendDelayedCommands(commands) {
+    if (commands && commands.length > 0) {
+        var offsetMs = 1000;
+        commands.forEach(function(command, index) {
+            setTimeout(function() {
+                sendCommand(command);
+            }, offsetMs * (index + 2))
+        });
+        // This may cause bugs... but for now.
+        commandOverride = '';
+    }
+}
 
-// Entry point for running a script:
+function getCommandDelayInMs() {
+    // Between 400 and 700 miliseconds
+    return Math.floor(Math.random() * 300) + 400;
+}
+
+/*********************************************************************************************/
+/** Scripting and stuff **/
+
+/**
+ * Entry point for running a script:
+ */
 function runScriptByName(scriptName, options) {
     bkg.console.log("Running script: " + scriptName);
     bkg.console.log("With options: " + JSON.stringify(options));
@@ -304,15 +320,17 @@ function killCurrentScript() {
     bkg.console.log("Script killed.");
 }
 
-// These will be represented by a json (with schema/explanation in the UI), and
-// accompanied with another UI to manage them.
+/**
+ * TODO: The following functions should be represented by a JSON, with schema/explanation
+ * in the UI, and accompanied with another UI to manage them.
+ */
 function twoHandBasic(target, weaponItemName, shouldKill) {
     this.target = target;
     this.weaponItemName = weaponItemName;
     this.shouldKill = shouldKill;
     shouldKillParse = 'With massive force';
     commandList = [];
-    addAttack = false; // Adds a regular attack into the end of the command list.
+    addAttack = false;
     commandOverride = '';
     currentCmdIndex = 0;
     stance = 'wgrip';
@@ -324,7 +342,6 @@ function twoHandBasic(target, weaponItemName, shouldKill) {
     commandList.push({ command: 'strike', parse: 'You slide your lower hand'});
     commandList.push({ command: 'hslash', parse: 'wide-arced slash'});
 
-    // Kick it off with the first command
     sendCommand(commandList[0].command + ' ' + target);
 }
 
@@ -334,7 +351,7 @@ function stavesBasic(target, weaponItemName, shouldKill) {
     this.shouldKill = shouldKill;
     shouldKillParse = 'You bash a';
     commandList = [];
-    addAttack = false; // Adds a regular attack into the end of the command list.
+    addAttack = false;
     stance = '';
     commandOverride = '';
     currentCmdIndex = 0;
@@ -346,7 +363,6 @@ function stavesBasic(target, weaponItemName, shouldKill) {
     commandList.push({ command: 'strike', parse: 'you bring the end of'});
     commandList.push({ command: 'jab', parse: 'You jab tentatively'});
 
-    // Kick it off with the first command
     sendCommand(commandList[0].command + ' ' + target);
 }
 
