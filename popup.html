@@ -21,34 +21,36 @@
     <main role="main">
         <div class="container">
             <p>
-                <input id="messageInput" type="text" class="message-input" />
-                <button type="button" id="sendMessage" class="btn btn-dark">Send</button>
-
-
+                <input id="messageInput" type="text" placeholder="Send command..." />
+                <button type="button" id="sendMessage" class="btn btn-basic">Send</button>
             </p>
-        </div>
-        <div class="container">
             <p>
-                <input id="repeatInput" type="text" class="message-input" />
-                <button type="button" id="sendRepeat" class="btn btn-dark">Repeat</button>
-                <button type="button" id="stopRepeat" class="btn btn-danger">Stop</button>
+                <input id="repeatInput" type="text" placeholder="Command to repeat..." />
+                <button type="button" id="sendRepeat" class="btn btn-basic" value="simpleCommandRepeat">Repeat</button>
             </p>
-        </div>
-        <div class="container">
+            <div>
+                <label for="scriptSelect">Choose a script to run:</label>
+            </div>
             <p>
-                <input id="targetInput" type="text" class="message-input" />
-                <button type="button" id="twoHandBasic" class="btn btn-basic">Two-Hand Basic</button>
+                <select id="scriptSelect">
+                    <option value="twoHandedBasic">Two-Handed Basic</option>
+                    <option value="stavesBasic">Staves Basic</option>
+                </select>
+                <button type="button" id="editScripts" class="btn btn-basic">Edit Scripts</button>
             </p>
-        </div>
-        <div class="container">
-            <p class="float-left">
-                <button type="button" id="stopScripts" class="btn btn-danger">Stop Scripts</button>
-
-
+            <p>
+                <input id="weaponItemName" type="text" placeholder="Weapon/item name..." />
             </p>
-            <p class="float-right">
-                <input type="checkbox" id="endIt" />
-                <label for="endIt">End it?</label>
+            <p>
+                <input id="targetInput" type="text" placeholder="Target name..." />
+                <button type="button" id="runScript" class="btn btn-success">Run Script</button>
+            </p>
+            <p>
+                <input type="checkbox" id="shouldKill" checked />
+                <label for="shouldKill">Use kill on KO?</label>
+            </p>
+            <p>
+                <button type="button" id="stopScript" class="btn btn-danger">Stop Script</button>
             </p>
         </div>
     </main>

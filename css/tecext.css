@@ -4,11 +4,19 @@ body {
 }
 
 input[type="text"] {
+    width: 221px;
     padding-left: 3px;
+    margin-right: 5px;
 }
 
-.message-input {
+select {
+    height: 30px;
     width: 221px;
+    margin-right: 5px;
+}
+
+button {
+    min-width: 105px;
 }
 
 #actionArea {

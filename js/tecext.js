@@ -1,11 +1,11 @@
 /*
-  Extension popup logic.
+  Extension popup logic: event wireup and UI stuff.
 
 */
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    document.getElementById("sendMessage").addEventListener("click", function () {
+    document.getElementById("sendMessage").addEventListener("click", function (e) {
         var input = document.getElementById("messageInput");
 
         if (input.value) {
@@ -21,28 +21,43 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    document.getElementById("sendRepeat").addEventListener("click", function () {
-        var input = document.getElementById("repeatInput");
+    document.getElementById("sendRepeat").addEventListener("click", function (e) {
+        // Grab value of repeat button:
+        var scriptName = e.srcElement.value;
+        var repeatCommand = document.getElementById("repeatInput").value;
 
-        if (input.value) {
-            chrome.extension.getBackgroundPage().startRepeat(input.value);
+        if (repeatCommand) {
+            chrome.extension.getBackgroundPage().runScriptByName(
+                scriptName, {
+                    command: repeatCommand
+                }
+            );
         }
     });
 
-    document.getElementById("stopRepeat").addEventListener("click", function () {
-        chrome.extension.getBackgroundPage().stopRepeat();
-    });
+    document.getElementById("runScript").addEventListener("click", function (e) {
+        var scriptName = document.getElementById("scriptSelect").value;
+        var target = document.getElementById("targetInput").value;
+        var weaponItemName = document.getElementById("weaponItemName").value;
+        var shouldKill = document.getElementById("shouldKill").checked;
 
-    document.getElementById("twoHandBasic").addEventListener("click", function () {
-        var input = document.getElementById("targetInput");
-
-        if (input.value) {
-            var endIt = document.getElementById("endIt").checked;
-            chrome.extension.getBackgroundPage().twoHandBasic(input.value, endIt);
+        // Will change, but for now we're assuming a script will at least need a target
+        // and a weapon or item name to get started.
+        if (target || weaponItemName) {
+            // This will become data driven later, via json/local storage with defaults.
+            // Options object will be expanded.
+            chrome.extension.getBackgroundPage().runScriptByName(
+                scriptName, {
+                    target: target,
+                    weaponItemName: weaponItemName,
+                    shouldKill: shouldKill
+                }
+            );
         }
     });
 
-    document.getElementById("stopScripts").addEventListener("click", function () {
+    document.getElementById("stopScript").addEventListener("click", function (e) {
+        // Kill any currently running script.
         chrome.extension.getBackgroundPage().killCurrentScript();
     });
 
