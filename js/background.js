@@ -40,7 +40,7 @@ function openPopupWindow(tab) {
     chrome.windows.create({
             url: chrome.runtime.getURL("popup.html"),
             type: "popup",
-            height: 500,
+            height: 475,
             width: 395
         }, function(win) {
             // Do something with the new window?
@@ -85,7 +85,7 @@ function parseMessage(data) {
         if (data.indexOf('You are no longer busy.') >= 0) {
             setTimeout(function () {
                 sendCommand(repeatCommand);
-            }, Math.floor(Math.random() * 300) + 700)
+            }, Math.floor(Math.random() * 300) + 400)
             return;
         }
     }
@@ -169,7 +169,7 @@ function combatScript(data) {
     if (data.indexOf('You must be standing') >= 0) {
         setTimeout(function() {
             sendCommand('stand');
-        }, Math.floor(Math.random() * 300) + 700)
+        }, Math.floor(Math.random() * 300) + 400)
     }
 
     // Handle fumble:
@@ -215,7 +215,7 @@ function combatScript(data) {
                 }
                 currentCmdIndex = 0;
             }
-        }, Math.floor(Math.random() * 300) + 700);
+        }, Math.floor(Math.random() * 300) + 400);
     }
 }
 
@@ -239,7 +239,7 @@ function nonComScript(data) {
             if (currentCmdIndex === (commandList.length - 1)) {
                 currentCmdIndex = 0;
             }
-        }, Math.floor(Math.random() * 300) + 700);
+        }, Math.floor(Math.random() * 300) + 400);
     }
 }
 
