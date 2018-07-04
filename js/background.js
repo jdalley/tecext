@@ -361,7 +361,6 @@ function stavesBasic(target, weaponItemName, shouldKill) {
     commandList.push({ command: 'snaps', parse: 'you chop down at'});
     commandList.push({ command: 'spins', parse: 'Stepping slightly to the side'});
     commandList.push({ command: 'strike', parse: 'you bring the end of'});
-    commandList.push({ command: 'jab', parse: 'You jab tentatively'});
 
     sendCommand(commandList[0].command + ' ' + target);
 }

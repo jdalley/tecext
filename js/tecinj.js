@@ -8,6 +8,12 @@
 var orig = doReceive;
 doReceive = function (msg) {
     doReceiveOverride(msg);
+
+    // Colorize 'say to'
+    if (msg.indexOf('says to') >= 0) {
+        msg = '</font><font color="#0020ff">' + msg;
+    }
+
     // Ref: orchil.js - doReceive(msg)
     var ret = orig.apply(this, arguments);
     return ret;
