@@ -300,6 +300,13 @@ function runScriptByName(scriptName, options) {
                 options.shouldKill
             );
             break;
+        case 'pankrationBasic':
+            pankrationBasic(
+                options.target,
+                options.weaponItemName,
+                options.shouldKill
+            );
+            break;
         default:
             bkg.console.log("No script found matching name: " + scriptName);
     }
@@ -361,6 +368,24 @@ function stavesBasic(target, weaponItemName, shouldKill) {
     commandList.push({ command: 'snaps', parse: 'you chop down at'});
     commandList.push({ command: 'spins', parse: 'Stepping slightly to the side'});
     commandList.push({ command: 'strike', parse: 'you bring the end of'});
+
+    sendCommand(commandList[0].command + ' ' + target);
+}
+
+function pankrationBasic(target, weaponItemName, shouldKill) {
+    this.target = target;
+    this.weaponItemName = 'hands';
+    this.shouldKill = shouldKill;
+    shouldKillParse = 'You strangle a';
+    commandList = [];
+    addAttack = false;
+    stance = 'pankr';
+    commandOverride = '';
+    currentCmdIndex = 0;
+
+    commandList.push({ command: 'lpalm', parse: 'You lean into your forward shoulder'});
+    commandList.push({ command: 'felbow', parse: 'You turn and lean into your shoulder while bringing your elbow'});
+    commandList.push({ command: 'spalm', parse: 'You twist slightly, throwing a straight strike'});
 
     sendCommand(commandList[0].command + ' ' + target);
 }

@@ -10,7 +10,11 @@ doReceive = function (msg) {
     doReceiveOverride(msg);
 
     // Colorize 'say to'
-    if (msg.indexOf('says to') >= 0) {
+    if (msg.indexOf('say to') >= 0
+        || msg.indexOf(' says') >= 0
+        || msg.indexOf(' ask') >= 0
+        || msg.indexOf(' exclaim') >= 0
+        || msg.indexOf(' wink') >= 0) {
         msg = '</font><font color="#0020ff">' + msg;
     }
 
