@@ -386,6 +386,10 @@ function pankrationBasic(target, weaponItemName, shouldKill) {
     commandList.push({ command: 'lpalm', parse: 'You lean into your forward shoulder'});
     commandList.push({ command: 'felbow', parse: 'You turn and lean into your shoulder while bringing your elbow'});
     commandList.push({ command: 'spalm', parse: 'You twist slightly, throwing a straight strike'});
+    commandList.push({ command: 'dknee', parse: 'you drive your knee forward into'});
+    commandList.push({ command: 'rpalm', parse: 'You dip one hand then shoot an upward palm-strike'});
+    commandList.push({ command: 'relbow', parse: 'You dip one hand then shoot an upward elbow-strike'});
+    commandList.push({ command: 'wknee', parse: 'bring around your knee, hammering it'});
 
     sendCommand(commandList[0].command + ' ' + target);
 }
