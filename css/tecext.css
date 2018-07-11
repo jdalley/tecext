@@ -4,61 +4,26 @@ body {
     overflow: hidden;
 }
 
-input[type="text"] {
+.popup-container {
+    margin-top: 15px;
+}
+
+.popup-container input[type="text"] {
     width: 221px;
     padding-left: 3px;
     margin-right: 5px;
 }
 
-select {
+.popup-container select {
     height: 30px;
     width: 221px;
     margin-right: 5px;
 }
 
-button {
+.popup-container button {
     min-width: 105px;
 }
 
-main {
+.popup-container main {
     height: 100%;
 }
-
-.container {
-    margin-top: 15px;
-}
-
-/* Edit Scripts */
-.edit-main {
-    height:100vh;
-    padding: 10px;
-}
-    .edit-main button {
-        margin-right: 10px;
-    }
-
-.edit-container {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-}
-    .edit-container .row {
-        margin: 0;
-    }
-    .edit-container .row.header {
-        flex: 0 1 auto;
-    }
-    .edit-container .row.content {
-        display: flex;
-        flex-flow: column;
-        flex: 1 1 auto;
-        overflow-y: auto;
-    }
-    .edit-container .row.footer {
-        flex: 0 1 40px;
-        margin-top: 10px;
-    }
-    .edit-container textarea {
-        height: 100%;
-        width: 100%;
-    }

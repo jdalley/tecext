@@ -1,21 +1,30 @@
-/*
-    This script handles the logic driving the Edit Scripts page:
-*/
-document.addEventListener("DOMContentLoaded", function () {
+/**
+ * JSON Editor Setup
+ */
 
-    // Load the current user scripts from the background:
-    var currentScripts = JSON.stringify(chrome.extension.getBackgroundPage().currentScripts);
-    document.getElementById("scriptJson").value = currentScripts;
+ // create the editor
+ var container = document.getElementById("jsonEditor");
+ var options = {
+     "mode": "text",
+     "indentation": 4
+ };
+ var editor = new JSONEditor(container, options);
+
+ // Load the current user scripts from the background:
+ var currentScriptsJson = chrome.extension.getBackgroundPage().currentScripts;
+ editor.set(currentScriptsJson);
+
+/**
+ *   This script handles the logic driving the Edit Scripts page:
+ */
+document.addEventListener("DOMContentLoaded", function () {
 
     // Save changes to the script by calling the background save function:
     document.getElementById("saveScript").addEventListener("click", function (e) {
-
-        var scriptsJson = JSON.parse(document.getElementById("scriptJson").value);
-
+        var scriptsJson = editor.get();
         if (script) {
             chrome.extension.getBackgroundPage().saveScripts(scriptsJson);
         }
-
         close();
     });
 

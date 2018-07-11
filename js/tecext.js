@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "url": "edit-scripts.html",
             "type": "popup",
             height: 1000,
-            width: 800
+            width: 900
         }, function(window) {  });
     });
 
