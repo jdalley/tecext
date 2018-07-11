@@ -133,7 +133,7 @@ function sendCommand(msg) {
  * TODO: Figure out how to make this more composable and dynamic to work with JSON 'scripts'
  */
 function combatScript(data) {
-    if (data.indexOf(commandList[currentCmdIndex].parse) >= 0) {
+    if (commandList.length > 1 && data.indexOf(commandList[currentCmdIndex].parse) >= 0) {
         // Move the command list index forward...
         currentCmdIndex++;
     }
@@ -200,7 +200,7 @@ function combatScript(data) {
             sendCommand(commandOverride ?
                 commandOverride : commandList[currentCmdIndex].command + ' ' + target);
 
-            if (currentCmdIndex === (commandList.length - 1)) {
+            if (currentCmdIndex >= (commandList.length - 1)) {
                 if (addAttack) {
                     commandOverride = 'att ' + target;
                 }
@@ -293,6 +293,13 @@ function runScriptByName(scriptName, options) {
                 options.shouldKill
             );
             break;
+        case 'twoHandKillFast':
+            twoHandKillFast(
+                options.target,
+                options.weaponItemName,
+                options.shouldKill
+            );
+            break;
         case 'stavesBasic':
             stavesBasic(
                 options.target,
@@ -348,6 +355,22 @@ function twoHandBasic(target, weaponItemName, shouldKill) {
     commandList.push({ command: 'swat', parse: 'Shifting your grip'});
     commandList.push({ command: 'strike', parse: 'You slide your lower hand'});
     commandList.push({ command: 'hslash', parse: 'wide-arced slash'});
+
+    sendCommand(commandList[0].command + ' ' + target);
+}
+
+function twoHandKillFast(target, weaponItemName, shouldKill) {
+    this.target = target;
+    this.weaponItemName = weaponItemName;
+    this.shouldKill = shouldKill;
+    shouldKillParse = 'With massive force';
+    commandList = [];
+    addAttack = false;
+    commandOverride = '';
+    currentCmdIndex = 0;
+    stance = 'wgrip';
+
+    commandList.push({ command: 'cchop', parse: 'making a swift downwards diagonal chop'});
 
     sendCommand(commandList[0].command + ' ' + target);
 }

@@ -1,0 +1,126 @@
+[
+    {
+        "scriptName": "twoHandBasic",
+        "target": "",
+        "weaponItemName": "",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "addAttack": false,
+        "stanceCommand": "wgrip",
+        "commandList": [
+            {
+                "command": "chop",
+                "parse": "You raise your",
+                "timeOut": 0
+            },
+            {
+                "command": "slash",
+                "parse": "You make a wide horizontal",
+                "timeOut": 0
+            },
+            {
+                "command": "swat",
+                "parse": "Shifting your grip",
+                "timeOut": 0
+            },
+            {
+                "command": "strike",
+                "parse": "You slide your lower hand",
+                "timeOut": 0
+            },
+            {
+                "command": "hslash",
+                "parse": "wide-arced slash",
+                "timeOut": 0
+            }
+        ]
+    },
+    {
+        "scriptName": "twoHandKillFast",
+        "target": "",
+        "weaponItemName": "",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "addAttack": false,
+        "stanceCommand": "wgrip",
+        "commandList": [
+            {
+            "command": "cchop",
+            "parse": "making a swift downwards diagonal chop",
+            "timeOut": 0
+            }
+        ]
+    },
+    {
+        "scriptName": "stavesBasic",
+        "target": "",
+        "weaponItemName": "",
+        "shouldKill": true,
+        "shouldKillParse": "You bash a",
+        "addAttack": false,
+        "stanceCommand": "",
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": "you swat at",
+                "timeOut": 0
+            },
+            {
+                "command": "smash",
+                "parse": "you step forward and pivot slightly",
+                "timeOut": 0
+            },
+            {
+                "command": "snaps",
+                "parse": "you chop down at",
+                "timeOut": 0
+            },
+            {
+                "command": "spins",
+                "parse": "Stepping slightly to the side",
+                "timeOut": 0
+            },
+            {
+                "command": "hslash",
+                "parse": "you bring the end of",
+                "timeOut": 0
+            }
+        ]
+    },
+    {
+        "scriptName": "pankrationBasic",
+        "target": "",
+        "weaponItemName": "",
+        "shouldKill": true,
+        "shouldKillParse": "You strangle a",
+        "addAttack": false,
+        "stanceCommand": "",
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": "you swat at",
+                "timeOut": 0
+            },
+            {
+                "command": "smash",
+                "parse": "you step forward and pivot slightly",
+                "timeOut": 0
+            },
+            {
+                "command": "snaps",
+                "parse": "you chop down at",
+                "timeOut": 0
+            },
+            {
+                "command": "spins",
+                "parse": "Stepping slightly to the side",
+                "timeOut": 0
+            },
+            {
+                "command": "hslash",
+                "parse": "you bring the end of",
+                "timeOut": 0
+            }
+        ]
+    }
+]
