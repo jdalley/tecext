@@ -56,11 +56,20 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Edit script modal
+    document.getElementById("editScripts").addEventListener("click", function (e) {
+        chrome.windows.create({
+            "url": "edit-scripts.html",
+            "type": "popup",
+            height: 1000,
+            width: 800
+        }, function(window) {  });
+    });
+
     document.getElementById("stopScript").addEventListener("click", function (e) {
         // Kill any currently running script.
         chrome.extension.getBackgroundPage().killCurrentScript();
     });
-
 
     // Load combat script choices from background page:
     var select = document.getElementById("scriptSelect");

@@ -68,7 +68,7 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
     }
 });
 
-// Load combat scripts
+// Load scripts from default or sync storage:
 function loadScripts() {
     chrome.storage.sync.get("userScripts", function (data) {
         if (data && data["userScripts"]) {
@@ -89,6 +89,16 @@ function loadScripts() {
     });
 
     return false;
+}
+
+// Save scripts to the var and to sync storage:
+function saveScripts(scripts) {
+    if (scripts) {
+        currentScripts = scripts;
+        chrome.storage.sync.set({"userScripts": scripts}, function() {
+            return false;
+        });
+    }
 }
 
 // Do the load thing...

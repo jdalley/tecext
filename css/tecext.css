@@ -1,6 +1,7 @@
 body {
     min-width: 400px;
-    overflow-x: hidden;
+    height: 100%;
+    overflow: hidden;
 }
 
 input[type="text"] {
@@ -19,6 +20,45 @@ button {
     min-width: 105px;
 }
 
+main {
+    height: 100%;
+}
+
 .container {
     margin-top: 15px;
 }
+
+/* Edit Scripts */
+.edit-main {
+    height:100vh;
+    padding: 10px;
+}
+    .edit-main button {
+        margin-right: 10px;
+    }
+
+.edit-container {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+    .edit-container .row {
+        margin: 0;
+    }
+    .edit-container .row.header {
+        flex: 0 1 auto;
+    }
+    .edit-container .row.content {
+        display: flex;
+        flex-flow: column;
+        flex: 1 1 auto;
+        overflow-y: auto;
+    }
+    .edit-container .row.footer {
+        flex: 0 1 40px;
+        margin-top: 10px;
+    }
+    .edit-container textarea {
+        height: 100%;
+        width: 100%;
+    }
