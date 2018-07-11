@@ -29,8 +29,9 @@ var weaponItemName;
 var addAttack;
 var stance;
 
-// Non-Com
-var nonCom = false;
+// Scripts:
+var currentScriptType = '';
+var currentScripts;
 
 /*********************************************************************************************/
 /* Extension setup and Chrome things */
@@ -67,6 +68,33 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
     }
 });
 
+// Load combat scripts
+function loadScripts() {
+    chrome.storage.sync.get("userScripts", function (data) {
+        if (data && data["userScripts"]) {
+            currentScripts = data["userScripts"];
+        }
+        else {
+            fetch('/scripts/combat.json')
+            .then(res => res.json())
+            .then((out) => {
+                if (out) {
+                    currentScripts = out;
+                    chrome.storage.sync.set({"userScripts": out}, function() {
+                        return false;
+                    });
+                }
+            })
+        }
+    });
+
+    return false;
+}
+
+// Do the load thing...
+loadScripts();
+
+
 /*********************************************************************************************/
 /** Communication with content scripts to send/receive messages to/from the game **/
 
@@ -94,10 +122,10 @@ function parseMessage(data) {
         }
     }
 
-    if (target && commandList.length > 0 && weaponItemName) {
-       combatScript(data);
+    if (target && commandList.length > 0 && currentScriptType === 'combat') {
+        combatScript(data);
     }
-    else if (commandList.length > 0 && nonCom) {
+    else if (commandList.length > 0 && currentScriptType === 'nonCom') {
         nonComScript(data);
     }
 }
@@ -278,44 +306,32 @@ function runScriptByName(scriptName, options) {
     bkg.console.log("Running script: " + scriptName);
     bkg.console.log("With options: " + JSON.stringify(options));
 
-    // Detect which script to run by name, manual for now - data driven later:
-    // (json, local storage, defaults and expandable options.)
-    switch(scriptName) {
-        case 'simpleCommandRepeat':
-            runRepeat = true;
-            repeatCommand = options.command;
-            sendCommand(repeatCommand);
-            break;
-        case 'twoHandedBasic':
-            twoHandBasic(
-                options.target,
-                options.weaponItemName,
-                options.shouldKill
-            );
-            break;
-        case 'twoHandKillFast':
-            twoHandKillFast(
-                options.target,
-                options.weaponItemName,
-                options.shouldKill
-            );
-            break;
-        case 'stavesBasic':
-            stavesBasic(
-                options.target,
-                options.weaponItemName,
-                options.shouldKill
-            );
-            break;
-        case 'pankrationBasic':
-            pankrationBasic(
-                options.target,
-                options.weaponItemName,
-                options.shouldKill
-            );
-            break;
-        default:
-            bkg.console.log("No script found matching name: " + scriptName);
+    // Get the script object by name:
+    var script = currentScripts.find(obj => { return obj.scriptName === scriptName; });
+
+    if (!script) {
+        bkg.console.log("No script found matching name: " + scriptName);
+    }
+    else {
+        commandOverride = '';
+        currentCmdIndex = 0;
+
+        target = options.target;
+        weaponItemName = options.weaponItemName;
+        shouldKill = options.shouldKill;
+        shouldKillParse = script.shouldKillParse;
+        addAttack = script.addAttack;
+        stance = script.stanceCommand;
+        currentScriptType = script.scriptType;
+
+        script.commandList.forEach(function(command, index) {
+            commandList.push(command);
+        })
+
+        // Kick it off...
+        sendCommand(commandList[0].command + ' ' + target);
+
+        bkg.console.log("Script " + scriptName + " loaded and started.");
     }
 }
 
@@ -332,88 +348,5 @@ function killCurrentScript() {
     commandOverride = '';
     currentCmdIndex = 0;
     bkg.console.log("Script killed.");
-}
-
-/**
- * TODO: The following functions should be represented by a JSON, with schema/explanation
- * in the UI, and accompanied with another UI to manage them.
- */
-function twoHandBasic(target, weaponItemName, shouldKill) {
-    this.target = target;
-    this.weaponItemName = weaponItemName;
-    this.shouldKill = shouldKill;
-    shouldKillParse = 'With massive force';
-    commandList = [];
-    addAttack = false;
-    commandOverride = '';
-    currentCmdIndex = 0;
-    stance = 'wgrip';
-
-    commandList.push({ command: 'chop', parse: 'You raise your'});
-    commandList.push({ command: 'slash', parse: 'You make a wide horizontal'});
-    // commandList.push({ command: 'bstrike', parse: 'With your weapon turned'});
-    commandList.push({ command: 'swat', parse: 'Shifting your grip'});
-    commandList.push({ command: 'strike', parse: 'You slide your lower hand'});
-    commandList.push({ command: 'hslash', parse: 'wide-arced slash'});
-
-    sendCommand(commandList[0].command + ' ' + target);
-}
-
-function twoHandKillFast(target, weaponItemName, shouldKill) {
-    this.target = target;
-    this.weaponItemName = weaponItemName;
-    this.shouldKill = shouldKill;
-    shouldKillParse = 'With massive force';
-    commandList = [];
-    addAttack = false;
-    commandOverride = '';
-    currentCmdIndex = 0;
-    stance = 'wgrip';
-
-    commandList.push({ command: 'cchop', parse: 'making a swift downwards diagonal chop'});
-
-    sendCommand(commandList[0].command + ' ' + target);
-}
-
-function stavesBasic(target, weaponItemName, shouldKill) {
-    this.target = target;
-    this.weaponItemName = weaponItemName;
-    this.shouldKill = shouldKill;
-    shouldKillParse = 'You bash a';
-    commandList = [];
-    addAttack = false;
-    stance = '';
-    commandOverride = '';
-    currentCmdIndex = 0;
-
-    commandList.push({ command: 'swat', parse: 'you swat at'});
-    commandList.push({ command: 'smash', parse: 'you step forward and pivot slightly'});
-    commandList.push({ command: 'snaps', parse: 'you chop down at'});
-    commandList.push({ command: 'spins', parse: 'Stepping slightly to the side'});
-    commandList.push({ command: 'strike', parse: 'you bring the end of'});
-
-    sendCommand(commandList[0].command + ' ' + target);
-}
-
-function pankrationBasic(target, weaponItemName, shouldKill) {
-    this.target = target;
-    this.weaponItemName = 'hands';
-    this.shouldKill = shouldKill;
-    shouldKillParse = 'You strangle a';
-    commandList = [];
-    addAttack = false;
-    stance = 'pankr';
-    commandOverride = '';
-    currentCmdIndex = 0;
-
-    commandList.push({ command: 'lpalm', parse: 'You lean into your forward shoulder'});
-    commandList.push({ command: 'felbow', parse: 'You turn and lean into your shoulder while bringing your elbow'});
-    commandList.push({ command: 'spalm', parse: 'You twist slightly, throwing a straight strike'});
-    commandList.push({ command: 'dknee', parse: 'you drive your knee forward into'});
-    commandList.push({ command: 'rpalm', parse: 'You dip one hand then shoot an upward palm-strike'});
-    commandList.push({ command: 'relbow', parse: 'You dip one hand then shoot an upward elbow-strike'});
-    commandList.push({ command: 'wknee', parse: 'bring around your knee, hammering it'});
-
-    sendCommand(commandList[0].command + ' ' + target);
 }
 

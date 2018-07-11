@@ -61,4 +61,16 @@ document.addEventListener("DOMContentLoaded", function () {
         chrome.extension.getBackgroundPage().killCurrentScript();
     });
 
+
+    // Load combat script choices from background page:
+    var select = document.getElementById("scriptSelect");
+    var scripts = chrome.extension.getBackgroundPage().currentScripts;
+    if (scripts) {
+        scripts.forEach(element => {
+            var opt = document.createElement('option');
+            opt.value = element.scriptName;
+            opt.innerHTML = element.scriptFriendlyName;
+            select.appendChild(opt);
+        });
+    }
 });

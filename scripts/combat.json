@@ -1,6 +1,8 @@
 [
     {
         "scriptName": "twoHandBasic",
+        "scriptFriendlyName": "Two-Handed Axe Basic",
+        "scriptType": "combat",
         "target": "",
         "weaponItemName": "",
         "shouldKill": true,
@@ -10,33 +12,30 @@
         "commandList": [
             {
                 "command": "chop",
-                "parse": "You raise your",
-                "timeOut": 0
+                "parse": "You raise your"
             },
             {
                 "command": "slash",
-                "parse": "You make a wide horizontal",
-                "timeOut": 0
+                "parse": "You make a wide horizontal"
             },
             {
                 "command": "swat",
-                "parse": "Shifting your grip",
-                "timeOut": 0
+                "parse": "Shifting your grip"
             },
             {
                 "command": "strike",
-                "parse": "You slide your lower hand",
-                "timeOut": 0
+                "parse": "You slide your lower hand"
             },
             {
                 "command": "hslash",
-                "parse": "wide-arced slash",
-                "timeOut": 0
+                "parse": "wide-arced slash"
             }
         ]
     },
     {
         "scriptName": "twoHandKillFast",
+        "scriptFriendlyName": "Two-Handed Axe Kill Fast",
+        "scriptType": "combat",
         "target": "",
         "weaponItemName": "",
         "shouldKill": true,
@@ -45,81 +44,82 @@
         "stanceCommand": "wgrip",
         "commandList": [
             {
-            "command": "cchop",
-            "parse": "making a swift downwards diagonal chop",
-            "timeOut": 0
+                "command": "cchop",
+                "parse": "making a swift downwards diagonal chop"
             }
         ]
     },
     {
         "scriptName": "stavesBasic",
+        "scriptFriendlyName": "Staves Basic",
+        "scriptType": "combat",
         "target": "",
         "weaponItemName": "",
         "shouldKill": true,
         "shouldKillParse": "You bash a",
         "addAttack": false,
-        "stanceCommand": "",
+        "stanceCommand": "skirmish",
         "commandList": [
             {
                 "command": "swat",
-                "parse": "you swat at",
-                "timeOut": 0
+                "parse": "you swat at"
             },
             {
                 "command": "smash",
-                "parse": "you step forward and pivot slightly",
-                "timeOut": 0
+                "parse": "you step forward and pivot slightly"
             },
             {
                 "command": "snaps",
-                "parse": "you chop down at",
-                "timeOut": 0
+                "parse": "you chop down at"
             },
             {
                 "command": "spins",
-                "parse": "Stepping slightly to the side",
-                "timeOut": 0
+                "parse": "Stepping slightly to the side"
             },
             {
                 "command": "hslash",
-                "parse": "you bring the end of",
-                "timeOut": 0
+                "parse": "you bring the end of"
             }
         ]
     },
     {
         "scriptName": "pankrationBasic",
+        "scriptFriendlyName": "Pankration Basic",
+        "scriptType": "combat",
         "target": "",
         "weaponItemName": "",
         "shouldKill": true,
         "shouldKillParse": "You strangle a",
         "addAttack": false,
-        "stanceCommand": "",
+        "stanceCommand": "pankr",
         "commandList": [
             {
-                "command": "swat",
-                "parse": "you swat at",
-                "timeOut": 0
+                "command": "lpalm",
+                "parse": "You lean into your forward shoulder"
             },
             {
-                "command": "smash",
-                "parse": "you step forward and pivot slightly",
-                "timeOut": 0
+                "command": "felbow",
+                "parse": "You turn and lean into your shoulder while bringing your elbow"
             },
             {
-                "command": "snaps",
-                "parse": "you chop down at",
-                "timeOut": 0
+                "command": "spalm",
+                "parse": "You twist slightly, throwing a straight strike"
             },
             {
-                "command": "spins",
-                "parse": "Stepping slightly to the side",
-                "timeOut": 0
+                "command": "dknee",
+                "parse": "you drive your knee forward into"
             },
             {
-                "command": "hslash",
-                "parse": "you bring the end of",
-                "timeOut": 0
+                "command": "rpalm",
+                "parse": "You dip one hand then shoot an upward palm-strike"
+            },
+            {
+                "command": "relbow",
+                "parse": "You dip one hand then shoot an upward elbow-strike"
+            },
+            {
+                "command": "wknee",
+                "parse": "bring around your knee, hammering it"
             }
         ]
     }
