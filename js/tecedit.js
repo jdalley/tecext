@@ -22,9 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Save changes to the script by calling the background save function:
     document.getElementById("saveScript").addEventListener("click", function (e) {
         var scriptsJson = editor.get();
-        if (script) {
+        if (scriptsJson) {
             chrome.extension.getBackgroundPage().saveScripts(scriptsJson);
         }
+
         close();
     });
 

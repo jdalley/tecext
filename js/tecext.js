@@ -56,6 +56,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    document.getElementById("stopScript").addEventListener("click", function (e) {
+        // Kill any currently running script.
+        chrome.extension.getBackgroundPage().killCurrentScript();
+    });
+
     // Edit script modal
     document.getElementById("editScripts").addEventListener("click", function (e) {
         chrome.windows.create({
@@ -66,13 +71,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }, function(window) {  });
     });
 
-    document.getElementById("stopScript").addEventListener("click", function (e) {
-        // Kill any currently running script.
-        chrome.extension.getBackgroundPage().killCurrentScript();
-    });
+    // Listener to update the script select; expected to trigger from Edit Scripts window:
+    chrome.runtime.onMessage.addListener(
+        function(request, sender, sendResponse) {
+            if (request.msg === "reload-scripts-select") {
+                loadScriptSelect();
+            }
+        }
+    );
 
-    // Load combat script choices from background page:
+    // Initial scripts load:
+    loadScriptSelect();
+});
+
+/**
+ *  Load combat script choices from background page:
+ */
+function loadScriptSelect() {
     var select = document.getElementById("scriptSelect");
+    // Clear select
+    select.innerText = null;
+
+    // Load scripts from background:
     var scripts = chrome.extension.getBackgroundPage().currentScripts;
     if (scripts) {
         scripts.forEach(element => {
@@ -82,4 +102,4 @@ document.addEventListener("DOMContentLoaded", function () {
             select.appendChild(opt);
         });
     }
-});
+}

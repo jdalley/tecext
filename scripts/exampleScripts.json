@@ -1,0 +1,215 @@
+[
+    {
+        "commandList": [
+            {
+                "command": "cut bandage from",
+                "parse": [
+                    {
+                        "moveNext": "You are no longer busy",
+                        "str": "You remove the bandages from"
+                    },
+                    {
+                        "moveNext": "",
+                        "str": "There are no bandages there"
+                    }
+                ]
+            },
+            {
+                "command": "bandage <target> with bandage",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You wrap a clean bandage around"
+                }
+            },
+            {
+                "command": "clean <target> with antiseptic",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You clean your"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Healing Basic",
+        "scriptName": "HealingBasic",
+        "scriptType": "nonCom",
+        "target": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "lpalm",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You lean into your forward shoulder"
+                }
+            },
+            {
+                "command": "felbow",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You turn and lean into your shoulder while bringing your elbow"
+                }
+            },
+            {
+                "command": "spalm",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You twist slightly, throwing a straight strike"
+                }
+            },
+            {
+                "command": "dknee",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "you drive your knee forward into"
+                }
+            },
+            {
+                "command": "rpalm",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You dip one hand then shoot an upward palm-strike"
+                }
+            },
+            {
+                "command": "relbow",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You dip one hand then shoot an upward elbow-strike"
+                }
+            },
+            {
+                "command": "wknee",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "bring around your knee, hammering it"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Pankration Basic",
+        "scriptName": "pankrationBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You strangle a",
+        "stanceCommand": "pankr",
+        "target": "",
+        "weaponItemName": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "you swat at"
+                }
+            },
+            {
+                "command": "smash",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "you step forward and pivot slightly"
+                }
+            },
+            {
+                "command": "snaps",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "you chop down at"
+                }
+            },
+            {
+                "command": "spins",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "Stepping slightly to the side"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "you bring the end of"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Staves Basic",
+        "scriptName": "stavesBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You bash a",
+        "stanceCommand": "skirmish",
+        "target": "",
+        "weaponItemName": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "chop",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You raise your"
+                }
+            },
+            {
+                "command": "slash",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You make a wide horizontal"
+                }
+            },
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "Shifting your grip"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "You slide your lower hand"
+                }
+            },
+            {
+                "command": "hslash",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "wide-arced slash"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Two-Handed Axe Basic",
+        "scriptName": "twoHandBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip",
+        "target": "",
+        "weaponItemName": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "cchop",
+                "parse": {
+                    "moveNext": "You are no longer busy",
+                    "str": "making a swift downwards diagonal chop"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Two-Handed Axe Kill Fast",
+        "scriptName": "twoHandKillFast",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip",
+        "target": "",
+        "weaponItemName": ""
+    }
+]

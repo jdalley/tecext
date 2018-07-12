@@ -20,6 +20,7 @@ var repeatCommand;
 var target;
 var commandList = [];
 var currentCmdIndex = 0;
+var currentCmdMoveNext = null;
 var commandOverride;
 
 // Combat
@@ -29,7 +30,7 @@ var weaponItemName;
 var addAttack;
 var stance;
 
-// Scripts:
+// Scripts
 var currentScriptType = '';
 var currentScripts;
 
@@ -51,31 +52,16 @@ function openPopupWindow(tab) {
     );
 }
 
-// Open popup window on click of the main extension icon:
-chrome.browserAction.onClicked.addListener(function(tab) {
-    openPopupWindow(tab);
-});
-
-// Add the context menu for opening the UI:
-chrome.contextMenus.create({
-    id: "open-tec-ui",
-    title: "[TEC] Open UI...",
-    contexts: ["all"],
-});
-chrome.contextMenus.onClicked.addListener(function(info, tab) {
-    if (info.menuItemId == "open-tec-ui") {
-        openPopupWindow();
-    }
-});
-
-// Load scripts from default or sync storage:
+/**
+ * Load scripts from exampleScripts or sync storage:
+ */
 function loadScripts() {
     chrome.storage.sync.get("userScripts", function (data) {
         if (data && data["userScripts"]) {
             currentScripts = data["userScripts"];
         }
         else {
-            fetch('/scripts/combat.json')
+            fetch('/scripts/exampleScripts.json')
             .then(res => res.json())
             .then((out) => {
                 if (out) {
@@ -91,54 +77,49 @@ function loadScripts() {
     return false;
 }
 
-// Save scripts to the var and to sync storage:
+/**
+ *  Save scripts to the var and to sync storage:
+ */
 function saveScripts(scripts) {
     if (scripts) {
         currentScripts = scripts;
         chrome.storage.sync.set({"userScripts": scripts}, function() {
             return false;
         });
+
+        // Send message to popup that currentScripts have been updated:
+        chrome.runtime.sendMessage({
+            msg: "reload-scripts-select",
+            data: {
+                // TODO: Should we maybe just send the scripts here to prevent another round trip?;
+            }
+        });
     }
 }
 
-// Do the load thing...
+// Open popout window when the main extension icon is clicked:
+chrome.browserAction.onClicked.addListener(function(tab) {
+    openPopupWindow(tab);
+});
+
+// Add the context menu for opening the popout window:
+chrome.contextMenus.create({
+    id: "open-tec-ui",
+    title: "[TEC] Open UI...",
+    contexts: ["all"],
+});
+chrome.contextMenus.onClicked.addListener(function(info, tab) {
+    if (info.menuItemId == "open-tec-ui") {
+        openPopupWindow();
+    }
+});
+
+// Initial script load:
 loadScripts();
 
 
 /*********************************************************************************************/
 /** Communication with content scripts to send/receive messages to/from the game **/
-
-// Listen for received messages from teccontent.js (ultimately from tecinj.js)
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    // request.message.timestamp
-    // request.message.data
-    if (request.type == "tec-receive-message") {
-        bkg.console.log(request.message.data);
-        parseMessage(request.message.data);
-    }
-});
-
-/**
- * Entry point for figuring out what to do with messages received from the server.
- */
-function parseMessage(data) {
-    // TODO: Hook in a decision tree here based on settings/current state as this expands.
-    if (runRepeat) {
-        if (data.indexOf('You are no longer busy.') >= 0) {
-            setTimeout(function () {
-                sendCommand(repeatCommand);
-            }, Math.floor(Math.random() * 300) + 400)
-            return;
-        }
-    }
-
-    if (target && commandList.length > 0 && currentScriptType === 'combat') {
-        combatScript(data);
-    }
-    else if (commandList.length > 0 && currentScriptType === 'nonCom') {
-        nonComScript(data);
-    }
-}
 
 /**
  * Send a command to the content script, which will forward it to the injected script.
@@ -163,18 +144,120 @@ function sendCommand(msg) {
     });
 }
 
+/**
+ * Entry point for figuring out what to do with messages received from the server.
+ */
+function parseMessage(data) {
+    if (runRepeat) {
+        if (data.indexOf('You are no longer busy.') >= 0) {
+            setTimeout(function () {
+                sendCommand(repeatCommand);
+            }, getCommandDelayInMs())
+            return;
+        }
+    }
+
+    if (target && commandList.length > 0 && currentScriptType === 'combat') {
+        combatScript(data);
+    }
+    else if (commandList.length > 0 && currentScriptType === 'nonCom') {
+        nonComScript(data);
+    }
+}
+
+// Listen for received messages from teccontent.js (ultimately from tecinj.js)
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    // request.message.timestamp
+    // request.message.data
+    if (request.type == "tec-receive-message") {
+        bkg.console.log(request.message.data);
+        parseMessage(request.message.data);
+    }
+});
+
 /*********************************************************************************************/
 /** Scripting: setting up and executing defined scripts **/
 
 /**
- * Naive function to manage and act on the current combat script:
- * TODO: Figure out how to make this more composable and dynamic to work with JSON 'scripts'
+ * Entry point for running a script:
+ */
+function runScriptByName(scriptName, options) {
+    bkg.console.log("Running script: " + scriptName);
+    bkg.console.log("With options: " + JSON.stringify(options));
+
+    // Get the script object by name:
+    var script = currentScripts.find(obj => { return obj.scriptName === scriptName; });
+
+    if (!script) {
+        bkg.console.log("No script found matching name: " + scriptName);
+    }
+    else {
+        commandOverride = '';
+        currentCmdIndex = 0;
+        currentCmdMoveNext = 'You are no longer busy';
+
+        target = options.target;
+        weaponItemName = options.weaponItemName;
+        shouldKill = options.shouldKill;
+        shouldKillParse = script.shouldKillParse;
+        addAttack = script.addAttack;
+        stance = script.stanceCommand;
+        currentScriptType = script.scriptType;
+
+        script.commandList.forEach(function(command, index) {
+            commandList.push(command);
+        })
+
+        // Kick it off...
+        sendCommand(getFormattedCommand());
+    }
+}
+
+/**
+ * Kill it with fire.
+ */
+function killCurrentScript() {
+    target = '';
+    weaponItemName = '';
+    shouldKill = false;
+    shouldKillParse = '';
+    runRepeat = false;
+    repeatCommand = '';
+    commandList = [];
+    addAttack = false;
+    stance = '';
+    commandOverride = '';
+    currentCmdIndex = 0;
+    currentCmdMoveNext = null;
+    currentScriptType = '';
+    bkg.console.log("Script killed.");
+}
+
+/**
+ * Used to parse and act on incoming game message data for combat scripts.
  */
 function combatScript(data) {
-    if (commandList.length > 1 && data.indexOf(commandList[currentCmdIndex].parse) >= 0) {
-        // Move the command list index forward...
-        currentCmdIndex++;
+    var matchFound = matchExpectedParse(data);
+    if (matchFound) {
+        if (currentCmdIndex === (commandList.length - 1)) {
+            if (addAttack) {
+                commandOverride = 'att ' + target;
+            }
+            // Reset
+            currentCmdIndex = 0;
+        }
+        else {
+            // Move the command list index forward...
+            currentCmdIndex++;
+        }
+
+        // If the currentCmdMoveNext is null here, send the next command now:
+        if (!currentCmdMoveNext) {
+            sendNextCommand();
+        }
     }
+
+    // TODO: The custom checks below should probably be moved into a configurable area.
 
     // Handle addAttack commandOverride off-switch
     if (commandOverride.indexOf('att') >= 0 &&
@@ -233,57 +316,57 @@ function combatScript(data) {
     }
 
     // Main work for combat loop:
-    if (data.indexOf('You are no longer busy.') >= 0) {
-        setTimeout(function() {
-            sendCommand(commandOverride ?
-                commandOverride : commandList[currentCmdIndex].command + ' ' + target);
-
-            if (currentCmdIndex >= (commandList.length - 1)) {
-                if (addAttack) {
-                    commandOverride = 'att ' + target;
-                }
-                currentCmdIndex = 0;
-            }
-        }, getCommandDelayInMs());
+    if (currentCmdMoveNext.length > 0 && data.indexOf(currentCmdMoveNext) >= 0) {
+        sendNextCommand();
     }
 }
 
 /**
- * Naive function to manage and act on the current script:
- * TODO: Figure out how to make this more composable and dynamic.
+ * Used to parse and act on incoming game message data for nonCombat scripts.
  */
 function nonComScript(data) {
-    if (data.indexOf(commandList[currentCmdIndex].parse) >= 0) {
-        // Move the command list index forward...
-        currentCmdIndex++;
+    var matchFound = matchExpectedParse(data);
+    if (matchFound) {
+        if (currentCmdIndex === (commandList.length - 1)) {
+            // Reset
+            currentCmdIndex = 0;
+        }
+        else {
+            // Move the command list index forward...
+            currentCmdIndex++;
+        }
+
+        // If the currentCmdMoveNext is not set, send the next command now:
+        if (!currentCmdMoveNext) {
+            sendNextCommand();
+        }
     }
 
-    // Main work for combat loop after 'NLB'
-    if (data.indexOf('You are no longer busy.') >= 0) {
-        setTimeout(function() {
-            var nextCommand =
-                commandOverride ?
-                    commandOverride : commandList[currentCmdIndex].command + ' ' + target;
-
-            sendCommand(nextCommand);
-
-            if (currentCmdIndex === (commandList.length - 1)) {
-                currentCmdIndex = 0;
-            }
-        }, getCommandDelayInMs());
+    // Send the next command after the configured currentCmdMoveNext is detected:
+    if (currentCmdMoveNext.length > 0 && data.indexOf(currentCmdMoveNext) >= 0) {
+        sendNextCommand();
     }
 }
 
-/*********************************************************************************************/
-/** Utility **/
+/**
+ * Send the next command on the commandList.
+ */
+function sendNextCommand() {
+    setTimeout(function() {
+        // Set override or default to current command value:
+        var nextCommand = commandOverride
+            ? commandOverride : commandList[currentCmdIndex].command;
 
-var delay = ( function() {
-    var timer = 0;
-    return function(callback, ms) {
-        clearTimeout (timer);
-        timer = setTimeout(callback, ms);
-    };
-})();
+        // Format the command to add the target:
+        nextCommand = getFormattedCommand();
+
+        sendCommand(nextCommand);
+
+        // Reset to a default here now to prevent it from sending back to back commands.
+        currentCmdMoveNext = 'You are no longer busy';
+    }, getCommandDelayInMs());
+}
+
 
 /**
  * Send a list of commands with an offset belay between them.
@@ -301,62 +384,76 @@ function sendDelayedCommands(commands) {
     }
 }
 
+/**
+ * Replace expected special sequences in a command string with the appropriate
+ * values from script variables. This will likely become more robust over time.
+ */
+function getFormattedCommand() {
+    var command = commandList[currentCmdIndex].command;
+
+    // Check if the command has moved <target> to be replaced:
+    if (command.indexOf("<target>") >= 0) {
+        // Check for target replacement:
+        command = command.replace("<target>", target, "g");
+    }
+    else {
+        // Tack target onto the end by default:
+        command += ' ' + target;
+    }
+
+   return command;
+}
+
+/**
+ * Check data from the server to determine if it satisfies the parse requirements
+ * for the current command in commandList. If matched it will set the value of
+ * currentCmdMoveNext (identifies the trigger to run the next command).
+ */
+function matchExpectedParse(data) {
+    if (commandList.length < 1) {
+        bkg.console.log("CommandList is empty... stop running?");
+        return false;
+    }
+
+    var matchFound = false;
+    var parse = commandList[currentCmdIndex].parse;
+    // If the expected parse check is an array, check each:
+    if (Array.isArray(parse)) {
+        for (var i = 0; i < parse.length; i++) {
+            if (data.indexOf(parse[i].str) >= 0) {
+                matchFound = true;
+
+                // Set value to detect for moving onto the next command:
+                currentCmdMoveNext = parse[i].moveNext;
+            }
+        }
+    }
+    else {
+        if (data.indexOf(parse.str) >= 0) {
+            // The parse is just a string, check it:
+            matchFound = data.indexOf(parse.str) >= 0;
+
+            // Set value to detect for moving onto the next command:
+            currentCmdMoveNext = parse.moveNext;
+        }
+   }
+
+   return matchFound;
+}
+
+
+/*********************************************************************************************/
+/** Utility **/
+
+var delay = ( function() {
+    var timer = 0;
+    return function(callback, ms) {
+        clearTimeout (timer);
+        timer = setTimeout(callback, ms);
+    };
+})();
+
 function getCommandDelayInMs() {
     // Between 400 and 700 miliseconds
     return Math.floor(Math.random() * 300) + 400;
 }
-
-/*********************************************************************************************/
-/** Scripting and stuff **/
-
-/**
- * Entry point for running a script:
- */
-function runScriptByName(scriptName, options) {
-    bkg.console.log("Running script: " + scriptName);
-    bkg.console.log("With options: " + JSON.stringify(options));
-
-    // Get the script object by name:
-    var script = currentScripts.find(obj => { return obj.scriptName === scriptName; });
-
-    if (!script) {
-        bkg.console.log("No script found matching name: " + scriptName);
-    }
-    else {
-        commandOverride = '';
-        currentCmdIndex = 0;
-
-        target = options.target;
-        weaponItemName = options.weaponItemName;
-        shouldKill = options.shouldKill;
-        shouldKillParse = script.shouldKillParse;
-        addAttack = script.addAttack;
-        stance = script.stanceCommand;
-        currentScriptType = script.scriptType;
-
-        script.commandList.forEach(function(command, index) {
-            commandList.push(command);
-        })
-
-        // Kick it off...
-        sendCommand(commandList[0].command + ' ' + target);
-
-        bkg.console.log("Script " + scriptName + " loaded and started.");
-    }
-}
-
-function killCurrentScript() {
-    target = '';
-    weaponItemName = '';
-    shouldKill = false;
-    shouldKillParse = '';
-    runRepeat = false;
-    repeatCommand = '';
-    commandList = [];
-    addAttack = false;
-    stance = '';
-    commandOverride = '';
-    currentCmdIndex = 0;
-    bkg.console.log("Script killed.");
-}
-
