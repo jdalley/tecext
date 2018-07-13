@@ -20,7 +20,7 @@ var repeatCommand;
 var target;
 var commandList = [];
 var currentCmdIndex = 0;
-var currentCmdMoveNext = null;
+var currentMoveNextWhen = null;
 var commandOverride;
 
 // Combat
@@ -194,7 +194,7 @@ function runScriptByName(scriptName, options) {
     else {
         commandOverride = '';
         currentCmdIndex = 0;
-        currentCmdMoveNext = 'You are no longer busy';
+        currentMoveNextWhen = 'You are no longer busy';
 
         target = options.target;
         weaponItemName = options.weaponItemName;
@@ -228,7 +228,7 @@ function killCurrentScript() {
     stance = '';
     commandOverride = '';
     currentCmdIndex = 0;
-    currentCmdMoveNext = null;
+    currentMoveNextWhen = null;
     currentScriptType = '';
     bkg.console.log("Script killed.");
 }
@@ -251,8 +251,8 @@ function combatScript(data) {
             currentCmdIndex++;
         }
 
-        // If the currentCmdMoveNext is null here, send the next command now:
-        if (!currentCmdMoveNext) {
+        // If the currentMoveNextWhen is null here, send the next command now:
+        if (!currentMoveNextWhen) {
             sendNextCommand();
         }
     }
@@ -316,7 +316,7 @@ function combatScript(data) {
     }
 
     // Main work for combat loop:
-    if (currentCmdMoveNext.length > 0 && data.indexOf(currentCmdMoveNext) >= 0) {
+    if (currentMoveNextWhen.length > 0 && data.indexOf(currentMoveNextWhen) >= 0) {
         sendNextCommand();
     }
 }
@@ -336,14 +336,14 @@ function nonComScript(data) {
             currentCmdIndex++;
         }
 
-        // If the currentCmdMoveNext is not set, send the next command now:
-        if (!currentCmdMoveNext) {
+        // If the currentMoveNextWhen is not set, send the next command now:
+        if (!currentMoveNextWhen) {
             sendNextCommand();
         }
     }
 
-    // Send the next command after the configured currentCmdMoveNext is detected:
-    if (currentCmdMoveNext.length > 0 && data.indexOf(currentCmdMoveNext) >= 0) {
+    // Send the next command after the configured currentMoveNextWhen is detected:
+    if (currentMoveNextWhen.length > 0 && data.indexOf(currentMoveNextWhen) >= 0) {
         sendNextCommand();
     }
 }
@@ -363,7 +363,7 @@ function sendNextCommand() {
         sendCommand(nextCommand);
 
         // Reset to a default here now to prevent it from sending back to back commands.
-        currentCmdMoveNext = 'You are no longer busy';
+        currentMoveNextWhen = 'You are no longer busy';
     }, getCommandDelayInMs());
 }
 
@@ -407,7 +407,7 @@ function getFormattedCommand() {
 /**
  * Check data from the server to determine if it satisfies the parse requirements
  * for the current command in commandList. If matched it will set the value of
- * currentCmdMoveNext (identifies the trigger to run the next command).
+ * currentMoveNextWhen (identifies the trigger to run the next command).
  */
 function matchExpectedParse(data) {
     if (commandList.length < 1) {
@@ -420,21 +420,21 @@ function matchExpectedParse(data) {
     // If the expected parse check is an array, check each:
     if (Array.isArray(parse)) {
         for (var i = 0; i < parse.length; i++) {
-            if (data.indexOf(parse[i].str) >= 0) {
+            if (data.indexOf(parse[i].outcome) >= 0) {
                 matchFound = true;
 
                 // Set value to detect for moving onto the next command:
-                currentCmdMoveNext = parse[i].moveNext;
+                currentMoveNextWhen = parse[i].moveNextWhen;
             }
         }
     }
     else {
-        if (data.indexOf(parse.str) >= 0) {
+        if (data.indexOf(parse.outcome) >= 0) {
             // The parse is just a string, check it:
-            matchFound = data.indexOf(parse.str) >= 0;
+            matchFound = data.indexOf(parse.outcome) >= 0;
 
             // Set value to detect for moving onto the next command:
-            currentCmdMoveNext = parse.moveNext;
+            currentMoveNextWhen = parse.moveNextWhen;
         }
    }
 

@@ -5,27 +5,27 @@
                 "command": "cut bandage from",
                 "parse": [
                     {
-                        "moveNext": "You are no longer busy",
-                        "str": "You remove the bandages from"
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You remove the bandages from"
                     },
                     {
-                        "moveNext": "",
-                        "str": "There are no bandages there"
+                        "moveNextWhen": "",
+                        "outcome": "There are no bandages there"
                     }
                 ]
             },
             {
-                "command": "bandage <target> with bandage",
+                "command": "bandage <target> with bandages",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You wrap a clean bandage around"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You wrap a clean bandage around"
                 }
             },
             {
                 "command": "clean <target> with antiseptic",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You clean your"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You clean your"
                 }
             }
         ],
@@ -40,50 +40,50 @@
             {
                 "command": "lpalm",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You lean into your forward shoulder"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You lean into your forward shoulder"
                 }
             },
             {
                 "command": "felbow",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You turn and lean into your shoulder while bringing your elbow"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You turn and lean into your shoulder while bringing your elbow"
                 }
             },
             {
                 "command": "spalm",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You twist slightly, throwing a straight strike"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You twist slightly, throwing a straight strike"
                 }
             },
             {
                 "command": "dknee",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "you drive your knee forward into"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you drive your knee forward into"
                 }
             },
             {
                 "command": "rpalm",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You dip one hand then shoot an upward palm-strike"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You dip one hand then shoot an upward palm-strike"
                 }
             },
             {
                 "command": "relbow",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You dip one hand then shoot an upward elbow-strike"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You dip one hand then shoot an upward elbow-strike"
                 }
             },
             {
                 "command": "wknee",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "bring around your knee, hammering it"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "bring around your knee, hammering it"
                 }
             }
         ],
@@ -102,36 +102,36 @@
             {
                 "command": "swat",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "you swat at"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you swat at"
                 }
             },
             {
                 "command": "smash",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "you step forward and pivot slightly"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you step forward and pivot slightly"
                 }
             },
             {
                 "command": "snaps",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "you chop down at"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you chop down at"
                 }
             },
             {
                 "command": "spins",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "Stepping slightly to the side"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Stepping slightly to the side"
                 }
             },
             {
                 "command": "strike",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "you bring the end of"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you bring the end of"
                 }
             }
         ],
@@ -150,36 +150,36 @@
             {
                 "command": "chop",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You raise your"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You raise your"
                 }
             },
             {
                 "command": "slash",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You make a wide horizontal"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You make a wide horizontal"
                 }
             },
             {
                 "command": "swat",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "Shifting your grip"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Shifting your grip"
                 }
             },
             {
                 "command": "strike",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "You slide your lower hand"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You slide your lower hand"
                 }
             },
             {
                 "command": "hslash",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "wide-arced slash"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "wide-arced slash"
                 }
             }
         ],
@@ -198,8 +198,8 @@
             {
                 "command": "cchop",
                 "parse": {
-                    "moveNext": "You are no longer busy",
-                    "str": "making a swift downwards diagonal chop"
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "making a swift downwards diagonal chop"
                 }
             }
         ],
