@@ -353,12 +353,15 @@ function nonComScript(data) {
  */
 function sendNextCommand() {
     setTimeout(function() {
-        // Set override or default to current command value:
-        var nextCommand = commandOverride
-            ? commandOverride : commandList[currentCmdIndex].command;
+        // Set override or use current command value:
+        var nextCommand;
 
-        // Format the command to add the target:
-        nextCommand = getFormattedCommand();
+        if (commandOverride) {
+            nextCommand = commandOverride
+        }
+        else {
+            nextCommand = getFormattedCommand();
+        }
 
         sendCommand(nextCommand);
 
