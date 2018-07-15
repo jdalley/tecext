@@ -157,7 +157,7 @@ function parseMessage(data) {
         }
     }
 
-    if (target && commandList.length > 0 && currentScriptType === 'combat') {
+    if (commandList.length > 0 && currentScriptType === 'combat') {
         combatScript(data);
     }
     else if (commandList.length > 0 && currentScriptType === 'nonCom') {
@@ -211,6 +211,19 @@ function runScriptByName(scriptName, options) {
         // Kick it off...
         sendCommand(getFormattedCommand());
     }
+}
+
+function runSimpleRepeat(options) {
+    bkg.console.log("Starting simple repeat: " + options.command)
+
+    killCurrentScript();
+
+    runRepeat = true;
+    repeatCommand = options.command;
+
+    setTimeout(function() {
+        sendCommand(repeatCommand);
+    }, getCommandDelayInMs());
 }
 
 /**
