@@ -98,6 +98,20 @@
                     "moveNextWhen": "You are no longer busy",
                     "outcome": "After searching the area a while"
                 }
+            },
+            {
+                "command": "find sapling",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You have found a suitable looking"
+                }
+            },
+            {
+                "command": "find berries",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You walk around the area, picking berries"
+                }
             }
         ],
         "scriptFriendlyName": "Outdoors Basic",
