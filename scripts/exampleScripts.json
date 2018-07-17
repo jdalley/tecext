@@ -35,6 +35,77 @@
         "target": ""
     },
     {
+        "commandList": [
+            {
+                "command": "cut bandage from",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You remove the bandages from"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "There are no bandages there"
+                    }
+                ]
+            },
+            {
+                "command": "bandage <target> with bandages",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You wrap a clean bandage around"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Healing Bandaging",
+        "scriptName": "HealingBandaging",
+        "scriptType": "nonCom",
+        "target": ""
+    },
+    {
+        "commandList": [
+            {
+                "command": "gather twigs",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You gather up a handful"
+                }
+            },
+            {
+                "command": "stoke fire with twig",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You carefully work a"
+                }
+            },
+            {
+                "command": "find firewood",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You search the area, finding some"
+                }
+            },
+            {
+                "command": "make torch with dead",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You successfully convert"
+                }
+            },
+            {
+                "command": "find resource",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "After searching the area a while"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Outdoors Basic",
+        "scriptName": "OutdoorsBasic",
+        "scriptType": "nonCom",
+        "target": ""
+    },
+    {
         "addAttack": false,
         "commandList": [
             {
@@ -83,7 +154,7 @@
                 "command": "wknee",
                 "parse": {
                     "moveNextWhen": "You are no longer busy",
-                    "outcome": "bring around your knee, hammering it"
+                    "outcome": "You lift your back leg up, perpendicular"
                 }
             }
         ],
