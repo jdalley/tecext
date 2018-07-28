@@ -470,6 +470,6 @@ var delay = ( function() {
 })();
 
 function getCommandDelayInMs() {
-    // Between 400 and 700 miliseconds
-    return Math.floor(Math.random() * 300) + 400;
+    // Between 700 and 1000 miliseconds
+    return Math.floor(Math.random() * 300) + 700;
 }
