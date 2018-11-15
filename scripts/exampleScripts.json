@@ -465,6 +465,19 @@
                 }
             },
             {
+                "command": "uslash",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "you slash upward at"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "This maneuver needs to follow"
+                    }
+                ]
+            },
+            {
                 "command": "break",
                 "parse": {
                     "moveNextWhen": "You are no longer busy",
