@@ -362,6 +362,75 @@
         "addAttack": false,
         "commandList": [
             {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you swat at"
+                }
+            },
+            {
+                "command": "smash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you step forward and pivot slightly"
+                }
+            },
+            {
+                "command": "snaps",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you chop down at"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you bring the end of"
+                }
+            },
+            {
+                "command": "sides",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you let loose a quick side strike"
+                }
+            },
+            {
+                "command": "jab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You jab tentatively"
+                }
+            },
+            {
+                "command": "spins",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Stepping slightly to the side"
+                }
+            },
+            {
+                "command": "tripleb",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Bashing downwards with"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Staves Full",
+        "scriptName": "stavesFull",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You bash a",
+        "stanceCommand": "skirmish",
+        "target": "",
+        "weaponItemName": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
                 "command": "chop",
                 "parse": {
                     "moveNextWhen": "You are no longer busy",
