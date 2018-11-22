@@ -328,6 +328,11 @@ function combatScript(data) {
         }
     }
 
+    // Naive attempt to continue after having no target when something 'arrives'
+    if (data.indexOf(' arrives.') >= 0) {
+        sendNextCommand();
+    }
+
     // Main work for combat loop:
     if (currentMoveNextWhen.length > 0 && data.indexOf(currentMoveNextWhen) >= 0) {
         sendNextCommand();
