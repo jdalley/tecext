@@ -249,6 +249,42 @@
         "target": ""
     },
     {
+        "commandList": [
+            {
+                "command": "palm",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You barely manage to palm"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You nearly drop a"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You manage to palm"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You are already palming that"
+                    }
+                ]
+            },
+            {
+                "command": "unpalm",
+                "parse": {
+                    "moveNextWhen": "",
+                    "outcome": "You flip your wrist"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Palming",
+        "scriptName": "Palming",
+        "scriptType": "nonCom",
+        "target": ""
+    },
+    {
         "addAttack": false,
         "commandList": [
             {

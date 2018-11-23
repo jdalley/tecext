@@ -356,7 +356,8 @@ function nonComScript(data) {
 
         // If the currentMoveNextWhen is not set, send the next command now:
         if (!currentMoveNextWhen) {
-            sendNextCommand();
+            // Delay to avoid commands being sent too close together.
+            sendNextCommand(700);
         }
     }
 
@@ -369,7 +370,7 @@ function nonComScript(data) {
 /**
  * Send the next command on the commandList.
  */
-function sendNextCommand() {
+function sendNextCommand(additionalDelay) {
     setTimeout(function() {
         // Set override or use current command value:
         var nextCommand;
@@ -385,7 +386,7 @@ function sendNextCommand() {
 
         // Reset to a default here now to prevent it from sending back to back commands.
         currentMoveNextWhen = 'You are no longer busy';
-    }, getCommandDelayInMs());
+    }, getCommandDelayInMs(additionalDelay));
 }
 
 
@@ -474,7 +475,13 @@ var delay = ( function() {
     };
 })();
 
-function getCommandDelayInMs() {
+function getCommandDelayInMs(additionalDelay) {
     // Between 700 and 1000 miliseconds
-    return Math.floor(Math.random() * 300) + 700;
+    var commandDelay = Math.floor(Math.random() * 300) + 700;
+
+    if (additionalDelay) {
+        commandDelay += additionalDelay;
+    }
+
+    return commandDelay;
 }
