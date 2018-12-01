@@ -6,6 +6,7 @@ body {
 
 .popup-container {
     margin-top: 15px;
+
 }
 
 .popup-container input[type="text"] {
@@ -26,4 +27,8 @@ body {
 
 .popup-container main {
     height: 100%;
+}
+
+.popup-container div {
+    padding-bottom: 5px;
 }

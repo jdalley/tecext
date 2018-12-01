@@ -26,6 +26,7 @@ var commandOverride;
 // Combat
 var shouldKill = false;
 var shouldKillParse;
+var continueOnWalkIn = false;
 var weaponItemName;
 var addAttack;
 var stance;
@@ -44,7 +45,7 @@ function openPopupWindow(tab) {
     chrome.windows.create({
             url: chrome.runtime.getURL("popup.html"),
             type: "popup",
-            height: 475,
+            height: 425,
             width: 395
         }, function(win) {
             // Do something with the new window?
@@ -200,6 +201,7 @@ function runScriptByName(scriptName, options) {
         weaponItemName = options.weaponItemName;
         shouldKill = options.shouldKill;
         shouldKillParse = script.shouldKillParse;
+        continueOnWalkIn = options.continueOnWalkIn;
         addAttack = script.addAttack;
         stance = script.stanceCommand;
         currentScriptType = script.scriptType;
@@ -330,6 +332,10 @@ function combatScript(data) {
 
     // Naive attempt to continue after having no target when something 'arrives'
     if (data.indexOf(' arrives.') >= 0) {
+        sendNextCommand();
+    }
+
+    if (continueOnWalkIn && data.indexOf('walks in') >= 0) {
         sendNextCommand();
     }
 

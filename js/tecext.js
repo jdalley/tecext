@@ -2,6 +2,14 @@
  * Extension popup logic: event wireup and UI logic.
  * Events call functions directly in the background script.
  */
+
+
+function resizeMe() {
+    height = document.getElementsByClassName("popup-container")[0].offsetHeight;
+    width  = document.getElementsByClassName("popup-container")[0].offsetWidth;
+    self.resizeTo(width, height+50);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
     // Plain message input:
@@ -35,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var target = document.getElementById("targetInput").value;
         var weaponItemName = document.getElementById("weaponItemName").value;
         var shouldKill = document.getElementById("shouldKill").checked;
+        var continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
 
         // This will become data driven later, via json/local storage with defaults.
         // TODO: Move options into its own JSON config, load it like scripts are loaded.
@@ -42,7 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
             scriptName, {
                 target: target,
                 weaponItemName: weaponItemName,
-                shouldKill: shouldKill
+                shouldKill: shouldKill,
+                continueOnWalkIn: continueOnWalkIn
             }
         );
     });
