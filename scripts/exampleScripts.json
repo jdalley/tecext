@@ -2,6 +2,25 @@
     {
         "commandList": [
             {
+                "command": "slash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You swing a cestus-covered fist"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Cestus Basic",
+        "scriptName": "CestusBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "Your quick, vicious blow",
+        "stanceCommand": "",
+        "target": "",
+        "weaponItemName": ""
+    },
+    {
+        "commandList": [
+            {
                 "command": "swat",
                 "parse": {
                     "moveNextWhen": "You are no longer busy",
