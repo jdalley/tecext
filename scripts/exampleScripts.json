@@ -24,10 +24,16 @@
             },
             {
                 "command": "gouge",
-                "parse": {
-                    "moveNextWhen": "You are no longer busy",
-                    "outcome": "you viciously gouge at"
-                }
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "you viciously gouge at"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You attempt a heavy raking punch"
+                    }
+                ]
             }
         ],
         "scriptFriendlyName": "Cestus Basic",
