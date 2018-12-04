@@ -7,6 +7,27 @@
                     "moveNextWhen": "You are no longer busy",
                     "outcome": "You swing a cestus-covered fist"
                 }
+            },
+            {
+                "command": "jab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "with a swift punch using"
+                }
+            },
+            {
+                "command": "stab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You send a heavy, underhand punch"
+                }
+            },
+            {
+                "command": "gouge",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you viciously gouge at"
+                }
             }
         ],
         "scriptFriendlyName": "Cestus Basic",
