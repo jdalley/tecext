@@ -303,7 +303,7 @@ function combatScript(data) {
     }
 
     // Handle fumble:
-    if (data.indexOf('You fumble!') >= 0) {
+    if (data.indexOf('You fumble! You drop a') >= 0) {
         // Just set override since fumble requires waiting for no longer busy anyway.
         commandOverride = 'take ' + weaponItemName;
     }
