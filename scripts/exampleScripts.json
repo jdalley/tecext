@@ -2,6 +2,44 @@
     {
         "commandList": [
             {
+                "command": "load bow with arrow",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You nock a"
+                    }
+                ]
+            },
+            {
+                "command": "shoot target",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "isn't loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You fire a"
+                    }
+                ]
+            }
+        ],
+        "scriptFriendlyName": "Archery Target",
+        "scriptName": "ArcheryBasic",
+        "scriptType": "combat",
+        "shouldKill": false,
+        "shouldKillParse": "",
+        "stanceCommand": "",
+        "target": "",
+        "weaponItemName": ""
+    },
+    {
+        "commandList": [
+            {
                 "command": "slash",
                 "parse": {
                     "moveNextWhen": "You are no longer busy",
