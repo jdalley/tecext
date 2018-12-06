@@ -34,6 +34,13 @@
                         "outcome": "You attempt a heavy raking punch"
                     }
                 ]
+            },
+            {
+                "command": "doublej",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "With a rapid one-two punch"
+                }
             }
         ],
         "scriptFriendlyName": "Cestus Basic",
