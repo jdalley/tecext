@@ -86,6 +86,13 @@
                     "moveNextWhen": "You are no longer busy",
                     "outcome": "Arm extended, you pivot backwards"
                 }
+            },
+            {
+                "command": "triplesl",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "With both arms extended, you spin in place"
+                }
             }
         ],
         "scriptFriendlyName": "Cestus Basic",
