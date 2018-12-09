@@ -79,6 +79,13 @@
                     "moveNextWhen": "You are no longer busy",
                     "outcome": "With a rapid one-two punch"
                 }
+            },
+            {
+                "command": "spin",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Arm extended, you pivot backwards"
+                }
             }
         ],
         "scriptFriendlyName": "Cestus Basic",
