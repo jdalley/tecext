@@ -1,5 +1,6 @@
 [
     {
+        "addAttack": false,
         "commandList": [
             {
                 "command": "load bow with arrow",
@@ -34,10 +35,10 @@
         "shouldKill": false,
         "shouldKillParse": "",
         "stanceCommand": "",
-        "target": "",
         "weaponItemName": ""
     },
     {
+        "addAttack": false,
         "commandList": [
             {
                 "command": "slash",
@@ -98,13 +99,11 @@
         "scriptFriendlyName": "Cestus Basic",
         "scriptName": "CestusBasic",
         "scriptType": "combat",
-        "shouldKill": true,
         "shouldKillParse": "Your quick, vicious blow",
-        "stanceCommand": "",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": ""
     },
     {
+        "addAttack": false,
         "commandList": [
             {
                 "command": "swat",
@@ -161,9 +160,7 @@
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "You bash",
-        "stanceCommand": "iunius",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": "iunius"
     },
     {
         "commandList": [
@@ -197,8 +194,7 @@
         ],
         "scriptFriendlyName": "Healing Basic",
         "scriptName": "HealingBasic",
-        "scriptType": "nonCom",
-        "target": ""
+        "scriptType": "nonCom"
     },
     {
         "commandList": [
@@ -225,8 +221,7 @@
         ],
         "scriptFriendlyName": "Healing Bandaging",
         "scriptName": "HealingBandaging",
-        "scriptType": "nonCom",
-        "target": ""
+        "scriptType": "nonCom"
     },
     {
         "commandList": [
@@ -294,8 +289,7 @@
         ],
         "scriptFriendlyName": "Outdoors Basic",
         "scriptName": "OutdoorsBasic",
-        "scriptType": "nonCom",
-        "target": ""
+        "scriptType": "nonCom"
     },
     {
         "commandList": [
@@ -350,8 +344,7 @@
         ],
         "scriptFriendlyName": "Outdoors Without Berries",
         "scriptName": "OutdoorsWithoutBerries",
-        "scriptType": "nonCom",
-        "target": ""
+        "scriptType": "nonCom"
     },
     {
         "commandList": [
@@ -386,8 +379,7 @@
         ],
         "scriptFriendlyName": "Palming",
         "scriptName": "Palming",
-        "scriptType": "nonCom",
-        "target": ""
+        "scriptType": "nonCom"
     },
     {
         "addAttack": false,
@@ -447,9 +439,7 @@
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "You strangle a",
-        "stanceCommand": "pankr",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": "pankr"
     },
     {
         "addAttack": false,
@@ -495,9 +485,7 @@
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "You bash a",
-        "stanceCommand": "skirmish",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": "skirmish"
     },
     {
         "addAttack": false,
@@ -564,9 +552,7 @@
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "You bash a",
-        "stanceCommand": "skirmish",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": "skirmish"
     },
     {
         "addAttack": false,
@@ -612,9 +598,7 @@
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "With massive force",
-        "stanceCommand": "wgrip",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": "wgrip"
     },
     {
         "addAttack": false,
@@ -700,9 +684,7 @@
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "With massive force",
-        "stanceCommand": "wgrip",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": "wgrip"
     },
     {
         "addAttack": false,
@@ -720,9 +702,7 @@
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "With massive force",
-        "stanceCommand": "wgrip",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": "wgrip"
     },
     {
         "addAttack": false,
@@ -740,9 +720,7 @@
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "With massive force",
-        "stanceCommand": "wgrip",
-        "target": "",
-        "weaponItemName": ""
+        "stanceCommand": "wgrip"
     },
     {
         "commandList": [
@@ -756,8 +734,6 @@
         ],
         "scriptFriendlyName": "Language Echo",
         "scriptName": "languageEcho",
-        "scriptType": "nonCom",
-        "target": "",
-        "weaponItemName": ""
+        "scriptType": "nonCom"
     }
 ]
