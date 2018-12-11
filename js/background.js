@@ -193,8 +193,8 @@ function runScriptByName(scriptName, options) {
         bkg.console.log("No script found matching name: " + scriptName);
     }
     else {
-        commandOverride = '';
-        currentCmdIndex = 0;
+        killCurrentScript();
+
         currentMoveNextWhen = 'You are no longer busy';
 
         target = options.target;
