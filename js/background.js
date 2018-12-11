@@ -54,10 +54,10 @@ function openPopupWindow(tab) {
 }
 
 /**
- * Load scripts from exampleScripts or sync storage:
+ * Load scripts from exampleScripts or local storage:
  */
 function loadScripts() {
-    chrome.storage.sync.get("userScripts", function (data) {
+    chrome.storage.local.get("userScripts", function (data) {
         if (data && data["userScripts"]) {
             currentScripts = data["userScripts"];
         }
@@ -67,7 +67,7 @@ function loadScripts() {
             .then((out) => {
                 if (out) {
                     currentScripts = out;
-                    chrome.storage.sync.set({"userScripts": out}, function() {
+                    chrome.storage.local.set({"userScripts": out}, function() {
                         return false;
                     });
                 }
@@ -84,7 +84,7 @@ function loadScripts() {
 function saveScripts(scripts) {
     if (scripts) {
         currentScripts = scripts;
-        chrome.storage.sync.set({"userScripts": scripts}, function() {
+        chrome.storage.local.set({"userScripts": scripts}, function() {
             return false;
         });
 
