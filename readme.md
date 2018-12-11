@@ -1,12 +1,12 @@
 ## TEC Extender
 
-Extensions and goodies for TEC
+Extensions and goodies for The Eternal City's Orchil client: http://test.skotos.net/orchil/tec/tec.htm
 
 ### Installation Instructions
 
 After cloning/downloading a copy of this repository:
 
-1. Navigate to chrome://extensions
+1. Navigate to ```chrome://extensions```
 2. Make sure Developer Mode is turned on in the top right.
 3. Click Load unpacked in the top left.
 4. In the file browser, navigate to the root of this project directory on your machine, then click Ok.
@@ -43,7 +43,7 @@ The UI is very much temporary and doesn't make a ton of sense, so let's called i
     
     ![Edit Scripts UI](https://github.com/jdalley/tecext/blob/master/images/editscripts.png "Edit Scripts UI")
     
-* The Choose a script to run dropdown starts off with a list of script examples that I continually update, found in this repo at /scripts/exampleScripts.json.
+* The Choose a script to run dropdown starts off with a list of script examples that I continually update, found in this repo at [scripts/exampleScripts.json](scripts/exampleScripts.json).
     * Weapon/item name: this input is used in combat scripts as the name of your weapon in case you drop it - it will pick it back up and wield it.
         * This does not work if you get disarmed and suddenly "you can't do that right now" or variants of that.
         * It is currently not used for nonCom scripts.
