@@ -27,6 +27,32 @@
                         "outcome": "You fire a"
                     }
                 ]
+            },
+            {
+                "command": "load bow with arrow",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You nock a"
+                    }
+                ]
+            },
+            {
+                "command": "rapidfire target",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "isn't loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You fire a"
+                    }
+                ]
             }
         ],
         "scriptFriendlyName": "Archery Target",
