@@ -3,15 +3,15 @@
  */
 
  // create the editor
- var container = document.getElementById("jsonEditor");
- var options = {
+ const container = document.getElementById("jsonEditor");
+ const options = {
      "mode": "text",
      "indentation": 4
  };
- var editor = new JSONEditor(container, options);
+ const editor = new JSONEditor(container, options);
 
  // Load the current user scripts from the background:
- var currentScriptsJson = chrome.extension.getBackgroundPage().currentScripts;
+ const currentScriptsJson = chrome.extension.getBackgroundPage().currentScripts;
  editor.set(currentScriptsJson);
 
 /**
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Save changes to the script by calling the background save function:
     document.getElementById("saveScript").addEventListener("click", function (e) {
-        var scriptsJson = editor.get();
+        const scriptsJson = editor.get();
         if (scriptsJson) {
             chrome.extension.getBackgroundPage().saveScripts(scriptsJson);
         }

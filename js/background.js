@@ -4,36 +4,39 @@
 */
 
 /*********************************************************************************************/
-/* Globals, yuck */
 
-var bkg = chrome.extension.getBackgroundPage();
+const bkg = chrome.extension.getBackgroundPage();
 bkg.console.log("background.js initialized...");
 
 // Chrome
-var targetTabTitle = 'The Eternal City - Orchil (Beta) - Skotos';
+const targetTabTitle = 'The Eternal City - Orchil (Beta) - Skotos';
 
 // Simple repeat
-var runRepeat = false;
-var repeatCommand;
+let runRepeat = false;
+let repeatCommand;
 
 // General
-var target;
-var commandList = [];
-var currentCmdIndex = 0;
-var currentMoveNextWhen = null;
-var commandOverride;
+let target;
+let commandList = [];
+let currentCmdIndex = 0;
+let currentMoveNextWhen = null;
+let commandOverride;
 
 // Combat
-var shouldKill = false;
-var shouldKillParse;
-var continueOnWalkIn = false;
-var weaponItemName;
-var addAttack;
-var stance;
+let shouldKill = false;
+let shouldKillParse;
+let continueOnWalkIn = false;
+let weaponItemName;
+let addAttack;
+let stance;
 
 // Scripts
-var currentScriptType = '';
-var currentScripts;
+let currentScriptType = '';
+let currentScripts;
+// Expose scripts to tecext.js
+function getCurrentScripts() {
+	return currentScripts;
+}
 
 /*********************************************************************************************/
 /* Extension setup and Chrome things */
@@ -187,7 +190,7 @@ function runScriptByName(scriptName, options) {
     bkg.console.log("With options: " + JSON.stringify(options));
 
     // Get the script object by name:
-    var script = currentScripts.find(obj => { return obj.scriptName === scriptName; });
+    const script = currentScripts.find(obj => { return obj.scriptName === scriptName; });
 
     if (!script) {
         bkg.console.log("No script found matching name: " + scriptName);
@@ -252,7 +255,7 @@ function killCurrentScript() {
  * Used to parse and act on incoming game message data for combat scripts.
  */
 function combatScript(data) {
-    var matchFound = matchExpectedParse(data);
+    const matchFound = matchExpectedParse(data);
     if (matchFound) {
         if (currentCmdIndex === (commandList.length - 1)) {
             if (addAttack) {
@@ -349,7 +352,7 @@ function combatScript(data) {
  * Used to parse and act on incoming game message data for nonCombat scripts.
  */
 function nonComScript(data) {
-    var matchFound = matchExpectedParse(data);
+    const matchFound = matchExpectedParse(data);
     if (matchFound) {
         if (currentCmdIndex === (commandList.length - 1)) {
             // Reset
@@ -379,7 +382,7 @@ function nonComScript(data) {
 function sendNextCommand(additionalDelay) {
     setTimeout(function() {
         // Set override or use current command value:
-        var nextCommand;
+        let nextCommand;
 
         if (commandOverride) {
             nextCommand = commandOverride
@@ -401,7 +404,7 @@ function sendNextCommand(additionalDelay) {
  */
 function sendDelayedCommands(commands) {
     if (commands && commands.length > 0) {
-        var offsetMs = 1000;
+        const offsetMs = 1000;
         commands.forEach(function(command, index) {
             setTimeout(function() {
                 sendCommand(command);
@@ -417,7 +420,7 @@ function sendDelayedCommands(commands) {
  * values from script variables. This will likely become more robust over time.
  */
 function getFormattedCommand() {
-    var command = commandList[currentCmdIndex].command;
+    let command = commandList[currentCmdIndex].command;
 
     // Check if the command has moved <target> to be replaced:
     if (command.indexOf("<target>") >= 0) {
@@ -443,8 +446,8 @@ function matchExpectedParse(data) {
         return false;
     }
 
-    var matchFound = false;
-    var parse = commandList[currentCmdIndex].parse;
+    let matchFound = false;
+    const parse = commandList[currentCmdIndex].parse;
     // If the expected parse check is an array, check each:
     if (Array.isArray(parse)) {
         for (var i = 0; i < parse.length; i++) {
@@ -473,7 +476,7 @@ function matchExpectedParse(data) {
 /*********************************************************************************************/
 /** Utility **/
 
-var delay = ( function() {
+const delay = ( function() {
     var timer = 0;
     return function(callback, ms) {
         clearTimeout (timer);
@@ -483,7 +486,7 @@ var delay = ( function() {
 
 function getCommandDelayInMs(additionalDelay) {
     // Between 700 and 1000 miliseconds
-    var commandDelay = Math.floor(Math.random() * 300) + 700;
+    let commandDelay = Math.floor(Math.random() * 300) + 700;
 
     if (additionalDelay) {
         commandDelay += additionalDelay;

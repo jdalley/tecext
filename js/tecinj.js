@@ -5,7 +5,7 @@
  */
 
 // Override the doReceive function on the page to intercept data, then send it on.
-var orig = doReceive;
+const orig = doReceive;
 doReceive = function (msg) {
     doReceiveOverride(msg);
 
@@ -19,7 +19,7 @@ doReceive = function (msg) {
     // }
 
     // Ref: orchil.js - doReceive(msg)
-    var ret = orig.apply(this, arguments);
+    const ret = orig.apply(this, arguments);
     return ret;
 };
 
@@ -39,7 +39,7 @@ function doReceiveOverride(msg) {
 // Receive commands from the content script, and send them to the existing doSend
 // function on the page. This function pipes the command back to the web socket.
 document.addEventListener('tecSendMessage', function (e) {
-    var msg = e.detail.data;
+    const msg = e.detail.data;
     if (msg) {
         console.log('Sending command: ' + msg);
         // Ref: orchil.js - doSend(message, noecho)

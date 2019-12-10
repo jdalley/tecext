@@ -3,7 +3,6 @@
  * Events call functions directly in the background script.
  */
 
-
 function resizeMe() {
     height = document.getElementsByClassName("popup-container")[0].offsetHeight;
     width  = document.getElementsByClassName("popup-container")[0].offsetWidth;
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Plain message input:
     document.getElementById("sendCommand").addEventListener("click", function (e) {
-        var command = document.getElementById("commandInput").value;
+        const command = document.getElementById("commandInput").value;
 
         if (command) {
             chrome.extension.getBackgroundPage().sendCommand(command);
@@ -29,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Simple command repeat, checks for no longer busy:
     document.getElementById("sendRepeat").addEventListener("click", function (e) {
-        var repeatCommand = document.getElementById("repeatInput").value;
+        const repeatCommand = document.getElementById("repeatInput").value;
         if (repeatCommand) {
             chrome.extension.getBackgroundPage().runSimpleRepeat({
                 command: repeatCommand
@@ -39,11 +38,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Run the selected script by name, with options:
     document.getElementById("runScript").addEventListener("click", function (e) {
-        var scriptName = document.getElementById("scriptSelect").value;
-        var target = document.getElementById("targetInput").value;
-        var weaponItemName = document.getElementById("weaponItemName").value;
-        var shouldKill = document.getElementById("shouldKill").checked;
-        var continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
+        const scriptName = document.getElementById("scriptSelect").value;
+        const target = document.getElementById("targetInput").value;
+        const weaponItemName = document.getElementById("weaponItemName").value;
+        const shouldKill = document.getElementById("shouldKill").checked;
+        const continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
 
         // This will become data driven later, via json/local storage with defaults.
         // TODO: Move options into its own JSON config, load it like scripts are loaded.
@@ -89,15 +88,15 @@ document.addEventListener("DOMContentLoaded", function () {
  *  Load combat script choices from background page:
  */
 function loadScriptSelect() {
-    var select = document.getElementById("scriptSelect");
+    const select = document.getElementById("scriptSelect");
     // Clear select
     select.innerText = null;
 
     // Load scripts from background:
-    var scripts = chrome.extension.getBackgroundPage().currentScripts;
+    const scripts = chrome.extension.getBackgroundPage().getCurrentScripts();
     if (scripts) {
         scripts.forEach(element => {
-            var opt = document.createElement('option');
+            const opt = document.createElement('option');
             opt.value = element.scriptName;
             opt.innerHTML = element.scriptFriendlyName;
             select.appendChild(opt);

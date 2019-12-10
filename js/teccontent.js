@@ -5,11 +5,11 @@
 
 // Inject the script used to work directly with the contents of the page; hooking into
 // relevant events, variables, and data from web sockets.
-var s = document.createElement('script');
-s.src = chrome.extension.getURL('js/tecinj.js');
-(document.head || document.documentElement).appendChild(s);
-s.onload = function () {
-    s.remove();
+const script = document.createElement('script');
+script.src = chrome.extension.getURL('js/tecinj.js');
+(document.head || document.documentElement).appendChild(script);
+script.onload = function () {
+    script.remove();
 };
 
 // Listen for received messages from the injected script:
