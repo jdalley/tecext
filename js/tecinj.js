@@ -5,7 +5,7 @@
  */
 
 // Override the doReceive function on the page to intercept data, then send it on.
-const orig = doReceive;
+const origDoReceive = doReceive;
 doReceive = function (msg) {
     doReceiveOverride(msg);
 
@@ -18,20 +18,42 @@ doReceive = function (msg) {
     //     msg = '</font><font color="#0020ff">' + msg;
     // }
 
-    // Ref: orchil.js - doReceive(msg)
-    const ret = orig.apply(this, arguments);
-    return ret;
+    origDoReceive.apply(this, arguments);
+    return;
 };
 
-/**
- * Send intercepted data to the content script:
- */
+// Send intercepted data to the content script:
 function doReceiveOverride(msg) {
     console.log(msg);
     document.dispatchEvent(new CustomEvent('tecReceiveMessage', {
         detail: {
             timestamp: new Date().toISOString(),
             data: msg
+        }
+    }));
+}
+
+// Override the doSend function on the page to intercept commands entered.
+const origDoSend = doSend;
+doSend = function (msg, noecho) {
+    doSendOverride(msg);
+
+    // Don't apply the original function if a slash command is detected.
+    if (msg.indexOf('/') === 0) {
+        msg = '';
+    }
+
+    origDoSend.apply(this, arguments);
+    return;
+}
+
+// Send intercepted commands to the content script:
+function doSendOverride(msg) {
+    console.log(`doSendOverride: ${msg}`);
+    document.dispatchEvent(new CustomEvent('tecSendCommand', {
+        detail: {
+            timestamp: new Date().toISOString(),
+            command: msg
         }
     }));
 }

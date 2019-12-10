@@ -16,14 +16,24 @@ script.onload = function () {
 document.addEventListener('tecReceiveMessage', function (e) {
     // Send received message to the background script.
     chrome.runtime.sendMessage({
-        type: "tec-receive-message",
+        type: 'tec-receive-message',
+        message: e.detail
+    });
+});
+
+// Listen for received commands from the injected script:
+document.addEventListener('tecSendCommand', function(e) {
+    debugger;
+    // Send received command to the background script.
+    chrome.runtime.sendMessage({
+        type: 'tec-send-command',
         message: e.detail
     });
 });
 
 // Listen for messages from the background script to send to the injected script:
 chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.type == "tec-message-send") {
+    if (request.type == 'tec-message-send') {
         // Send message to the injected script:
         document.dispatchEvent(new CustomEvent('tecSendMessage', {
             detail: {

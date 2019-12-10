@@ -33,7 +33,6 @@ let stance;
 // Scripts
 let currentScriptType = '';
 let currentScripts;
-// Expose scripts to tecext.js
 function getCurrentScripts() {
 	return currentScripts;
 }
@@ -176,6 +175,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.type == "tec-receive-message") {
         bkg.console.log(request.message.data);
         parseMessage(request.message.data);
+    }
+});
+
+// Listen for received commands from teccontent.js (ultimately from tecinj.js)
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.type == 'tec-send-command') {
+        bkg.console.log(`command received: ${request.message.command}`);
+
+        const cmdTrimmed = command.trim();
+        if (cmdTrimmed.indexOf('/') === 0) {
+            // Run the slash command
+            slashCommand(request.message.command);
+        }
     }
 });
 
@@ -493,4 +505,15 @@ function getCommandDelayInMs(additionalDelay) {
     }
 
     return commandDelay;
+}
+
+function slashCommand(command) {
+    // TODO: Add more slash commands
+    switch(command) {
+        case '/stop':
+            killCurrentScript();
+            break;
+        default:
+            bkg.console.log(`Slash command ${cmdTrimmed} not found.`);
+    }
 }
