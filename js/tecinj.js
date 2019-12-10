@@ -37,13 +37,10 @@ function doReceiveOverride(msg) {
 const origDoSend = doSend;
 doSend = function (msg, noecho) {
     doSendOverride(msg);
-
     // Don't apply the original function if a slash command is detected.
-    if (msg.indexOf('/') === 0) {
-        msg = '';
+    if (msg.indexOf('/') !== 0) {
+        origDoSend.apply(this, arguments);
     }
-
-    origDoSend.apply(this, arguments);
     return;
 }
 
@@ -63,7 +60,7 @@ function doSendOverride(msg) {
 document.addEventListener('tecSendMessage', function (e) {
     const msg = e.detail.data;
     if (msg) {
-        console.log('Sending command: ' + msg);
+        console.log(`Sending command: ${msg}`);
         // Ref: orchil.js - doSend(message, noecho)
         doSend(msg, true);
     }

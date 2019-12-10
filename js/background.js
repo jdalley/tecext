@@ -6,7 +6,7 @@
 /*********************************************************************************************/
 
 const bkg = chrome.extension.getBackgroundPage();
-bkg.console.log("background.js initialized...");
+bkg.console.log('background.js initialized...');
 
 // Chrome
 const targetTabTitle = 'The Eternal City - Orchil (Beta) - Skotos';
@@ -45,8 +45,8 @@ function getCurrentScripts() {
  */
 function openPopupWindow(tab) {
     chrome.windows.create({
-            url: chrome.runtime.getURL("popup.html"),
-            type: "popup",
+            url: chrome.runtime.getURL('popup.html'),
+            type: 'popup',
             height: 425,
             width: 395
         }, function(win) {
@@ -59,9 +59,9 @@ function openPopupWindow(tab) {
  * Load scripts from exampleScripts or local storage:
  */
 function loadScripts() {
-    chrome.storage.local.get("userScripts", function (data) {
-        if (data && data["userScripts"]) {
-            currentScripts = data["userScripts"];
+    chrome.storage.local.get('userScripts', function (data) {
+        if (data && data['userScripts']) {
+            currentScripts = data['userScripts'];
         }
         else {
             fetch('/scripts/exampleScripts.json')
@@ -69,7 +69,7 @@ function loadScripts() {
             .then((out) => {
                 if (out) {
                     currentScripts = out;
-                    chrome.storage.local.set({"userScripts": out}, function() {
+                    chrome.storage.local.set({'userScripts': out}, function() {
                         return false;
                     });
                 }
@@ -86,13 +86,13 @@ function loadScripts() {
 function saveScripts(scripts) {
     if (scripts) {
         currentScripts = scripts;
-        chrome.storage.local.set({"userScripts": scripts}, function() {
+        chrome.storage.local.set({'userScripts': scripts}, function() {
             return false;
         });
 
         // Send message to popup that currentScripts have been updated:
         chrome.runtime.sendMessage({
-            msg: "reload-scripts-select",
+            msg: 'reload-scripts-select',
             data: {
                 // TODO: Should we maybe just send the scripts here to prevent another round trip?;
             }
@@ -107,12 +107,12 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 // Add the context menu for opening the popout window:
 chrome.contextMenus.create({
-    id: "open-tec-ui",
-    title: "[TEC] Open UI...",
-    contexts: ["all"],
+    id: 'open-tec-ui',
+    title: '[TEC] Open UI...',
+    contexts: ['all'],
 });
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
-    if (info.menuItemId == "open-tec-ui") {
+    if (info.menuItemId == 'open-tec-ui') {
         openPopupWindow();
     }
 });
@@ -124,20 +124,40 @@ loadScripts();
 /*********************************************************************************************/
 /** Communication with content scripts to send/receive messages to/from the game **/
 
+
 /**
- * Send a command to the content script, which will forward it to the injected script.
+ *  Send a command to the content script, which will forward it to the injected script.
  */
 function sendCommand(msg) {
-    bkg.console.log("Sending message: " + msg);
-
+    bkg.console.log(`Sending message: ${msg}`);
     chrome.tabs.query({ title: targetTabTitle }, function (tabs) {
         if (tabs.length === 0) {
-            bkg.console.log("Tab not found, title changed?");
+            bkg.console.log('Tab not found, title changed?');
         }
-
         chrome.tabs.sendMessage(tabs[0].id,
             {
-                type: "tec-message-send",
+                type: 'tec-message-send',
+                message: {
+                    timestamp: new Date().toISOString(),
+                    data: msg
+                }
+            }
+        );
+    });
+}
+
+/**
+ *  Send a message to the content script to be displayed in the client
+ */
+function sendClientMessage(msg) {
+    bkg.console.log(`Sending message to client: ${msg}`)
+    chrome.tabs.query({ title: targetTabTitle }, function (tabs) {
+        if (tabs.length === 0) {
+            bkg.console.log('Tab not found, title changed?');
+        }
+        chrome.tabs.sendMessage(tabs[0].id,
+            {
+                type: 'tec-client-message',
                 message: {
                     timestamp: new Date().toISOString(),
                     data: msg
@@ -172,7 +192,7 @@ function parseMessage(data) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     // request.message.timestamp
     // request.message.data
-    if (request.type == "tec-receive-message") {
+    if (request.type == 'tec-receive-message') {
         bkg.console.log(request.message.data);
         parseMessage(request.message.data);
     }
@@ -180,13 +200,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 // Listen for received commands from teccontent.js (ultimately from tecinj.js)
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.type == 'tec-send-command') {
+    if (request.type == 'tec-send-command' && request.message.command !== 'undefined') {
         bkg.console.log(`command received: ${request.message.command}`);
 
-        const cmdTrimmed = command.trim();
+        const cmdTrimmed = request.message.command.trim();
         if (cmdTrimmed.indexOf('/') === 0) {
             // Run the slash command
-            slashCommand(request.message.command);
+            slashCommand(cmdTrimmed);
         }
     }
 });
@@ -198,14 +218,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  * Entry point for running a script:
  */
 function runScriptByName(scriptName, options) {
-    bkg.console.log("Running script: " + scriptName);
-    bkg.console.log("With options: " + JSON.stringify(options));
+    bkg.console.log(`Running script: ${scriptName}`);
+    bkg.console.log(`With options: ${JSON.stringify(options)}`);
 
     // Get the script object by name:
     const script = currentScripts.find(obj => { return obj.scriptName === scriptName; });
 
     if (!script) {
-        bkg.console.log("No script found matching name: " + scriptName);
+        bkg.console.log(`No script found matching name: ${scriptName}`);
     }
     else {
         killCurrentScript();
@@ -231,7 +251,7 @@ function runScriptByName(scriptName, options) {
 }
 
 function runSimpleRepeat(options) {
-    bkg.console.log("Starting simple repeat: " + options.command)
+    bkg.console.log(`Starting simple repeat: ${options.command}`)
 
     killCurrentScript();
 
@@ -260,7 +280,7 @@ function killCurrentScript() {
     currentCmdIndex = 0;
     currentMoveNextWhen = null;
     currentScriptType = '';
-    bkg.console.log("Script killed.");
+    bkg.console.log('Script killed.');
 }
 
 /**
@@ -271,7 +291,7 @@ function combatScript(data) {
     if (matchFound) {
         if (currentCmdIndex === (commandList.length - 1)) {
             if (addAttack) {
-                commandOverride = 'att ' + target;
+                commandOverride = `att ${target}`;
             }
             // Reset
             currentCmdIndex = 0;
@@ -301,7 +321,7 @@ function combatScript(data) {
         if (data.indexOf('falls unconscious') >= 0
                     || data.indexOf('You hit') >= 0
                     || data.indexOf('You miss') >= 0) {
-            commandOverride = 'kill ' + target;
+            commandOverride = `kill ${target}`;
         }
 
         // Detect weapon-specific kill echo and wipe the override for next no longer busy.
@@ -320,11 +340,11 @@ function combatScript(data) {
     // Handle fumble:
     if (data.indexOf('You fumble! You drop a') >= 0) {
         // Just set override since fumble requires waiting for no longer busy anyway.
-        commandOverride = 'take ' + weaponItemName;
+        commandOverride = `take ${weaponItemName}`;
     }
     if (data.indexOf('You take a') >= 0) {
         sendDelayedCommands([
-            'wield ' + weaponItemName,
+            `wield ${weaponItemName}`,
             commandList[currentCmdIndex].command + ' ' + target
         ]);
     }
@@ -332,7 +352,7 @@ function combatScript(data) {
     // Handle distance/approaching
     if (data.indexOf('is not close enough') >= 0) {
         sendDelayedCommands([
-            'app ' + target,
+            `app ${target}`,
             commandOverride ?
                 commandOverride : commandList[currentCmdIndex].command + ' ' + target
         ]);
@@ -435,9 +455,9 @@ function getFormattedCommand() {
     let command = commandList[currentCmdIndex].command;
 
     // Check if the command has moved <target> to be replaced:
-    if (command.indexOf("<target>") >= 0) {
+    if (command.indexOf('<target>') >= 0) {
         // Check for target replacement:
-        command = command.replace("<target>", target, "g");
+        command = command.replace('<target>', target, 'g');
     }
     else {
         // Tack target onto the end by default:
@@ -454,7 +474,7 @@ function getFormattedCommand() {
  */
 function matchExpectedParse(data) {
     if (commandList.length < 1) {
-        bkg.console.log("CommandList is empty... stop running?");
+        bkg.console.log('CommandList is empty... stop running?');
         return false;
     }
 
@@ -513,7 +533,40 @@ function slashCommand(command) {
         case '/stop':
             killCurrentScript();
             break;
+        case '/help':
+            sendClientMessage(dedent(
+                `Here are the available slash commands:
+                /stop
+                /help`
+            ));
+            break;
         default:
             bkg.console.log(`Slash command ${cmdTrimmed} not found.`);
     }
+}
+
+function dedent(callSite, ...args) {
+    function format(str) {
+        let size = -1;
+        return str.replace(/\n(\s+)/g, (m, m1) => {
+
+            if (size < 0)
+                size = m1.replace(/\t/g, "    ").length;
+
+            return "\n" + m1.slice(Math.min(m1.length, size));
+        });
+    }
+
+    if (typeof callSite === "string")
+        return format(callSite);
+
+    if (typeof callSite === "function")
+        return (...args) => format(callSite(...args));
+
+    let output = callSite
+        .slice(0, args.length + 1)
+        .map((text, i) => (i === 0 ? "" : args[i - 1]) + text)
+        .join("");
+
+    return format(output);
 }

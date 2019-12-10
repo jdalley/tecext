@@ -23,7 +23,6 @@ document.addEventListener('tecReceiveMessage', function (e) {
 
 // Listen for received commands from the injected script:
 document.addEventListener('tecSendCommand', function(e) {
-    debugger;
     // Send received command to the background script.
     chrome.runtime.sendMessage({
         type: 'tec-send-command',
@@ -44,4 +43,20 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
     }
 });
 
+// Write messages from the background script to the game window
+chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.type == 'tec-client-message') {
+        // Add message to output
+        const output = document.getElementById('output');
+        const div = document.createElement('div');
+        const text = document.createTextNode(request.message.data);
+
+        div.appendChild(text);
+        div.style.color = 'red'
+        output.appendChild(div);
+
+        // scroll to bottom
+        output.scrollTop = output.scrollHeight
+    }
+});
 
