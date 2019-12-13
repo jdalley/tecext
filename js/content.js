@@ -49,10 +49,11 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
         // Add message to output
         const output = document.getElementById('output');
         const div = document.createElement('div');
-        const text = document.createTextNode(request.message.data);
+        const text = document.createTextNode(`\r\n${request.message.data}`);
 
         div.appendChild(text);
-        div.style.color = 'red'
+        div.style.color = 'red';
+        div.style.fontSize = 'smaller';
         output.appendChild(div);
 
         // scroll to bottom

@@ -92,10 +92,7 @@ function saveScripts(scripts) {
 
         // Send message to popup that currentScripts have been updated:
         chrome.runtime.sendMessage({
-            msg: 'reload-scripts-select',
-            data: {
-                // TODO: Should we maybe just send the scripts here to prevent another round trip?;
-            }
+            msg: 'reload-scripts-select'
         });
     }
 }
@@ -250,16 +247,14 @@ function runScriptByName(scriptName, options) {
     }
 }
 
-function runSimpleRepeat(options) {
-    bkg.console.log(`Starting simple repeat: ${options.command}`)
+function runSimpleRepeat(command) {
+    bkg.console.log(`Starting simple repeat: ${command}`)
 
     killCurrentScript();
-
     runRepeat = true;
-    repeatCommand = options.command;
 
     setTimeout(function() {
-        sendCommand(repeatCommand);
+        sendCommand(command);
     }, getCommandDelayInMs());
 }
 
@@ -527,24 +522,6 @@ function getCommandDelayInMs(additionalDelay) {
     return commandDelay;
 }
 
-function slashCommand(command) {
-    // TODO: Add more slash commands
-    switch(command) {
-        case '/stop':
-            killCurrentScript();
-            break;
-        case '/help':
-            sendClientMessage(dedent(
-                `Here are the available slash commands:
-                /stop
-                /help`
-            ));
-            break;
-        default:
-            bkg.console.log(`Slash command ${cmdTrimmed} not found.`);
-    }
-}
-
 function dedent(callSite, ...args) {
     function format(str) {
         let size = -1;
@@ -569,4 +546,79 @@ function dedent(callSite, ...args) {
         .join("");
 
     return format(output);
+}
+
+/**
+ *  Handle slash commands that are received from the game client.
+ */
+function slashCommand(command) {
+    if(command === '/help') {
+        sendClientMessage(dedent(`
+            Here are the available commands:
+            /scripts - List of currently defined scripts
+            /start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional
+            /stop - Stop the currently running script
+            /repeat [command] - Repeats a given command, expects 'No longer busy' inbetween
+        `));
+    }
+    else if (command === '/scripts') {
+        const scripts = currentScripts.map(s => s.scriptName).toString().replace(/,/g, '\r\n');
+        sendClientMessage(dedent(
+            `Here are the names of available scripts:
+            ${scripts}`
+        ));
+    }
+    else if (command.includes('/start')) {
+        const cmdParams = command.split(/\s+/);
+        // Remove empty param option if found
+        if (cmdParams.includes('')) {
+            cmdParams.splice(cmdParams.indexOf(''), 1);
+        }
+
+        if (cmdParams.length <= 1)
+            sendClientMessage(`A script name parameter is expected when using /scripts`);
+
+        const scriptName = cmdParams[1];
+        const target = cmdParams[2];
+        const weaponItemName = cmdParams[3];
+        let shouldKill = false;
+        let continueOnWalkIn = false;
+
+        if (cmdParams.length >= 5)
+            shouldKill = cmdParams[4];
+        if (cmdParams.length >= 6)
+            continueOnWalkIn = cmdParams[5];
+
+        const script = currentScripts.find(s => {
+            return s.scriptName === scriptName
+        });
+
+        if (!script)
+            sendClientMessage(`Script not found.`);
+
+        runScriptByName(scriptName, {
+            target: target,
+            weaponItemName: weaponItemName,
+            shouldKill: shouldKill,
+            continueOnWalkIn: continueOnWalkIn
+        });
+
+        sendClientMessage(`Starting script: ${scriptName} (${script.scriptFriendlyName})`);
+    }
+    else if (command === '/stop') {
+        killCurrentScript();
+        sendClientMessage(`Script stopped.`);
+    }
+    else if (command.includes('/repeat')) {
+        const cmdParams = command.split('/repeat');
+        if (cmdParams.length <= 1)
+            sendClientMessage(`A command to repeat is expected when using /repeat`);
+
+        const cmd = cmdParams[1].trim();
+        runSimpleRepeat(cmd);
+        sendClientMessage(`Starting to repeat the command: ${cmd}`)
+    }
+    else {
+        bkg.console.log(`Slash command ${cmdTrimmed} not found.`);
+    }
 }

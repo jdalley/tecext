@@ -30,9 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('sendRepeat').addEventListener('click', function (e) {
         const repeatCommand = document.getElementById('repeatInput').value;
         if (repeatCommand) {
-            chrome.extension.getBackgroundPage().runSimpleRepeat({
-                command: repeatCommand
-            });
+            chrome.extension.getBackgroundPage().runSimpleRepeat(repeatCommand);
         }
     });
 
