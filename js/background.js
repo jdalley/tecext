@@ -188,7 +188,7 @@ function parseMessage(data) {
     }
 }
 
-// Listen for received messages from teccontent.js (ultimately from tecinj.js)
+// Listen for received messages from content.js (ultimately from injected.js)
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     // request.message.timestamp
     // request.message.data
@@ -198,7 +198,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
-// Listen for received commands from teccontent.js (ultimately from tecinj.js)
+// Listen for received commands from content.js (ultimately from injected.js)
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.type == 'tec-send-command' && request.message.command !== 'undefined') {
         bkg.console.log(`command received: ${request.message.command}`);

@@ -20,11 +20,11 @@
   "content_scripts": [
     {
       "matches": ["*://*.skotos.net/*"],
-      "js": ["js/teccontent.js"],
+      "js": ["js/content.js"],
       "run_at": "document_end"
     }
   ],
-  "web_accessible_resources": ["js/teccontent.js", "js/tecinj.js"],
+  "web_accessible_resources": ["js/content.js", "js/injected.js"],
   "permissions": [
     "contextMenus",
     "debugger",

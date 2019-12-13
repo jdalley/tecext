@@ -6,7 +6,7 @@
 // Inject the script used to work directly with the contents of the page; hooking into
 // relevant events, variables, and data from web sockets.
 const script = document.createElement('script');
-script.src = chrome.extension.getURL('js/tecinj.js');
+script.src = chrome.extension.getURL('js/injected.js');
 (document.head || document.documentElement).appendChild(script);
 script.onload = function () {
     script.remove();

@@ -11,7 +11,7 @@
  const editor = new JSONEditor(container, options);
 
  // Load the current user scripts from the background:
- const currentScriptsJson = chrome.extension.getBackgroundPage().currentScripts;
+ const currentScriptsJson = chrome.extension.getBackgroundPage().getCurrentScripts();
  editor.set(currentScriptsJson);
 
 /**
