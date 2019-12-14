@@ -619,6 +619,6 @@ function slashCommand(command) {
         sendClientMessage(`Starting to repeat the command: ${cmd}`)
     }
     else {
-        bkg.console.log(`Slash command ${cmdTrimmed} not found.`);
+        sendClientMessage(`Slash command ${cmdTrimmed} not found.`)
     }
 }
