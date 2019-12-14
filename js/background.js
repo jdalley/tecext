@@ -556,7 +556,7 @@ function slashCommand(command) {
         sendClientMessage(dedent(`
             Here are the available commands:
             /scripts - List of currently defined scripts
-            /start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional
+            /start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional, default true
             /stop - Stop the currently running script
             /repeat [command] - Repeats a given command, expects 'No longer busy' inbetween
         `));
@@ -581,8 +581,8 @@ function slashCommand(command) {
         const scriptName = cmdParams[1];
         const target = cmdParams[2];
         const weaponItemName = cmdParams[3];
-        let shouldKill = false;
-        let continueOnWalkIn = false;
+        let shouldKill = true;
+        let continueOnWalkIn = true;
 
         if (cmdParams.length >= 5)
             shouldKill = cmdParams[4];
@@ -590,7 +590,7 @@ function slashCommand(command) {
             continueOnWalkIn = cmdParams[5];
 
         const script = currentScripts.find(s => {
-            return s.scriptName === scriptName
+            return s.scriptName.toLowerCase() === scriptName.toLowerCase()
         });
 
         if (!script)
