@@ -126,7 +126,6 @@ loadScripts();
  *  Send a command to the content script, which will forward it to the injected script.
  */
 function sendCommand(msg) {
-    bkg.console.log(`Sending message: ${msg}`);
     chrome.tabs.query({ title: targetTabTitle }, function (tabs) {
         if (tabs.length === 0) {
             bkg.console.log('Tab not found, title changed?');
@@ -147,7 +146,6 @@ function sendCommand(msg) {
  *  Send a message to the content script to be displayed in the client
  */
 function sendClientMessage(msg) {
-    bkg.console.log(`Sending message to client: ${msg}`)
     chrome.tabs.query({ title: targetTabTitle }, function (tabs) {
         if (tabs.length === 0) {
             bkg.console.log('Tab not found, title changed?');
@@ -190,7 +188,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     // request.message.timestamp
     // request.message.data
     if (request.type == 'tec-receive-message') {
-        bkg.console.log(request.message.data);
         parseMessage(request.message.data);
     }
 });
@@ -198,8 +195,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 // Listen for received commands from content.js (ultimately from injected.js)
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.type == 'tec-send-command' && request.message.command !== 'undefined') {
-        bkg.console.log(`command received: ${request.message.command}`);
-
         const cmdTrimmed = request.message.command.trim();
         if (cmdTrimmed.indexOf('/') === 0) {
             // Run the slash command
@@ -215,9 +210,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  * Entry point for running a script:
  */
 function runScriptByName(scriptName, options) {
-    bkg.console.log(`Running script: ${scriptName}`);
-    bkg.console.log(`With options: ${JSON.stringify(options)}`);
-
     // Get the script object by name:
     const script = currentScripts.find(obj => { return obj.scriptName === scriptName; });
 
@@ -248,8 +240,6 @@ function runScriptByName(scriptName, options) {
 }
 
 function runSimpleRepeat(command) {
-    bkg.console.log(`Starting simple repeat: ${command}`)
-
     killCurrentScript();
     runRepeat = true;
 
@@ -275,7 +265,6 @@ function killCurrentScript() {
     currentCmdIndex = 0;
     currentMoveNextWhen = null;
     currentScriptType = '';
-    bkg.console.log('Script killed.');
 }
 
 /**

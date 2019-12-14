@@ -24,7 +24,6 @@ doReceive = function (msg) {
 
 // Send intercepted data to the content script:
 function doReceiveOverride(msg) {
-    console.log(msg);
     document.dispatchEvent(new CustomEvent('tecReceiveMessage', {
         detail: {
             timestamp: new Date().toISOString(),
@@ -46,7 +45,6 @@ doSend = function (msg, noecho) {
 
 // Send intercepted commands to the content script:
 function doSendOverride(msg) {
-    console.log(`doSendOverride: ${msg}`);
     document.dispatchEvent(new CustomEvent('tecSendCommand', {
         detail: {
             timestamp: new Date().toISOString(),
@@ -60,7 +58,6 @@ function doSendOverride(msg) {
 document.addEventListener('tecSendMessage', function (e) {
     const msg = e.detail.data;
     if (msg) {
-        console.log(`Sending command: ${msg}`);
         // Ref: orchil.js - doSend(message, noecho)
         doSend(msg, true);
     }
