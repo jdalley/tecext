@@ -608,6 +608,6 @@ function slashCommand(command) {
         sendClientMessage(`Starting to repeat the command: ${cmd}`)
     }
     else {
-        sendClientMessage(`Slash command ${cmdTrimmed} not found.`)
+        sendClientMessage(`Slash command ${command} not found.`)
     }
 }
