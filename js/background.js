@@ -242,6 +242,7 @@ function runScriptByName(scriptName, options) {
 function runSimpleRepeat(command) {
     killCurrentScript();
     runRepeat = true;
+    repeatCommand = command;
 
     setTimeout(function() {
         sendCommand(command);
