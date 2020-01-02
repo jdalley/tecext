@@ -13,26 +13,28 @@ const targetTabTitle = 'The Eternal City - Orchil (Beta) - Skotos';
 
 // Simple repeat
 let runRepeat = false;
-let repeatCommand;
+let repeatCommand = null;
 
 // General
-let target;
+let target = null;
 let commandList = [];
 let currentCmdIndex = 0;
 let currentMoveNextWhen = null;
-let commandOverride;
+let commandOverride = null;
 
 // Combat
 let shouldKill = false;
-let shouldKillParse;
+let shouldKillParse = null;
 let continueOnWalkIn = false;
-let weaponItemName;
-let addAttack;
+let weaponItemName = null;
+let addAttack = false;
 let stance;
 
 // Scripts
-let currentScriptType = '';
-let currentScripts;
+let scriptPaused = false;
+let currentScriptName = null;
+let currentScriptType = null;
+let currentScripts = null;
 function getCurrentScripts() {
 	return currentScripts;
 }
@@ -166,6 +168,8 @@ function sendClientMessage(msg) {
  * Entry point for figuring out what to do with messages received from the server.
  */
 function parseMessage(data) {
+    if (scriptPaused === true) return;
+
     if (runRepeat) {
         if (data.indexOf('You are no longer busy.') >= 0) {
             setTimeout(function () {
@@ -221,14 +225,15 @@ function runScriptByName(scriptName, options) {
 
         currentMoveNextWhen = 'You are no longer busy';
 
-        target = options.target;
-        weaponItemName = options.weaponItemName;
+        target = options.target || '';
+        weaponItemName = options.weaponItemName || '';
         shouldKill = options.shouldKill;
         shouldKillParse = script.shouldKillParse;
         continueOnWalkIn = options.continueOnWalkIn;
         addAttack = script.addAttack;
         stance = script.stanceCommand;
         currentScriptType = script.scriptType;
+        currentScriptName = script.scriptName;
 
         script.commandList.forEach(function(command, index) {
             commandList.push(command);
@@ -266,6 +271,7 @@ function killCurrentScript() {
     currentCmdIndex = 0;
     currentMoveNextWhen = null;
     currentScriptType = '';
+    currentScriptName = '';
 }
 
 /**
@@ -546,9 +552,12 @@ function slashCommand(command) {
         sendClientMessage(dedent(`
             Here are the available commands:
             /scripts - List of currently defined scripts
+            /current - Display the currently running script
             /start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional, default true
             /stop - Stop the currently running script
             /repeat [command] - Repeats a given command, expects 'No longer busy' inbetween
+            /pause - Pause the current script
+            /resume - Resume the current script
         `));
     }
     else if (command === '/scripts') {
@@ -557,6 +566,9 @@ function slashCommand(command) {
             `Here are the names of available scripts:
             ${scripts}`
         ));
+    }
+    else if (command === '/current') {
+        sendClientMessage(`The current script is: ${currentScriptName}`);
     }
     else if (command.includes('/start')) {
         const cmdParams = command.split(/\s+/);
@@ -607,6 +619,15 @@ function slashCommand(command) {
         const cmd = cmdParams[1].trim();
         runSimpleRepeat(cmd);
         sendClientMessage(`Starting to repeat the command: ${cmd}`)
+    }
+    else if (command.includes('/pause')) {
+        scriptPaused = true;
+        sendClientMessage(`Paused script: ${currentScriptName}`)
+    }
+    else if (command.includes('/resume')) {
+        scriptPaused = false;
+        sendNextCommand();
+        sendClientMessage(`Resumed script: ${currentScriptName}`)
     }
     else {
         sendClientMessage(`Slash command ${command} not found.`)
