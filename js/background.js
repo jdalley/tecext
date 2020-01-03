@@ -215,7 +215,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  */
 function runScriptByName(scriptName, options) {
     // Get the script object by name:
-    const script = currentScripts.find(obj => { return obj.scriptName === scriptName; });
+    const script = currentScripts.find(s => {
+        return s.scriptName.toLowerCase() === scriptName.toLowerCase()
+    });
 
     if (!script) {
         bkg.console.log(`No script found matching name: ${scriptName}`);
