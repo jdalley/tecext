@@ -373,7 +373,7 @@ function combatScript(data) {
     }
 
     if (continueOnWalkIn &&
-        (data.indexOf('walks in') >= 0 ||  data.indexOf(' in from a') >= 0) {
+        (data.indexOf('walks in') >= 0 ||  data.indexOf(' in from a') >= 0)) {
         sendNextCommand();
     }
 
