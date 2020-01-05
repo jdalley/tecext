@@ -105,16 +105,18 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 });
 
 // Add the context menu for opening the popout window:
-chrome.contextMenus.create({
-    id: 'open-tec-ui',
-    title: '[TEC] Open UI...',
-    contexts: ['all'],
-});
-chrome.contextMenus.onClicked.addListener(function(info, tab) {
-    if (info.menuItemId == 'open-tec-ui') {
-        openPopupWindow();
-    }
-});
+chrome.contextMenus.removeAll(function() {
+    chrome.contextMenus.create({
+        id: 'open-tec-ui',
+        title: '[TEC] Open UI...',
+        contexts: ['all'],
+    });
+    chrome.contextMenus.onClicked.addListener(function(info, tab) {
+        if (info.menuItemId == 'open-tec-ui') {
+            openPopupWindow();
+        }
+    });
+})
 
 // Initial script load:
 loadScripts();
@@ -128,6 +130,11 @@ loadScripts();
  *  Send a command to the content script, which will forward it to the injected script.
  */
 function sendCommand(msg) {
+    if (!msg) {
+        bkg.console.log('sendCommand called with null or empty command');
+        return;
+    }
+
     chrome.tabs.query({ title: targetTabTitle }, function (tabs) {
         if (tabs.length === 0) {
             bkg.console.log('Tab not found, title changed?');
@@ -142,6 +149,8 @@ function sendCommand(msg) {
             }
         );
     });
+
+    return;
 }
 
 /**
@@ -363,7 +372,8 @@ function combatScript(data) {
         sendNextCommand();
     }
 
-    if (continueOnWalkIn && data.indexOf('walks in') >= 0) {
+    if (continueOnWalkIn &&
+        (data.indexOf('walks in') >= 0 ||  data.indexOf(' in from a') >= 0) {
         sendNextCommand();
     }
 
@@ -445,6 +455,8 @@ function sendDelayedCommands(commands) {
  * values from script variables. This will likely become more robust over time.
  */
 function getFormattedCommand() {
+    if (commandList.length <= 0 || commandList[currentCmdIndex] === undefined) return '';
+
     let command = commandList[currentCmdIndex].command;
 
     // Check if the command has moved <target> to be replaced:
