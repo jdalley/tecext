@@ -56,7 +56,7 @@
             }
         ],
         "scriptFriendlyName": "Archery Target",
-        "scriptName": "ArcheryBasic",
+        "scriptName": "archeryBasic",
         "scriptType": "combat",
         "shouldKill": false,
         "shouldKillParse": "",
@@ -123,7 +123,7 @@
             }
         ],
         "scriptFriendlyName": "Cestus Basic",
-        "scriptName": "CestusBasic",
+        "scriptName": "cestusBasic",
         "scriptType": "combat",
         "shouldKillParse": "Your quick, vicious blow",
         "stanceCommand": ""
@@ -182,7 +182,7 @@
             }
         ],
         "scriptFriendlyName": "Clubs Basic",
-        "scriptName": "ClubsBasic",
+        "scriptName": "clubsBasic",
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "You bash",
@@ -219,7 +219,7 @@
             }
         ],
         "scriptFriendlyName": "Healing Basic",
-        "scriptName": "HealingBasic",
+        "scriptName": "healingBasic",
         "scriptType": "nonCom"
     },
     {
@@ -246,7 +246,7 @@
             }
         ],
         "scriptFriendlyName": "Healing Bandaging",
-        "scriptName": "HealingBandaging",
+        "scriptName": "healingBandaging",
         "scriptType": "nonCom"
     },
     {
@@ -314,7 +314,7 @@
             }
         ],
         "scriptFriendlyName": "Outdoors Basic",
-        "scriptName": "OutdoorsBasic",
+        "scriptName": "outdoorsBasic",
         "scriptType": "nonCom"
     },
     {
@@ -369,7 +369,7 @@
             }
         ],
         "scriptFriendlyName": "Outdoors Without Berries",
-        "scriptName": "OutdoorsWithoutBerries",
+        "scriptName": "outdoorsWithoutBerries",
         "scriptType": "nonCom"
     },
     {
@@ -404,7 +404,7 @@
             }
         ],
         "scriptFriendlyName": "Palming",
-        "scriptName": "Palming",
+        "scriptName": "palming",
         "scriptType": "nonCom"
     },
     {
@@ -579,6 +579,52 @@
         "shouldKill": true,
         "shouldKillParse": "You bash a",
         "stanceCommand": "skirmish"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "qrake",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you quickly rake"
+                }
+            },
+            {
+                "command": "jab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You tentatively jab"
+                }
+            },
+            {
+                "command": "stab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You make a quick stabbing"
+                }
+            },
+            {
+                "command": "slash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You slash horizontally"
+                }
+            },
+            {
+                "command": "bash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you release a quick bashing"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Tridents Basic",
+        "scriptName": "tridentsBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "",
+        "stanceCommand": "harpoon"
     },
     {
         "addAttack": false,
