@@ -71,4 +71,8 @@ Here are the available commands:
 /resume - Resume the current script
 ```
 
+Because it's not super intuitive here's a few examples for the `/start` command:
+- `/start twohandfullrotation dog|rat two-handed`
+- `/start outdoorsBasic`
+  - In this case you can see the target/weaponItemName are not added, this is because they aren't required for nonCom type scripts (check the example scripts for an example of nonCom vs combat).
 Any command starting with a forward slash is not sent to the TEC server, instead it's interpreted by the extension. Additionally, all messages from the extension will be in a consistent red text with a smaller font size to distinguish it. 
