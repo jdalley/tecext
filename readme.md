@@ -28,7 +28,6 @@ Here's an example of what you'll see in the Dev Tools window:
 
 ![Background Dev Tools](https://github.com/jdalley/tecext/blob/master/images/backgroundtools.png "Background Dev Tools")
 
-
 ### UI and Scripts
 
 The UI is very much temporary and doesn't make a ton of sense, so let's called it mega-alpha for now.
@@ -56,3 +55,20 @@ The UI is very much temporary and doesn't make a ton of sense, so let's called i
         * Similar to use kill on KO, this will get triggered if ANYTHING walks in or arrives, even another player. It will not target that player - and the worst case scenario here is it just resumes the script with your intended target. So you'll see it try to use the next move even if no target is there. I could fix this similarly to use kill on KO eventually.
 * Run Script: clears all current values of any in-progress scripts, and uses the weapon/target to start the selected script from scratch.
 * Stop Script: stops the currently running script, and clears all current values set by that script.
+
+### Slash Commands
+
+Additionally, there are some slash commands you can enter in the game input to take advantage of some features without leaving the input. Type `/help` to view available command information, where you'll get output like this in red text:
+
+```
+Here are the available commands:
+/scripts - List of currently defined scripts
+/current - Display the currently running script
+/start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional, default true
+/stop - Stop the currently running script
+/repeat [command] - Repeats a given command, expects 'No longer busy' inbetween
+/pause - Pause the current script
+/resume - Resume the current script
+```
+
+Any command starting with a forward slash is not sent to the TEC server, instead it's interpreted by the extension. Additionally, all messages from the extension will be in a consistent red text with a smaller font size to distinguish it. 
