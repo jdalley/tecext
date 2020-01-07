@@ -177,6 +177,8 @@ function sendClientMessage(msg) {
  * Entry point for figuring out what to do with messages received from the server.
  */
 function parseMessage(data) {
+    //bkg.console.log(data);
+
     if (scriptPaused === true) return;
 
     if (runRepeat) {
@@ -245,6 +247,7 @@ function runScriptByName(scriptName, options) {
         stance = script.stanceCommand;
         currentScriptType = script.scriptType;
         currentScriptName = script.scriptName;
+        scriptPaused = false;
 
         script.commandList.forEach(function(command, index) {
             commandList.push(command);
@@ -283,6 +286,7 @@ function killCurrentScript() {
     currentMoveNextWhen = null;
     currentScriptType = '';
     currentScriptName = '';
+    scriptPaused = false;
 }
 
 /**
@@ -631,6 +635,7 @@ function slashCommand(command) {
             sendClientMessage(`A command to repeat is expected when using /repeat`);
 
         const cmd = cmdParams[1].trim();
+        scriptPaused = false;
         runSimpleRepeat(cmd);
         sendClientMessage(`Starting to repeat the command: ${cmd}`)
     }
