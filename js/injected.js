@@ -55,17 +55,17 @@ if (typeof doSend !== 'undefined') {
         }
         return;
     }
-
-    // Receive commands from the content script, and send them to the existing doSend
-    // function on the page. This function pipes the command back to the web socket.
-    document.addEventListener('tecSendMessage', function (e) {
-        const msg = e.detail.data;
-        if (msg) {
-            // Ref: orchil.js - doSend(message, noecho)
-            doSend(msg, true);
-        }
-    });
 }
+
+// Receive commands from the content script, and send them to the existing doSend
+// function on the page. This function pipes the command back to the web socket.
+document.addEventListener('tecSendMessage', function (e) {
+    const msg = e.detail.data;
+    if (msg) {
+        // Ref: orchil.js - doSend(message, noecho)
+        doSend(msg, true);
+    }
+});
 
 
 
