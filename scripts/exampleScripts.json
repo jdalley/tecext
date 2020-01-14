@@ -191,6 +191,33 @@
     {
         "commandList": [
             {
+                "command": "bait pole with worm",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You bait a"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already baited"
+                    }
+                ]
+            },
+            {
+                "command": "cast pole",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "no longer has any bait on it"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Fishing - Worms",
+        "scriptName": "fishingWorms",
+        "scriptType": "nonCom"
+    },
+    {
+        "commandList": [
+            {
                 "command": "cut bandage from",
                 "parse": [
                     {
