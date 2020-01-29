@@ -1,6 +1,6 @@
 ## TEC Extender
 
-Extensions and goodies for The Eternal City's Orchil client: http://test.skotos.net/orchil/tec/tec.htm
+Extensions and goodies for The Eternal City's Orchil client: http://client.tec.skotos.net/orchil/tec/tec.htm
 
 ### Installation Instructions
 
@@ -39,9 +39,9 @@ The UI is very much temporary and doesn't make a ton of sense, so let's called i
 * Repeat will take whatever command you input, and repeat it on 'No longer busy'. Useful for simple stuff.
 * Edit Scripts opens up another window with a really simple JSON editor; you can make your changes to scripts, add new ones etc. When you click Save, it will write the whole script to local storage in chrome, and next time you launch it it'll check there before loading the exampleScripts.json.
     * After Save is clicked and the window closes, you'll notice if there wasn't a parsing error with the JSON, the Choose a script to run dropdown is now updated with your new script.
-    
+
     ![Edit Scripts UI](https://github.com/jdalley/tecext/blob/master/images/editscripts.png "Edit Scripts UI")
-    
+
 * The Choose a script to run dropdown starts off with a list of script examples that I continually update, found in this repo at [scripts/exampleScripts.json](scripts/exampleScripts.json).
     * Weapon/item name: this input is used in combat scripts as the name of your weapon in case you drop it - it will pick it back up and wield it.
         * This does not work if you get disarmed and suddenly "you can't do that right now" or variants of that.
@@ -75,4 +75,4 @@ Because it's not super intuitive here's a few examples for the `/start` command:
 - `/start twohandfullrotation dog|rat two-handed`
 - `/start outdoorsBasic`
   - In this case you can see the target/weaponItemName are not added, this is because they aren't required for nonCom type scripts (check the example scripts for an example of nonCom vs combat).
-Any command starting with a forward slash is not sent to the TEC server, instead it's interpreted by the extension. Additionally, all messages from the extension will be in a consistent red text with a smaller font size to distinguish it. 
+Any command starting with a forward slash is not sent to the TEC server, instead it's interpreted by the extension. Additionally, all messages from the extension will be in a consistent red text with a smaller font size to distinguish it.
