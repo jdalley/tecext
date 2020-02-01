@@ -10,6 +10,7 @@ bkg.console.log('background.js initialized...');
 
 // Chrome
 const targetTabTitle = 'The Eternal City - Orchil (Beta) - Skotos';
+const targetTabUrl = 'http://client.tec.skotos.net/tec/tec.htm'
 
 // Simple repeat
 let runRepeat = false;
@@ -135,9 +136,9 @@ function sendCommand(msg) {
         return;
     }
 
-    chrome.tabs.query({ title: targetTabTitle }, function (tabs) {
+    chrome.tabs.query({ url: targetTabUrl }, function (tabs) {
         if (tabs.length === 0) {
-            bkg.console.log('Tab not found, title changed?');
+            bkg.console.log('Tab not found, url changed?');
         }
         chrome.tabs.sendMessage(tabs[0].id,
             {
@@ -157,7 +158,7 @@ function sendCommand(msg) {
  *  Send a message to the content script to be displayed in the client
  */
 function sendClientMessage(msg) {
-    chrome.tabs.query({ title: targetTabTitle }, function (tabs) {
+    chrome.tabs.query({ url: targetTabUrl }, function (tabs) {
         if (tabs.length === 0) {
             bkg.console.log('Tab not found, title changed?');
         }
