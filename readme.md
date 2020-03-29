@@ -1,6 +1,6 @@
 ## TEC Extender
 
-Extensions and goodies for The Eternal City's Orchil client: http://client.tec.skotos.net/orchil/tec/tec.htm
+Extensions and goodies for The Eternal City's Orchil client: http://client.tec.skotos.net/tec/tec.htm
 
 ### Installation Instructions
 
