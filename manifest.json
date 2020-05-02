@@ -19,7 +19,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.skotos.net/*"],
+      "matches": ["*://*.eternalcitygame.com/*"],
       "js": ["js/content.js"],
       "run_at": "document_end"
     }

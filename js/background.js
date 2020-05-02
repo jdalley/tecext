@@ -10,7 +10,7 @@ bkg.console.log('background.js initialized...');
 
 // Chrome
 const targetTabTitle = 'The Eternal City - Orchil (Beta) - Skotos';
-const targetTabUrl = 'http://client.tec.skotos.net/tec/tec.htm'
+const targetTabUrl = 'http://client.eternalcitygame.com/tec/tec.htm'
 
 // Simple repeat
 let runRepeat = false;
