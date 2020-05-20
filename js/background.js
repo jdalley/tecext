@@ -59,7 +59,7 @@ function openPopupWindow(tab) {
 }
 
 /**
- * Load scripts from exampleScripts or local storage:
+ * Load scripts from scriptCollection or local storage:
  */
 function loadScripts() {
     chrome.storage.local.get('userScripts', function (data) {
@@ -67,7 +67,7 @@ function loadScripts() {
             currentScripts = data['userScripts'];
         }
         else {
-            fetch('/scripts/exampleScripts.json')
+            fetch('/scripts/scriptCollection.json')
             .then(res => res.json())
             .then((out) => {
                 if (out) {
