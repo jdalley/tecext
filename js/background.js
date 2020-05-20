@@ -219,6 +219,18 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
+// Listen for the command to open the edit scripts window from content.js (ultimately from injected.js)
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.type == 'tec-edit-scripts' && request.message.command !== 'undefined') {
+        chrome.windows.create({
+            'url': 'edit-scripts.html',
+            'type': 'popup',
+            height: 1000,
+            width: 900
+        }, function(window) {  });
+    }
+});
+
 /*********************************************************************************************/
 /** Scripting: setting up and executing defined scripts **/
 

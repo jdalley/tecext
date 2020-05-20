@@ -30,6 +30,20 @@ document.addEventListener('tecSendCommand', function(e) {
     });
 });
 
+// Listen for edit scripts command from the injected script:
+document.addEventListener('tecUICommand', function(e) {
+    switch(e.detail.command) {
+        case 'openEditScripts':
+            // Open the edit-scripts popup
+            chrome.runtime.sendMessage({
+                type: 'tec-edit-scripts',
+                message: e.detail
+            });
+        break;
+        default:
+    }
+});
+
 // Listen for messages from the background script to send to the injected script:
 chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.type == 'tec-message-send') {
