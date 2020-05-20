@@ -72,9 +72,10 @@ document.addEventListener('tecSendMessage', function (e) {
  * This section is to create elements on the right sidebar and attach events to them.
  */
 setTimeout(function() {
-    // Remove the focusFix event from mouseup so click events can fire
+    // Remove the focusFix event from mouseup so click events can fire.
     window.removeEventListener("mouseup", fixFocus );
 
+    // Insert UI elements above the macro area.
     document.getElementById('macro_area').insertAdjacentHTML('beforebegin',`
         <style>
             @keyframes fadeIn {
@@ -89,16 +90,15 @@ setTimeout(function() {
         <div id="tecext" style="
             margin-bottom: 3px;
             padding: 6px;
-            animation: fadeIn 1s;">
+            animation: fadeIn 0.75s;">
             <div id="editScripts" style="
                 cursor: pointer;
                 background-color:#5eba7d;">Edit Scripts</div>
         </div>
     `);
 
+    // Send an event to the content script to open the edit scripts window.
     document.getElementById('editScripts').addEventListener("click", function() {
-        console.log("editScripts clicked");
-
         document.dispatchEvent(new CustomEvent('tecUICommand', {
             detail: {
                 timestamp: new Date().toISOString(),

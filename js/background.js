@@ -199,6 +199,16 @@ function parseMessage(data) {
     }
 }
 
+// Open the edit scripts popup
+function openEditScripts() {
+    chrome.windows.create({
+        'url': 'edit-scripts.html',
+        'type': 'popup',
+        height: 1000,
+        width: 900
+    }, function(window) {  });
+}
+
 // Listen for received messages from content.js (ultimately from injected.js)
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     // request.message.timestamp
@@ -222,12 +232,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 // Listen for the command to open the edit scripts window from content.js (ultimately from injected.js)
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.type == 'tec-edit-scripts' && request.message.command !== 'undefined') {
-        chrome.windows.create({
-            'url': 'edit-scripts.html',
-            'type': 'popup',
-            height: 1000,
-            width: 900
-        }, function(window) {  });
+       openEditScripts();
     }
 });
 
@@ -583,6 +588,7 @@ function slashCommand(command) {
         sendClientMessage(dedent(`
             Here are the available commands:
             /scripts - List of currently defined scripts
+            /editscripts - Open the edit scripts window
             /current - Display the currently running script
             /start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional, default true
             /stop - Stop the currently running script
@@ -597,6 +603,9 @@ function slashCommand(command) {
             `Here are the names of available scripts:
             ${scripts}`
         ));
+    }
+    else if (command === '/editscripts') {
+        openEditScripts();
     }
     else if (command === '/current') {
         sendClientMessage(`The current script is: ${currentScriptName}`);

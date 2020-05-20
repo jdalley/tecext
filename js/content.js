@@ -30,8 +30,9 @@ document.addEventListener('tecSendCommand', function(e) {
     });
 });
 
-// Listen for edit scripts command from the injected script:
+// Listen for in-page UI related commands from the injected script:
 document.addEventListener('tecUICommand', function(e) {
+
     switch(e.detail.command) {
         case 'openEditScripts':
             // Open the edit-scripts popup
@@ -42,6 +43,7 @@ document.addEventListener('tecUICommand', function(e) {
         break;
         default:
     }
+
 });
 
 // Listen for messages from the background script to send to the injected script:
