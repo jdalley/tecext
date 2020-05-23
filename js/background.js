@@ -377,14 +377,14 @@ function combatScript(data) {
             `${commandList[currentCmdIndex].command} ${target}`
         ]);
     }
-    if (data.indexOf('You can\'t do that right now.')) {
+    if (data.indexOf('You can\'t do that right now') >= 0) {
         sendDelayedCommands([
             `get ${weaponItemName}`,
             `wield ${weaponItemName}`,
             `${commandList[currentCmdIndex].command} ${target}`
         ]);
     }
-    if (data.indexOf('You must be carrying something to wield it.')) {
+    if (data.indexOf('You must be carrying something to wield it') >= 0) {
         sendDelayedCommands([
             `get ${weaponItemName}`,
             `wield ${weaponItemName}`,
