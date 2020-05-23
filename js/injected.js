@@ -72,9 +72,6 @@ document.addEventListener('tecSendMessage', function (e) {
  * This section is to create elements on the right sidebar and attach events to them.
  */
 setTimeout(function() {
-    // Remove the focusFix event from mouseup so click events can fire.
-    window.removeEventListener("mouseup", fixFocus );
-
     // Insert UI elements above the macro area.
     document.getElementById('macro_area').insertAdjacentHTML('beforebegin',`
         <style>
@@ -109,7 +106,10 @@ setTimeout(function() {
 
 }, 1400);
 
-
+setTimeout(function() {
+    // Remove the focusFix event from mouseup so click events can fire.
+    window.removeEventListener("mouseup", fixFocus );
+}, 2500);
 
 
 

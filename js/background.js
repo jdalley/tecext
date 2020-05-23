@@ -348,6 +348,11 @@ function combatScript(data) {
             commandOverride = `kill ${target}`;
         }
 
+        // Handle being stuck trying to kill something:
+        if (data.indexOf('must be unconscious first') >= 0) {
+            commandOverride = '';
+        }
+
         // Detect weapon-specific kill echo and wipe the override for next no longer busy.
         if (data.indexOf(shouldKillParse) >= 0 && commandOverride.indexOf('kill') >= 0) {
             commandOverride = '';
@@ -361,7 +366,7 @@ function combatScript(data) {
         }, getCommandDelayInMs())
     }
 
-    // Handle fumble:
+    // Handle fumble or disarm:
     if (data.indexOf('You fumble! You drop a') >= 0) {
         // Just set override since fumble requires waiting for no longer busy anyway.
         commandOverride = `take ${weaponItemName}`;
@@ -369,7 +374,21 @@ function combatScript(data) {
     if (data.indexOf('You take a') >= 0) {
         sendDelayedCommands([
             `wield ${weaponItemName}`,
-            commandList[currentCmdIndex].command + ' ' + target
+            `${commandList[currentCmdIndex].command} ${target}`
+        ]);
+    }
+    if (data.indexOf('You can\'t do that right now.')) {
+        sendDelayedCommands([
+            `get ${weaponItemName}`,
+            `wield ${weaponItemName}`,
+            `${commandList[currentCmdIndex].command} ${target}`
+        ]);
+    }
+    if (data.indexOf('You must be carrying something to wield it.')) {
+        sendDelayedCommands([
+            `get ${weaponItemName}`,
+            `wield ${weaponItemName}`,
+            `${commandList[currentCmdIndex].command} ${target}`
         ]);
     }
 
@@ -378,7 +397,7 @@ function combatScript(data) {
         sendDelayedCommands([
             `app ${target}`,
             commandOverride ?
-                commandOverride : commandList[currentCmdIndex].command + ' ' + target
+                commandOverride : `${commandList[currentCmdIndex].command} ${target}`
         ]);
     }
 
