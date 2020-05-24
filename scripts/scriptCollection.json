@@ -814,10 +814,77 @@
                     "moveNextWhen": "You are no longer busy",
                     "outcome": "You plant your feet into the ground"
                 }
+            },
+            {
+                "command": "overh",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "directing a heavy chop"
+                }
             }
         ],
         "scriptFriendlyName": "Two-Handed Axe Full",
-        "scriptName": "twoHandFullRotation",
+        "scriptName": "twoHandFull",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "overh",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "directing a heavy chop"
+                }
+            },
+            {
+                "command": "cchop",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "diagonal chop"
+                }
+            },
+            {
+                "command": "hslash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "wide-arced slash"
+                }
+            },
+            {
+                "command": "break",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You plant your feet into the ground"
+                }
+            },
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Shifting your grip"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You slide your lower hand"
+                }
+            },
+            {
+                "command": "chop",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You raise your"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Two-Handed Axe Core",
+        "scriptName": "twoHandCore",
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "With massive force",
@@ -835,7 +902,7 @@
             }
         ],
         "scriptFriendlyName": "Two-Handed Axe Kill CChop",
-        "scriptName": "twoHandKillFastCChop",
+        "scriptName": "twoHandCchop",
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "With massive force",
@@ -845,15 +912,15 @@
         "addAttack": false,
         "commandList": [
             {
-                "command": "hslash",
+                "command": "swat",
                 "parse": {
                     "moveNextWhen": "You are no longer busy",
-                    "outcome": "wide-arced slash"
+                    "outcome": "Shifting your grip"
                 }
             }
         ],
-        "scriptFriendlyName": "Two-Handed Axe Kill HSlash",
-        "scriptName": "twoHandKillFastHSlash",
+        "scriptFriendlyName": "Two-Handed Axe Min Gains",
+        "scriptName": "twoHandMin",
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "With massive force",
