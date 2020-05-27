@@ -894,15 +894,15 @@
         "addAttack": false,
         "commandList": [
             {
-                "command": "cchop",
+                "command": "overh",
                 "parse": {
                     "moveNextWhen": "You are no longer busy",
-                    "outcome": "making a swift downwards diagonal chop"
+                    "outcome": "directing a heavy chop"
                 }
             }
         ],
-        "scriptFriendlyName": "Two-Handed Axe Kill CChop",
-        "scriptName": "twoHandCchop",
+        "scriptFriendlyName": "Two-Handed Axe Kill Overhead",
+        "scriptName": "twoHandOverkill",
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "With massive force",
