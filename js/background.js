@@ -16,6 +16,10 @@ const targetTabUrl = 'http://client.eternalcitygame.com/tec/tec.htm'
 let runRepeat = false;
 let repeatCommand = null;
 
+// Repeat constantly with a delay
+let runRepeatWithDelay = false;
+let repeatWithDelayCommand = null;
+
 // General
 let target = null;
 let commandList = [];
@@ -186,7 +190,7 @@ function parseMessage(data) {
         if (data.indexOf('You are no longer busy.') >= 0) {
             setTimeout(function () {
                 sendCommand(repeatCommand);
-            }, getCommandDelayInMs())
+            }, getCommandDelayInMs());
             return;
         }
     }
@@ -286,6 +290,22 @@ function runSimpleRepeat(command) {
     }, getCommandDelayInMs());
 }
 
+function runSimpleRepeatWithDelay(command) {
+    killCurrentScript();
+    runRepeatWithDelay = true;
+    repeatWithDelayCommand = command;
+
+    var intr = setInterval(function() {
+        if (!runRepeatWithDelay)
+            clearInterval(intr);
+
+        if (!scriptPaused && runRepeatWithDelay)
+            sendCommand(command);
+
+        bkg.console.log('runSimpleRepeatWithDelay ran');
+    }, 1000);
+}
+
 /**
  * Kill it with fire.
  */
@@ -296,6 +316,8 @@ function killCurrentScript() {
     shouldKillParse = '';
     runRepeat = false;
     repeatCommand = '';
+    runRepeatWithDelay = false;
+    repeatWithDelayCommand = '';
     commandList = [];
     addAttack = false;
     stance = '';
@@ -351,6 +373,7 @@ function combatScript(data) {
         // Handle being stuck trying to kill something:
         if (data.indexOf('must be unconscious first') >= 0) {
             commandOverride = '';
+            sendNextCommand();
         }
 
         // Detect weapon-specific kill echo and wipe the override for next no longer busy.
@@ -456,6 +479,11 @@ function nonComScript(data) {
  * Send the next command on the commandList.
  */
 function sendNextCommand(additionalDelay) {
+    if (!shouldSendNextCommand()) {
+        bkg.console.log(`shouldSendNextCommand was false, don't send command.`);
+        return;
+    }
+
     setTimeout(function() {
         // Set override or use current command value:
         let nextCommand;
@@ -474,6 +502,17 @@ function sendNextCommand(additionalDelay) {
     }, getCommandDelayInMs(additionalDelay));
 }
 
+/**
+ * Determine whether or not we should send the next command. Special rules apply.
+ */
+function shouldSendNextCommand() {
+    var sendCommand = true;
+
+    if (runRepeatWithDelay)
+        sendCommand = false;
+
+    return sendCommand;
+}
 
 /**
  * Send a list of commands with an offset belay between them.
@@ -611,7 +650,8 @@ function slashCommand(command) {
             /current - Display the currently running script
             /start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional, default true
             /stop - Stop the currently running script
-            /repeat [command] - Repeats a given command, expects 'No longer busy' inbetween
+            /repeat [command] - Repeats a given command with a random delay inbetween each attempt
+            /repeatnlb [command] - Repeats a given command, expects 'No longer busy' inbetween
             /pause - Pause the current script
             /resume - Resume the current script
         `));
@@ -674,6 +714,16 @@ function slashCommand(command) {
         const cmdParams = command.split('/repeat');
         if (cmdParams.length <= 1)
             sendClientMessage(`A command to repeat is expected when using /repeat`);
+
+        const cmd = cmdParams[1].trim();
+        scriptPaused = false;
+        runSimpleRepeatWithDelay(cmd);
+        sendClientMessage(`Starting to repeat the command: ${cmd}`)
+    }
+    else if (command.includes('/repeatnlb')) {
+        const cmdParams = command.split('/repeatnlb');
+        if (cmdParams.length <= 1)
+            sendClientMessage(`A command to repeat is expected when using /repeatnlb`);
 
         const cmd = cmdParams[1].trim();
         scriptPaused = false;
