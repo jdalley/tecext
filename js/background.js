@@ -642,7 +642,10 @@ function dedent(callSite, ...args) {
  *  Handle slash commands that are received from the game client.
  */
 function slashCommand(command) {
-    if(command === '/help') {
+    const commandParams = command.split(/\s+/);
+    const commandName = commandParams[0];
+
+    if(commandName === '/help') {
         sendClientMessage(dedent(`
             Here are the available commands:
             /scripts - List of currently defined scripts
@@ -656,39 +659,38 @@ function slashCommand(command) {
             /resume - Resume the current script
         `));
     }
-    else if (command === '/scripts') {
+    else if (commandName === '/scripts') {
         const scripts = currentScripts.map(s => s.scriptName).toString().replace(/,/g, '\r\n');
         sendClientMessage(dedent(
             `Here are the names of available scripts:
             ${scripts}`
         ));
     }
-    else if (command === '/editscripts') {
+    else if (commandName === '/editscripts') {
         openEditScripts();
     }
-    else if (command === '/current') {
+    else if (commandName === '/current') {
         sendClientMessage(`The current script is: ${currentScriptName}`);
     }
-    else if (command.includes('/start')) {
-        const cmdParams = command.split(/\s+/);
+    else if (commandName === '/start') {
         // Remove empty param option if found
-        if (cmdParams.includes('')) {
-            cmdParams.splice(cmdParams.indexOf(''), 1);
+        if (commandParams.includes('')) {
+            commandParams.splice(commandParams.indexOf(''), 1);
         }
 
-        if (cmdParams.length <= 1)
+        if (commandParams.length <= 1)
             sendClientMessage(`A script name parameter is expected when using /scripts`);
 
-        const scriptName = cmdParams[1];
-        const target = cmdParams[2];
-        const weaponItemName = cmdParams[3];
+        const scriptName = commandParams[1];
+        const target = commandParams[2];
+        const weaponItemName = commandParams[3];
         let shouldKill = true;
         let continueOnWalkIn = true;
 
-        if (cmdParams.length >= 5)
-            shouldKill = cmdParams[4];
-        if (cmdParams.length >= 6)
-            continueOnWalkIn = cmdParams[5];
+        if (commandParams.length >= 5)
+            shouldKill = commandParams[4];
+        if (commandParams.length >= 6)
+            continueOnWalkIn = commandParams[5];
 
         const script = currentScripts.find(s => {
             return s.scriptName.toLowerCase() === scriptName.toLowerCase()
@@ -706,11 +708,12 @@ function slashCommand(command) {
 
         sendClientMessage(`Starting script: ${scriptName} (${script.scriptFriendlyName})`);
     }
-    else if (command === '/stop') {
+    else if (commandName === '/stop') {
         killCurrentScript();
         sendClientMessage(`Script stopped.`);
     }
-    else if (command.includes('/repeat')) {
+    else if (commandName === '/repeat') {
+        // Grab the entire command after the command name to use verbatim.
         const cmdParams = command.split('/repeat');
         if (cmdParams.length <= 1)
             sendClientMessage(`A command to repeat is expected when using /repeat`);
@@ -721,6 +724,7 @@ function slashCommand(command) {
         sendClientMessage(`Starting to repeat the command: ${cmd}`)
     }
     else if (command.includes('/repeatnlb')) {
+        // Grab the entire command after the command name to use verbatim.
         const cmdParams = command.split('/repeatnlb');
         if (cmdParams.length <= 1)
             sendClientMessage(`A command to repeat is expected when using /repeatnlb`);

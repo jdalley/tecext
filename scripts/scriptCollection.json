@@ -1,879 +1,879 @@
 [
     {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "quickload bow",
-               "parse": [
-                   {
-                       "moveNextWhen": "",
-                       "outcome": "is already loaded"
-                   },
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "With a quick fluid motion"
-                   }
-               ]
-           },
-           {
-               "command": "shoot target",
-               "parse": [
-                   {
-                       "moveNextWhen": "",
-                       "outcome": "isn't loaded"
-                   },
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You fire a"
-                   }
-               ]
-           }
-       ],
-       "scriptFriendlyName": "Archery Target",
-       "scriptName": "archTarg",
-       "scriptType": "combat",
-       "shouldKill": false,
-       "shouldKillParse": "",
-       "stanceCommand": "",
-       "weaponItemName": ""
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "slash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You swing a cestus-covered fist"
-               }
-           },
-           {
-               "command": "jab",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "with a swift punch using"
-               }
-           },
-           {
-               "command": "stab",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You send a heavy, underhand punch"
-               }
-           },
-           {
-               "command": "gouge",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "you viciously gouge at"
-                   },
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You attempt a heavy raking punch"
-                   }
-               ]
-           },
-           {
-               "command": "doublej",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "With a rapid one-two punch"
-               }
-           },
-           {
-               "command": "spin",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "Arm extended, you pivot backwards"
-               }
-           },
-           {
-               "command": "triplesl",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "With both arms extended, you spin in place"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Cestus Basic",
-       "scriptName": "cestusBasic",
-       "scriptType": "combat",
-       "shouldKillParse": "Your quick, vicious blow",
-       "stanceCommand": ""
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "swat",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "With a quick back-handed"
-               }
-           },
-           {
-               "command": "strike",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "overhead motion, striking"
-               }
-           },
-           {
-               "command": "bash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "bash downwards"
-               }
-           },
-           {
-               "command": "smash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "pivot into a crushing"
-               }
-           },
-           {
-               "command": "crush",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "twist into a crushing"
-               }
-           },
-           {
-               "command": "sides",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "swing it horizontally"
-               }
-           },
-           {
-               "command": "upswing",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You lower your"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Clubs Basic",
-       "scriptName": "clubsBasic",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "You bash",
-       "stanceCommand": "iunius"
-   },
-   {
-       "commandList": [
-           {
-               "command": "bait pole with worm",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You bait a"
-                   },
-                   {
-                       "moveNextWhen": "",
-                       "outcome": "is already baited"
-                   }
-               ]
-           },
-           {
-               "command": "cast pole",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "no longer has any bait on it"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Fishing - Worms",
-       "scriptName": "fishingWorms",
-       "scriptType": "nonCom"
-   },
-   {
-       "commandList": [
-           {
-               "command": "cut bandage from",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You remove the bandages from"
-                   },
-                   {
-                       "moveNextWhen": "",
-                       "outcome": "There are no bandages there"
-                   }
-               ]
-           },
-           {
-               "command": "bandage <target> with bandages",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You wrap a clean bandage around"
-               }
-           },
-           {
-               "command": "clean <target> with antiseptic",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You clean your"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Healing Basic",
-       "scriptName": "healingBasic",
-       "scriptType": "nonCom"
-   },
-   {
-       "commandList": [
-           {
-               "command": "cut bandage from",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You remove the bandages from"
-                   },
-                   {
-                       "moveNextWhen": "",
-                       "outcome": "There are no bandages there"
-                   }
-               ]
-           },
-           {
-               "command": "bandage <target> with bandages",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You wrap a clean bandage around"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Healing Bandaging",
-       "scriptName": "healingBandaging",
-       "scriptType": "nonCom"
-   },
-   {
-       "commandList": [
-           {
-               "command": "gather twigs",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You gather up a handful"
-               }
-           },
-           {
-               "command": "stoke fire with twig",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You carefully work a"
-               }
-           },
-           {
-               "command": "find firewood",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You search the area, finding some"
-               }
-           },
-           {
-               "command": "make torch with dead",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You successfully convert"
-               }
-           },
-           {
-               "command": "find resource",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "After searching the area a while"
-               }
-           },
-           {
-               "command": "find sapling",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You have found a suitable looking"
-                   },
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "There do not appear to be any viable saplings"
-                   }
-               ]
-           },
-           {
-               "command": "find berries",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You walk around the area, picking berries"
-                   },
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "After a short search, you fail"
-                   }
-               ]
-           }
-       ],
-       "scriptFriendlyName": "Outdoors Basic",
-       "scriptName": "outdoorsBasic",
-       "scriptType": "nonCom"
-   },
-   {
-       "commandList": [
-           {
-               "command": "gather twigs",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You gather up a handful"
-               }
-           },
-           {
-               "command": "stoke fire with twig",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You carefully work a"
-               }
-           },
-           {
-               "command": "find firewood",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You search the area, finding some"
-               }
-           },
-           {
-               "command": "make torch with dead",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You successfully convert"
-               }
-           },
-           {
-               "command": "find resource",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "After searching the area a while"
-               }
-           },
-           {
-               "command": "find sapling",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You have found a suitable looking"
-                   },
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "There do not appear to be any viable saplings"
-                   }
-               ]
-           }
-       ],
-       "scriptFriendlyName": "Outdoors Without Berries",
-       "scriptName": "outdoorsWithoutBerries",
-       "scriptType": "nonCom"
-   },
-   {
-       "commandList": [
-           {
-               "command": "palm",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You barely manage to palm"
-                   },
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You nearly drop a"
-                   },
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "You manage to palm"
-                   },
-                   {
-                       "moveNextWhen": "",
-                       "outcome": "You are already palming that"
-                   }
-               ]
-           },
-           {
-               "command": "unpalm",
-               "parse": {
-                   "moveNextWhen": "",
-                   "outcome": "You flip your wrist"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Palming",
-       "scriptName": "palming",
-       "scriptType": "nonCom"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "lpalm",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You lean into your forward shoulder"
-               }
-           },
-           {
-               "command": "felbow",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You turn and lean into your shoulder while bringing your elbow"
-               }
-           },
-           {
-               "command": "spalm",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You twist slightly, throwing a straight strike"
-               }
-           },
-           {
-               "command": "dknee",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you drive your knee forward into"
-               }
-           },
-           {
-               "command": "rpalm",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You dip one hand then shoot an upward palm-strike"
-               }
-           },
-           {
-               "command": "relbow",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You dip one hand then shoot an upward elbow-strike"
-               }
-           },
-           {
-               "command": "wknee",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You lift your back leg up, perpendicular"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Pankration Basic",
-       "scriptName": "pankrationBasic",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "You strangle a",
-       "stanceCommand": "pankr"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "swat",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you swat at"
-               }
-           },
-           {
-               "command": "smash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you step forward and pivot slightly"
-               }
-           },
-           {
-               "command": "snaps",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you chop down at"
-               }
-           },
-           {
-               "command": "spins",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "Stepping slightly to the side"
-               }
-           },
-           {
-               "command": "strike",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you bring the end of"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Staves Basic",
-       "scriptName": "stavesBasic",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "You bash a",
-       "stanceCommand": "skirmish"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "swat",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you swat at"
-               }
-           },
-           {
-               "command": "smash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you step forward and pivot slightly"
-               }
-           },
-           {
-               "command": "snaps",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you chop down at"
-               }
-           },
-           {
-               "command": "strike",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you bring the end of"
-               }
-           },
-           {
-               "command": "sides",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you let loose a quick side strike"
-               }
-           },
-           {
-               "command": "jab",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You jab tentatively"
-               }
-           },
-           {
-               "command": "spins",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "Stepping slightly to the side"
-               }
-           },
-           {
-               "command": "tripleb",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "Bashing downwards with"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Staves Full",
-       "scriptName": "stavesFull",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "You bash a",
-       "stanceCommand": "skirmish"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "qrake",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you quickly rake"
-               }
-           },
-           {
-               "command": "jab",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You tentatively jab"
-               }
-           },
-           {
-               "command": "stab",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You make a quick stabbing"
-               }
-           },
-           {
-               "command": "slash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You slash horizontally"
-               }
-           },
-           {
-               "command": "bash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "you release a quick bashing"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Tridents Basic",
-       "scriptName": "tridentsBasic",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "",
-       "stanceCommand": "harpoon"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "chop",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You raise your"
-               }
-           },
-           {
-               "command": "slash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You make a wide horizontal"
-               }
-           },
-           {
-               "command": "swat",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "Shifting your grip"
-               }
-           },
-           {
-               "command": "strike",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You slide your lower hand"
-               }
-           },
-           {
-               "command": "hslash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "wide-arced slash"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Two-Handed Axe Basic",
-       "scriptName": "twoHandBasic",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "With massive force",
-       "stanceCommand": "wgrip"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "chop",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You raise your"
-               }
-           },
-           {
-               "command": "slash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You make a wide horizontal"
-               }
-           },
-           {
-               "command": "bstrike",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "With your weapon turned"
-                   },
-                   {
-                       "moveNextWhen": "",
-                       "outcome": "This maneuver needs to follow"
-                   }
-               ]
-           },
-           {
-               "command": "swat",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "Shifting your grip"
-               }
-           },
-           {
-               "command": "strike",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You slide your lower hand"
-               }
-           },
-           {
-               "command": "hslash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "wide-arced slash"
-               }
-           },
-           {
-               "command": "cchop",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "diagonal chop"
-               }
-           },
-           {
-               "command": "uslash",
-               "parse": [
-                   {
-                       "moveNextWhen": "You are no longer busy",
-                       "outcome": "you slash upward at"
-                   },
-                   {
-                       "moveNextWhen": "",
-                       "outcome": "This maneuver needs to follow"
-                   }
-               ]
-           },
-           {
-               "command": "break",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You plant your feet into the ground"
-               }
-           },
-           {
-               "command": "overh",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "directing a heavy chop"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Two-Handed Axe Full",
-       "scriptName": "twoHandFull",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "With massive force",
-       "stanceCommand": "wgrip"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "overh",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "directing a heavy chop"
-               }
-           },
-           {
-               "command": "cchop",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "diagonal chop"
-               }
-           },
-           {
-               "command": "hslash",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "wide-arced slash"
-               }
-           },
-           {
-               "command": "break",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You plant your feet into the ground"
-               }
-           },
-           {
-               "command": "swat",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "Shifting your grip"
-               }
-           },
-           {
-               "command": "strike",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You slide your lower hand"
-               }
-           },
-           {
-               "command": "chop",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "You raise your"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Two-Handed Axe Core",
-       "scriptName": "twoHandCore",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "With massive force",
-       "stanceCommand": "wgrip"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "overh",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "directing a heavy chop"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Two-Handed Axe Kill Overhead",
-       "scriptName": "twoHandOverkill",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "With massive force",
-       "stanceCommand": "wgrip"
-   },
-   {
-       "addAttack": false,
-       "commandList": [
-           {
-               "command": "swat",
-               "parse": {
-                   "moveNextWhen": "You are no longer busy",
-                   "outcome": "Shifting your grip"
-               }
-           }
-       ],
-       "scriptFriendlyName": "Two-Handed Axe Min Gains",
-       "scriptName": "twoHandMin",
-       "scriptType": "combat",
-       "shouldKill": true,
-       "shouldKillParse": "With massive force",
-       "stanceCommand": "wgrip"
-   },
-   {
-       "commandList": [
-           {
-               "command": "echo <target>",
-               "parse": {
-                   "moveNextWhen": "Now you repeat it",
-                   "outcome": ""
-               }
-           }
-       ],
-       "scriptFriendlyName": "Language Echo",
-       "scriptName": "languageEcho",
-       "scriptType": "nonCom"
-   }
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "quickload bow",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "With a quick fluid motion"
+                    }
+                ]
+            },
+            {
+                "command": "shoot target",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "isn't loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You fire a"
+                    }
+                ]
+            }
+        ],
+        "scriptFriendlyName": "Archery Target",
+        "scriptName": "archTarg",
+        "scriptType": "combat",
+        "shouldKill": false,
+        "shouldKillParse": "",
+        "stanceCommand": "",
+        "weaponItemName": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "slash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You swing a cestus-covered fist"
+                }
+            },
+            {
+                "command": "jab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "with a swift punch using"
+                }
+            },
+            {
+                "command": "stab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You send a heavy, underhand punch"
+                }
+            },
+            {
+                "command": "gouge",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "you viciously gouge at"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You attempt a heavy raking punch"
+                    }
+                ]
+            },
+            {
+                "command": "doublej",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "With a rapid one-two punch"
+                }
+            },
+            {
+                "command": "spin",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Arm extended, you pivot backwards"
+                }
+            },
+            {
+                "command": "triplesl",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "With both arms extended, you spin in place"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Cestus Basic",
+        "scriptName": "cestusBasic",
+        "scriptType": "combat",
+        "shouldKillParse": "Your quick, vicious blow",
+        "stanceCommand": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "With a quick back-handed"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "overhead motion, striking"
+                }
+            },
+            {
+                "command": "bash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "bash downwards"
+                }
+            },
+            {
+                "command": "smash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "pivot into a crushing"
+                }
+            },
+            {
+                "command": "crush",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "twist into a crushing"
+                }
+            },
+            {
+                "command": "sides",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "swing it horizontally"
+                }
+            },
+            {
+                "command": "upswing",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You lower your"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Clubs Basic",
+        "scriptName": "clubsBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You bash",
+        "stanceCommand": "iunius"
+    },
+    {
+        "commandList": [
+            {
+                "command": "bait pole with worm",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You bait a"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already baited"
+                    }
+                ]
+            },
+            {
+                "command": "cast pole",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "no longer has any bait on it"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Fish With Worms",
+        "scriptName": "fishworms",
+        "scriptType": "nonCom"
+    },
+    {
+        "commandList": [
+            {
+                "command": "cut bandage from",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You remove the bandages from"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "There are no bandages there"
+                    }
+                ]
+            },
+            {
+                "command": "bandage <target> with bandages",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You wrap a clean bandage around"
+                }
+            },
+            {
+                "command": "clean <target> with antiseptic",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You clean your"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Healing Basic",
+        "scriptName": "healingBasic",
+        "scriptType": "nonCom"
+    },
+    {
+        "commandList": [
+            {
+                "command": "cut bandage from",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You remove the bandages from"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "There are no bandages there"
+                    }
+                ]
+            },
+            {
+                "command": "bandage <target> with bandages",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You wrap a clean bandage around"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Healing Bandaging",
+        "scriptName": "healingBandaging",
+        "scriptType": "nonCom"
+    },
+    {
+        "commandList": [
+            {
+                "command": "gather twigs",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You gather up a handful"
+                }
+            },
+            {
+                "command": "stoke fire with twig",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You carefully work a"
+                }
+            },
+            {
+                "command": "find firewood",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You search the area, finding some"
+                }
+            },
+            {
+                "command": "make torch with dead",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You successfully convert"
+                }
+            },
+            {
+                "command": "find resource",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "After searching the area a while"
+                }
+            },
+            {
+                "command": "find sapling",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You have found a suitable looking"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "There do not appear to be any viable saplings"
+                    }
+                ]
+            },
+            {
+                "command": "find berries",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You walk around the area, picking berries"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "After a short search, you fail"
+                    }
+                ]
+            }
+        ],
+        "scriptFriendlyName": "Outdoors Basic",
+        "scriptName": "outdoorsBasic",
+        "scriptType": "nonCom"
+    },
+    {
+        "commandList": [
+            {
+                "command": "gather twigs",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You gather up a handful"
+                }
+            },
+            {
+                "command": "stoke fire with twig",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You carefully work a"
+                }
+            },
+            {
+                "command": "find firewood",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You search the area, finding some"
+                }
+            },
+            {
+                "command": "make torch with dead",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You successfully convert"
+                }
+            },
+            {
+                "command": "find resource",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "After searching the area a while"
+                }
+            },
+            {
+                "command": "find sapling",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You have found a suitable looking"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "There do not appear to be any viable saplings"
+                    }
+                ]
+            }
+        ],
+        "scriptFriendlyName": "Outdoors Without Berries",
+        "scriptName": "outdoorsWithoutBerries",
+        "scriptType": "nonCom"
+    },
+    {
+        "commandList": [
+            {
+                "command": "palm",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You barely manage to palm"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You nearly drop a"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You manage to palm"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You are already palming that"
+                    }
+                ]
+            },
+            {
+                "command": "unpalm",
+                "parse": {
+                    "moveNextWhen": "",
+                    "outcome": "You flip your wrist"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Palming",
+        "scriptName": "palming",
+        "scriptType": "nonCom"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "lpalm",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You lean into your forward shoulder"
+                }
+            },
+            {
+                "command": "felbow",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You turn and lean into your shoulder while bringing your elbow"
+                }
+            },
+            {
+                "command": "spalm",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You twist slightly, throwing a straight strike"
+                }
+            },
+            {
+                "command": "dknee",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you drive your knee forward into"
+                }
+            },
+            {
+                "command": "rpalm",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You dip one hand then shoot an upward palm-strike"
+                }
+            },
+            {
+                "command": "relbow",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You dip one hand then shoot an upward elbow-strike"
+                }
+            },
+            {
+                "command": "wknee",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You lift your back leg up, perpendicular"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Pankration Basic",
+        "scriptName": "pankrationBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You strangle a",
+        "stanceCommand": "pankr"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you swat at"
+                }
+            },
+            {
+                "command": "smash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you step forward and pivot slightly"
+                }
+            },
+            {
+                "command": "snaps",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you chop down at"
+                }
+            },
+            {
+                "command": "spins",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Stepping slightly to the side"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you bring the end of"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Staves Basic",
+        "scriptName": "stavesBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You bash a",
+        "stanceCommand": "skirmish"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you swat at"
+                }
+            },
+            {
+                "command": "smash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you step forward and pivot slightly"
+                }
+            },
+            {
+                "command": "snaps",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you chop down at"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you bring the end of"
+                }
+            },
+            {
+                "command": "sides",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you let loose a quick side strike"
+                }
+            },
+            {
+                "command": "jab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You jab tentatively"
+                }
+            },
+            {
+                "command": "spins",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Stepping slightly to the side"
+                }
+            },
+            {
+                "command": "tripleb",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Bashing downwards with"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Staves Full",
+        "scriptName": "stavesFull",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You bash a",
+        "stanceCommand": "skirmish"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "qrake",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you quickly rake"
+                }
+            },
+            {
+                "command": "jab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You tentatively jab"
+                }
+            },
+            {
+                "command": "stab",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You make a quick stabbing"
+                }
+            },
+            {
+                "command": "slash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You slash horizontally"
+                }
+            },
+            {
+                "command": "bash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "you release a quick bashing"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Tridents Basic",
+        "scriptName": "tridentsBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "",
+        "stanceCommand": "harpoon"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "chop",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You raise your"
+                }
+            },
+            {
+                "command": "slash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You make a wide horizontal"
+                }
+            },
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Shifting your grip"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You slide your lower hand"
+                }
+            },
+            {
+                "command": "hslash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "wide-arced slash"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Two-Handed Axe Basic",
+        "scriptName": "twoHandBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "chop",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You raise your"
+                }
+            },
+            {
+                "command": "slash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You make a wide horizontal"
+                }
+            },
+            {
+                "command": "bstrike",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "With your weapon turned"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "This maneuver needs to follow"
+                    }
+                ]
+            },
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Shifting your grip"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You slide your lower hand"
+                }
+            },
+            {
+                "command": "hslash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "wide-arced slash"
+                }
+            },
+            {
+                "command": "cchop",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "diagonal chop"
+                }
+            },
+            {
+                "command": "uslash",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "you slash upward at"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "This maneuver needs to follow"
+                    }
+                ]
+            },
+            {
+                "command": "break",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You plant your feet into the ground"
+                }
+            },
+            {
+                "command": "overh",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "directing a heavy chop"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Two-Handed Axe Full",
+        "scriptName": "twoHandFull",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "overh",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "directing a heavy chop"
+                }
+            },
+            {
+                "command": "cchop",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "diagonal chop"
+                }
+            },
+            {
+                "command": "hslash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "wide-arced slash"
+                }
+            },
+            {
+                "command": "break",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You plant your feet into the ground"
+                }
+            },
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Shifting your grip"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You slide your lower hand"
+                }
+            },
+            {
+                "command": "chop",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You raise your"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Two-Handed Axe Core",
+        "scriptName": "twoHandCore",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "overh",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "directing a heavy chop"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Two-Handed Axe Kill Overhead",
+        "scriptName": "twoHandOverkill",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Shifting your grip"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Two-Handed Axe Min Gains",
+        "scriptName": "twoHandMin",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip"
+    },
+    {
+        "commandList": [
+            {
+                "command": "echo <target>",
+                "parse": {
+                    "moveNextWhen": "Now you repeat it",
+                    "outcome": ""
+                }
+            }
+        ],
+        "scriptFriendlyName": "Language Echo",
+        "scriptName": "languageEcho",
+        "scriptType": "nonCom"
+    }
 ]
