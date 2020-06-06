@@ -26,6 +26,7 @@ let commandList = [];
 let currentCmdIndex = 0;
 let currentMoveNextWhen = null;
 let commandOverride = null;
+let lastCommandRan = null;
 
 // Combat
 let shouldKill = false;
@@ -673,6 +674,7 @@ function slashCommand(command) {
         sendClientMessage(`The current script is: ${currentScriptName}`);
     }
     else if (commandName === '/start') {
+        lastCommandRan = command;
         // Remove empty param option if found
         if (commandParams.includes('')) {
             commandParams.splice(commandParams.indexOf(''), 1);
@@ -713,6 +715,7 @@ function slashCommand(command) {
         sendClientMessage(`Script stopped.`);
     }
     else if (commandName === '/repeat') {
+        lastCommandRan = command;
         // Grab the entire command after the command name to use verbatim.
         const cmdParams = command.split('/repeat');
         if (cmdParams.length <= 1)
@@ -723,7 +726,8 @@ function slashCommand(command) {
         runSimpleRepeatWithDelay(cmd);
         sendClientMessage(`Starting to repeat the command: ${cmd}`)
     }
-    else if (command.includes('/repeatnlb')) {
+    else if (commandName === '/repeatnlb') {
+        lastCommandRan = command;
         // Grab the entire command after the command name to use verbatim.
         const cmdParams = command.split('/repeatnlb');
         if (cmdParams.length <= 1)
@@ -734,16 +738,29 @@ function slashCommand(command) {
         runSimpleRepeat(cmd);
         sendClientMessage(`Starting to repeat the command: ${cmd}`)
     }
-    else if (command.includes('/pause')) {
+    else if (commandName === '/pause') {
         scriptPaused = true;
-        sendClientMessage(`Paused script: ${currentScriptName}`)
+        sendClientMessage(`Paused: ${getRunningCommand()}`)
     }
-    else if (command.includes('/resume')) {
+    else if (commandName === '/resume') {
         scriptPaused = false;
         sendNextCommand();
-        sendClientMessage(`Resumed script: ${currentScriptName}`)
+        sendClientMessage(`Resumed: ${getRunningCommand()}`)
     }
     else {
         sendClientMessage(`Slash command ${command} not found.`)
     }
+}
+
+function getRunningCommand(){
+    let runningCmd = '';
+
+    if (currentScriptName) {
+        runningCmd = `Script - ${currentScriptName}`;
+    }
+    else {
+        runningCmd = lastCommandRan;
+    }
+
+    return runningCmd;
 }
