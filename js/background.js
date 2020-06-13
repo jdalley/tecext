@@ -539,13 +539,20 @@ function getFormattedCommand() {
     if (commandList.length <= 0 || commandList[currentCmdIndex] === undefined) return '';
 
     let command = commandList[currentCmdIndex].command;
+    let targetRequired = true;
+
+    // If there is a value present for targetRequired, and it is false, then don't add a target.
+    if (commandList[currentCmdIndex].targetRequired !== undefined
+        && commandList[currentCmdIndex].targetRequired === "false") {
+        targetRequired = false;
+    }
 
     // Check if the command has moved <target> to be replaced:
     if (command.indexOf('<target>') >= 0) {
         // Check for target replacement:
         command = command.replace('<target>', target, 'g');
     }
-    else {
+    else if (targetRequired) {
         // Tack target onto the end by default:
         command += ' ' + target;
     }

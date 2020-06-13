@@ -4,6 +4,7 @@
         "commandList": [
             {
                 "command": "quickload bow",
+                "targetRequired": "false",
                 "parse": [
                     {
                         "moveNextWhen": "",
@@ -11,12 +12,12 @@
                     },
                     {
                         "moveNextWhen": "You are no longer busy",
-                        "outcome": "With a quick fluid motion"
+                        "outcome": "With a quick fluid motion you load"
                     }
                 ]
             },
             {
-                "command": "shoot target",
+                "command": "shoot",
                 "parse": [
                     {
                         "moveNextWhen": "",
@@ -27,10 +28,37 @@
                         "outcome": "You fire a"
                     }
                 ]
+            },
+            {
+                "command": "quickload bow",
+                "targetRequired": "false",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "With a quick fluid motion you load"
+                    }
+                ]
+            },
+            {
+                "command": "handshot",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "isn't loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": ", targeting the hand."
+                    }
+                ]
             }
         ],
-        "scriptFriendlyName": "Archery Target",
-        "scriptName": "archTarg",
+        "scriptFriendlyName": "Archery Core Rotation",
+        "scriptName": "archCore",
         "scriptType": "combat",
         "shouldKill": false,
         "shouldKillParse": "",

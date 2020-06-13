@@ -20,18 +20,28 @@ if (typeof doReceive !== 'undefined') {
     doReceive = function (msg) {
         doReceiveOverride(msg);
 
-        // Colorize 'say to'
-        // if (msg.indexOf('say to') >= 0
-        //     || msg.indexOf(' says') >= 0
-        //     || msg.indexOf(' ask') >= 0
-        //     || msg.indexOf(' exclaim') >= 0
-        //     || msg.indexOf(' wink') >= 0) {
-        //     msg = '</font><font color="#0020ff">' + msg;
-        // }
+        // Pull out communication for the comms window:
+        arguments[0] = pullCommunication(msg);
 
         origDoReceive.apply(this, arguments);
         return;
     };
+}
+
+function pullCommunication(msg) {
+    // //Colorize 'say to'
+    // if (msg.indexOf('say to') >= 0
+    //     || msg.indexOf(' says') >= 0
+    //     || msg.indexOf(' ask') >= 0
+    //     || msg.indexOf(' exclaim') >= 0
+    //     || msg.indexOf(' wink') >= 0) {
+    //     msg = `</font><div style="color: #00cde1;">${msg}</div>`;
+    // }
+
+    // arguments[0] = msg;
+
+
+    return msg;
 }
 
 // Send intercepted commands to the content script:
@@ -69,7 +79,7 @@ document.addEventListener('tecSendMessage', function (e) {
 
 
 /**
- * This section is to create elements on the right sidebar and attach events to them.
+ * This section is to create elements on the page and attach events to them.
  */
 setTimeout(function() {
     // Insert UI elements above the macro area.
@@ -93,6 +103,22 @@ setTimeout(function() {
                 background-color:#5eba7d;">Edit Scripts</div>
         </div>
     `);
+
+    // document.getElementById('core').insertAdjacentHTML('afterbegin',`
+    //     <style>
+    //         #comms {
+    //             width: 100%;
+    //             height: 200px;
+    //             color: #c7c7c7;
+    //             background-color: #060b0e;
+    //             border-color: #000000;
+    //             border-bottom-color: #c7c7c7;
+    //             overflow-y:scroll;
+    //         }
+    //     </style>
+    //     <div id="comms">
+    //     </div>
+    // `);
 
     // Send an event to the content script to open the edit scripts window.
     document.getElementById('editScripts').addEventListener("click", function() {
