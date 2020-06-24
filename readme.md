@@ -56,7 +56,8 @@ The UI is very much temporary and doesn't make a ton of sense, so let's called i
 * Run Script: clears all current values of any in-progress scripts, and uses the weapon/target to start the selected script from scratch.
 * Stop Script: stops the currently running script, and clears all current values set by that script.
 
-You can also get to the 'Edit Scripts' popup by clicking on the following button that appears above the macro section:
+You can also get to the 'Edit Scripts' popup by clicking on the following button that appears above the macro section:  
+
 ![image](https://user-images.githubusercontent.com/232725/85637391-b0e63980-b648-11ea-801f-0fe4338437e9.png)
 
 ### Slash Commands
