@@ -56,23 +56,23 @@ The UI is very much temporary and doesn't make a ton of sense, so let's called i
 * Run Script: clears all current values of any in-progress scripts, and uses the weapon/target to start the selected script from scratch.
 * Stop Script: stops the currently running script, and clears all current values set by that script.
 
+You can also get to the 'Edit Scripts' popup by clicking on the following button that appears above the macro section:  
+
+![image](https://user-images.githubusercontent.com/232725/85637391-b0e63980-b648-11ea-801f-0fe4338437e9.png)
+
 ### Slash Commands
 
 Additionally, there are some slash commands you can enter in the game input to take advantage of some features without leaving the input. Type `/help` to view available command information, where you'll get output like this in red text:
 
-```
-Here are the available commands:
-/scripts - List of currently defined scripts
-/current - Display the currently running script
-/start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional, default true
-/stop - Stop the currently running script
-/repeat [command] - Repeats a given command, expects 'No longer busy' inbetween
-/pause - Pause the current script
-/resume - Resume the current script
-```
+![image](https://user-images.githubusercontent.com/232725/85637288-71b7e880-b648-11ea-9348-1d614da65597.png)
+
+You can get a list of current scripts available with `/scripts`:
+
+![image](https://user-images.githubusercontent.com/232725/85637298-78466000-b648-11ea-919d-8eb24d2bc1d2.png)
 
 Because it's not super intuitive here's a few examples for the `/start` command:
-- `/start twohandfullrotation dog|rat two-handed`
+- `/start twohandcore dog|rat two-handed`
 - `/start outdoorsBasic`
   - In this case you can see the target/weaponItemName are not added, this is because they aren't required for nonCom type scripts (check the example scripts for an example of nonCom vs combat).
 Any command starting with a forward slash is not sent to the TEC server, instead it's interpreted by the extension. Additionally, all messages from the extension will be in a consistent red text with a smaller font size to distinguish it.
+
