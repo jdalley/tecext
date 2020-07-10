@@ -52,7 +52,61 @@
                     },
                     {
                         "moveNextWhen": "You are no longer busy",
-                        "outcome": ", targeting the hand."
+                        "outcome": "You take careful aim"
+                    }
+                ]
+            },
+            {
+                "command": "quickload bow",
+                "targetRequired": "false",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "With a quick fluid motion you load"
+                    }
+                ]
+            },
+            {
+                "command": "headshot",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "isn't loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You fire a"
+                    }
+                ]
+            },
+            {
+                "command": "quickload bow",
+                "targetRequired": "false",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "With a quick fluid motion you load"
+                    }
+                ]
+            },
+            {
+                "command": "quicksh",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "isn't loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You quickly raise your"
                     }
                 ]
             }
@@ -60,8 +114,86 @@
         "scriptFriendlyName": "Archery Core Rotation",
         "scriptName": "archCore",
         "scriptType": "combat",
-        "shouldKill": false,
-        "shouldKillParse": "",
+        "shouldKill": true,
+        "shouldKillParse": "you twist sharply",
+        "stanceCommand": "",
+        "weaponItemName": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "quickload bow",
+                "targetRequired": "false",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "With a quick fluid motion you load"
+                    }
+                ]
+            },
+            {
+                "command": "quicksh",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "isn't loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You quickly raise your"
+                    }
+                ]
+            }
+        ],
+        "scriptFriendlyName": "Archery Quickshot Only",
+        "scriptName": "archQuick",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "you twist sharply",
+        "stanceCommand": "",
+        "weaponItemName": ""
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "quickload bow",
+                "targetRequired": "false",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "is already loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "With a quick fluid motion you load"
+                    }
+                ]
+            },
+            {
+                "command": "shoot",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "isn't loaded"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You fire a"
+                    }
+                ]
+            }
+        ],
+        "scriptFriendlyName": "Archery Shot Only",
+        "scriptName": "archShot",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "you twist sharply",
         "stanceCommand": "",
         "weaponItemName": ""
     },
