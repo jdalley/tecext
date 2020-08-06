@@ -4,7 +4,6 @@
         "commandList": [
             {
                 "command": "quickload bow",
-                "targetRequired": "false",
                 "parse": [
                     {
                         "moveNextWhen": "",
@@ -14,7 +13,8 @@
                         "moveNextWhen": "You are no longer busy",
                         "outcome": "With a quick fluid motion you load"
                     }
-                ]
+                ],
+                "targetRequired": "false"
             },
             {
                 "command": "shoot",
@@ -31,7 +31,6 @@
             },
             {
                 "command": "quickload bow",
-                "targetRequired": "false",
                 "parse": [
                     {
                         "moveNextWhen": "",
@@ -41,7 +40,8 @@
                         "moveNextWhen": "You are no longer busy",
                         "outcome": "With a quick fluid motion you load"
                     }
-                ]
+                ],
+                "targetRequired": "false"
             },
             {
                 "command": "handshot",
@@ -58,7 +58,6 @@
             },
             {
                 "command": "quickload bow",
-                "targetRequired": "false",
                 "parse": [
                     {
                         "moveNextWhen": "",
@@ -68,7 +67,8 @@
                         "moveNextWhen": "You are no longer busy",
                         "outcome": "With a quick fluid motion you load"
                     }
-                ]
+                ],
+                "targetRequired": "false"
             },
             {
                 "command": "headshot",
@@ -85,7 +85,6 @@
             },
             {
                 "command": "quickload bow",
-                "targetRequired": "false",
                 "parse": [
                     {
                         "moveNextWhen": "",
@@ -95,7 +94,8 @@
                         "moveNextWhen": "You are no longer busy",
                         "outcome": "With a quick fluid motion you load"
                     }
-                ]
+                ],
+                "targetRequired": "false"
             },
             {
                 "command": "quicksh",
@@ -124,7 +124,6 @@
         "commandList": [
             {
                 "command": "quickload bow",
-                "targetRequired": "false",
                 "parse": [
                     {
                         "moveNextWhen": "",
@@ -134,7 +133,8 @@
                         "moveNextWhen": "You are no longer busy",
                         "outcome": "With a quick fluid motion you load"
                     }
-                ]
+                ],
+                "targetRequired": "false"
             },
             {
                 "command": "quicksh",
@@ -163,7 +163,6 @@
         "commandList": [
             {
                 "command": "quickload bow",
-                "targetRequired": "false",
                 "parse": [
                     {
                         "moveNextWhen": "",
@@ -173,7 +172,8 @@
                         "moveNextWhen": "You are no longer busy",
                         "outcome": "With a quick fluid motion you load"
                     }
-                ]
+                ],
+                "targetRequired": "false"
             },
             {
                 "command": "shoot",
@@ -299,9 +299,55 @@
                     "moveNextWhen": "You are no longer busy",
                     "outcome": "twist into a crushing"
                 }
+            }
+        ],
+        "scriptFriendlyName": "Club Basic",
+        "scriptName": "clubBasic",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You bash",
+        "stanceCommand": "iunius"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "With a quick back-handed"
+                }
             },
             {
-                "command": "sides",
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "overhead motion, striking"
+                }
+            },
+            {
+                "command": "bash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "bash downwards"
+                }
+            },
+            {
+                "command": "smash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "pivot into a crushing"
+                }
+            },
+            {
+                "command": "crush",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "twist into a crushing"
+                }
+            },
+            {
+                "command": "side",
                 "parse": {
                     "moveNextWhen": "You are no longer busy",
                     "outcome": "swing it horizontally"
@@ -313,10 +359,30 @@
                     "moveNextWhen": "You are no longer busy",
                     "outcome": "You lower your"
                 }
+            },
+            {
+                "command": "break",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You swing your"
+                }
+            },
+            {
+                "command": "hbash",
+                 "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "miss with your downwards bash"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "jump up, bashing at"
+                    }
+                ]
             }
         ],
-        "scriptFriendlyName": "Clubs Basic",
-        "scriptName": "clubsBasic",
+        "scriptFriendlyName": "Club Full",
+        "scriptName": "clubFull",
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "You bash",
