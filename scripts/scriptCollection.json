@@ -1,5 +1,162 @@
 [
     {
+        "commandList": [
+            {
+                "command": "stand",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You stand up"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You are already standing."
+                    }
+                ]
+            },
+            {
+                "command": "e",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You don't see a"
+                    },
+                    {
+                        "moveNextWhen": "You arrive at a climbing wall.",
+                        "outcome": "You walk to a climbing wall"
+                    }
+                ]
+            },
+            {
+                "command": "climb rope",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You don't see any"
+                    },
+                    {
+                        "moveNextWhen": "You arrive",
+                        "outcome": "You start to climb"
+                    }
+                ]
+            },
+            {
+                "command": "go plank",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You must be standing"
+                    },
+                    {
+                        "moveNextWhen": "You arrive at a",
+                        "outcome": "You pick a plank"
+                    }
+                ]
+            },
+            {
+                "command": "go path",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You must be standing"
+                    },
+                    {
+                        "moveNextWhen": "You arrive",
+                        "outcome": "You run down"
+                    }
+                ]
+            }
+        ],
+        "scriptFriendlyName": "3 part courses",
+        "scriptName": "3parter",
+        "scriptType": "nonCom"
+    },
+    {
+        "commandList": [
+            {
+                "command": "stand",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You stand up"
+                    },
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You are already standing."
+                    }
+                ]
+            },
+            {
+                "command": "s",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You don't see a"
+                    },
+                    {
+                        "moveNextWhen": "You arrive at a mud pit.",
+                        "outcome": "You walk to a mud pit"
+                    }
+                ]
+            },
+            {
+                "command": "jump rope",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You don't see a"
+                    },
+                    {
+                        "moveNextWhen": "You arrive",
+                        "outcome": "You leap at the"
+                    }
+                ]
+            },
+            {
+                "command": "go path",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You must be standing"
+                    },
+                    {
+                        "moveNextWhen": "You arrive at a",
+                        "outcome": "You race down"
+                    }
+                ]
+            },
+            {
+                "command": "go track",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You must be standing"
+                    },
+                    {
+                        "moveNextWhen": "You arrive",
+                        "outcome": "You begin to jog"
+                    }
+                ]
+            },
+            {
+                "command": "go coal",
+                "parse": [
+                    {
+                        "moveNextWhen": "",
+                        "outcome": "You must be standing"
+                    },
+                    {
+                        "moveNextWhen": "You arrive",
+                        "outcome": "You clear your mind"
+                    }
+                ]
+            }
+        ],
+        "scriptFriendlyName": "4 part courses",
+        "scriptName": "4parter",
+        "scriptType": "nonCom"
+    },
+    {
         "addAttack": false,
         "commandList": [
             {
@@ -369,7 +526,7 @@
             },
             {
                 "command": "hbash",
-                 "parse": [
+                "parse": [
                     {
                         "moveNextWhen": "You are no longer busy",
                         "outcome": "miss with your downwards bash"
@@ -383,6 +540,126 @@
         ],
         "scriptFriendlyName": "Club Full",
         "scriptName": "clubFull",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "You bash",
+        "stanceCommand": "iunius"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "swat",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "With a quick back-handed"
+                }
+            },
+            {
+                "command": "strike",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "overhead motion, striking"
+                }
+            },
+            {
+                "command": "bash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "bash downwards"
+                }
+            },
+            {
+                "command": "smash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "pivot into a crushing"
+                }
+            },
+            {
+                "command": "crush",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "twist into a crushing"
+                }
+            },
+            {
+                "command": "side",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "swing it horizontally"
+                }
+            },
+            {
+                "command": "upswing",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You lower your"
+                }
+            },
+            {
+                "command": "break",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You swing your"
+                }
+            },
+            {
+                "command": "hbash",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "miss with your downwards bash"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "jump up, bashing at"
+                    }
+                ]
+            },
+            {
+                "command": "sbash",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You bash"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "with your shield bash!"
+                    }
+                ]
+            },
+            {
+                "command": "edgebash",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "Tilting your shield forward"
+                }
+            },
+            {
+                "command": "supbash",
+                "parse": [
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "You bash upward"
+                    },
+                    {
+                        "moveNextWhen": "You are no longer busy",
+                        "outcome": "with the foot of your shield bash!"
+                    }
+                ]
+            },
+            {
+                "command": "kick",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": "You kick your leg out"
+                }
+            }
+        ],
+        "scriptFriendlyName": "Club Shield & Brawl",
+        "scriptName": "clubShieldBrawl",
         "scriptType": "combat",
         "shouldKill": true,
         "shouldKillParse": "You bash",
@@ -448,6 +725,52 @@
         "scriptFriendlyName": "Healing Basic",
         "scriptName": "healingBasic",
         "scriptType": "nonCom"
+    },
+    {
+        "addAttack": false,
+        "commandList": [
+            {
+                "command": "fe1",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": ""
+                }
+            },
+            {
+                "command": "fe2",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": ""
+                }
+            },
+            {
+                "command": "fe3",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": ""
+                }
+            },
+            {
+                "command": "fe4",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": ""
+                }
+            },
+            {
+                "command": "fe5",
+                "parse": {
+                    "moveNextWhen": "You are no longer busy",
+                    "outcome": ""
+                }
+            }
+        ],
+        "scriptFriendlyName": "Macro: fe1-fe5",
+        "scriptName": "macroRotation2ha",
+        "scriptType": "combat",
+        "shouldKill": true,
+        "shouldKillParse": "With massive force",
+        "stanceCommand": "wgrip"
     },
     {
         "commandList": [

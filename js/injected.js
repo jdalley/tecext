@@ -82,27 +82,44 @@ document.addEventListener('tecSendMessage', function (e) {
  * This section is to create elements on the page and attach events to them.
  */
 setTimeout(function() {
-    // Insert UI elements above the macro area.
-    document.getElementById('macro_area').insertAdjacentHTML('beforebegin',`
-        <style>
-            @keyframes fadeIn {
-                from {
-                    opacity:0;
+    const macroArea = document.getElementById('macro_area');
+    const editScripts = document.getElementById('editScripts');
+
+    if (macroArea) {
+        // Insert UI elements above the macro area.
+        document.getElementById('macro_area').insertAdjacentHTML('beforebegin',`
+            <style>
+                @keyframes fadeIn {
+                    from {
+                        opacity:0;
+                    }
+                    to {
+                        opacity:1;
+                    }
                 }
-                to {
-                    opacity:1;
+            </style>
+            <div id="tecext" style="
+                margin-bottom: 3px;
+                padding: 6px;
+                animation: fadeIn 0.75s;">
+                <div id="editScripts" style="
+                    cursor: pointer;
+                    background-color:#5eba7d;">Edit Scripts</div>
+            </div>
+        `);
+    }
+
+    if (editScripts) {
+        // Send an event to the content script to open the edit scripts window.
+        document.getElementById('editScripts').addEventListener("click", function() {
+            document.dispatchEvent(new CustomEvent('tecUICommand', {
+                detail: {
+                    timestamp: new Date().toISOString(),
+                    command: 'openEditScripts'
                 }
-            }
-        </style>
-        <div id="tecext" style="
-            margin-bottom: 3px;
-            padding: 6px;
-            animation: fadeIn 0.75s;">
-            <div id="editScripts" style="
-                cursor: pointer;
-                background-color:#5eba7d;">Edit Scripts</div>
-        </div>
-    `);
+            }));
+        });
+    }
 
     // document.getElementById('core').insertAdjacentHTML('afterbegin',`
     //     <style>
@@ -120,15 +137,6 @@ setTimeout(function() {
     //     </div>
     // `);
 
-    // Send an event to the content script to open the edit scripts window.
-    document.getElementById('editScripts').addEventListener("click", function() {
-        document.dispatchEvent(new CustomEvent('tecUICommand', {
-            detail: {
-                timestamp: new Date().toISOString(),
-                command: 'openEditScripts'
-            }
-        }));
-    });
 
 }, 1400);
 
