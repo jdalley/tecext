@@ -83,8 +83,7 @@ document.addEventListener('tecSendMessage', function (e) {
  */
 setTimeout(function() {
     const macroArea = document.getElementById('macro_area');
-    const editScripts = document.getElementById('editScripts');
-
+    
     if (macroArea) {
         // Insert UI elements above the macro area.
         document.getElementById('macro_area').insertAdjacentHTML('beforebegin',`
@@ -107,8 +106,9 @@ setTimeout(function() {
                     background-color:#5eba7d;">Edit Scripts</div>
             </div>
         `);
-    }
-
+		}
+		
+		const editScripts = document.getElementById('editScripts');
     if (editScripts) {
         // Send an event to the content script to open the edit scripts window.
         document.getElementById('editScripts').addEventListener("click", function() {
