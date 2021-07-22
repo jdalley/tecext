@@ -646,6 +646,22 @@ function dedent(callSite, ...args) {
     return format(output);
 }
 
+function stringToBoolean(string){
+    switch(string.toLowerCase().trim()) {
+        case "true": 
+        case "yes": 
+        case "1": 
+            return true;
+        case "false": 
+        case "no": 
+        case "0": 
+        case null: 
+            return false;
+        default: 
+            return Boolean(string);
+    }
+}
+
 /**
  *  Handle slash commands that are received from the game client.
  */
@@ -697,9 +713,9 @@ function slashCommand(command) {
         let continueOnWalkIn = true;
 
         if (commandParams.length >= 5)
-            shouldKill = commandParams[4];
+            shouldKill = stringToBoolean(commandParams[4]);
         if (commandParams.length >= 6)
-            continueOnWalkIn = commandParams[5];
+            continueOnWalkIn = stringToBoolean(commandParams[5]);
 
         const script = currentScripts.find(s => {
             return s.scriptName.toLowerCase() === scriptName.toLowerCase()
