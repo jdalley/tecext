@@ -22,7 +22,7 @@
 						"outcome": "You don't see a"
 					},
 					{
-						"moveNextWhen": "You arrive at a climbing wall.",
+						"moveNextWhen": "",
 						"outcome": "You walk to a climbing wall"
 					}
 				]
@@ -94,7 +94,7 @@
 						"outcome": "You don't see a"
 					},
 					{
-						"moveNextWhen": "You arrive at a mud pit.",
+						"moveNextWhen": "",
 						"outcome": "You walk to a mud pit"
 					}
 				]
