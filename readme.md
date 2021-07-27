@@ -14,7 +14,7 @@ After cloning/downloading a copy of this repository:
 
 You should see something like this under chrome://extensions if all goes well:
 
-![Extensions](https://github.com/jdalley/tecext/images/extensions.png)
+![Extensions](https://github.com/jdalley/blob/main/tecext/images/extensions.png)
 
 
 ### Debugging and Viewing Commands for Debugging
@@ -26,13 +26,13 @@ You should see something like this under chrome://extensions if all goes well:
 
 Here's an example of what you'll see in the Dev Tools window:
 
-![Background Dev Tools](https://github.com/jdalley/tecext/blob/master/images/backgroundtools.png "Background Dev Tools")
+![Background Dev Tools](https://github.com/jdalley/tecext/blob/main/images/backgroundtools.png "Background Dev Tools")
 
 ### UI and Scripts
 
 The UI is very much temporary and doesn't make a ton of sense, so let's called it mega-alpha for now.
 
-![Extension UI](https://github.com/jdalley/tecext/blob/master/images/mainui.png "Extension UI")
+![Extension UI](https://github.com/jdalley/tecext/blob/main/images/mainui.png "Extension UI")
 
 
 * Send command does exactly what you'd think, you can enter commands to be sent to the server. Typing in this box and hitting enter will send, then clear the input so you can use it like the normal input in Orchil. If you leave something in the box, then click send - it stays in the box.
@@ -40,7 +40,7 @@ The UI is very much temporary and doesn't make a ton of sense, so let's called i
 * Edit Scripts opens up another window with a really simple JSON editor; you can make your changes to scripts, add new ones etc. When you click Save, it will write the whole script to local storage in chrome, and next time you launch it it'll check there before loading the scriptCollection.json.
     * After Save is clicked and the window closes, you'll notice if there wasn't a parsing error with the JSON, the Choose a script to run dropdown is now updated with your new script.
 
-    ![Edit Scripts UI](https://github.com/jdalley/tecext/blob/master/images/editscripts.png "Edit Scripts UI")
+    ![Edit Scripts UI](https://github.com/jdalley/tecext/blob/main/images/editscripts.png "Edit Scripts UI")
 
 * The Choose a script to run dropdown starts off with a list of script examples that I continually update, found in this repo at [scripts/scriptCollection.json](scripts/scriptCollection.json).
     * Weapon/item name: this input is used in combat scripts as the name of your weapon in case you drop it - it will pick it back up and wield it.
