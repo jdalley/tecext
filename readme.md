@@ -14,7 +14,7 @@ After cloning/downloading a copy of this repository:
 
 You should see something like this under chrome://extensions if all goes well:
 
-![Extensions](https://github.com/jdalley/tecext/blob/main/tecext/images/extensions.png)
+![Extensions](https://github.com/jdalley/tecext/blob/main/images/extensions.png)
 
 
 ### Debugging and Viewing Commands for Debugging
