@@ -580,17 +580,10 @@
     "addAttack": false,
     "commandList": [
       {
-        "command": "swat",
+        "command": "upswing",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "With a quick back-handed"
-        }
-      },
-      {
-        "command": "strike",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "overhead motion, striking"
+          "outcome": "You lower your"
         }
       },
       {
@@ -601,10 +594,10 @@
         }
       },
       {
-        "command": "smash",
+        "command": "strike",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "pivot into a crushing"
+          "outcome": "overhead motion, striking"
         }
       },
       {
@@ -613,10 +606,23 @@
           "moveNextWhen": "You are no longer busy",
           "outcome": "twist into a crushing"
         }
+      },
+      {
+        "command": "hbash",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "miss with your downwards bash"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "jump up, bashing at"
+          }
+        ]
       }
     ],
-    "scriptFriendlyName": "Club Basic",
-    "scriptName": "clubBasic",
+    "scriptFriendlyName": "Club Core",
+    "scriptName": "clubCore",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You bash",
@@ -698,6 +704,52 @@
     ],
     "scriptFriendlyName": "Club Full",
     "scriptName": "clubFull",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You bash",
+    "stanceCommand": "iunius"
+  },
+  {
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "swat",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "With a quick back-handed"
+        }
+      },
+      {
+        "command": "strike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "overhead motion, striking"
+        }
+      },
+      {
+        "command": "bash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "bash downwards"
+        }
+      },
+      {
+        "command": "upswing",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You lower your"
+        }
+      },
+      {
+        "command": "crush",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "twist into a crushing"
+        }
+      }
+    ],
+    "scriptFriendlyName": "Club Ludus",
+    "scriptName": "clubLudus",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You bash",
