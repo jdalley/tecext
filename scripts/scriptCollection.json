@@ -9,7 +9,7 @@
             "outcome": "You stand up"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You are already standing."
           }
         ]
@@ -18,11 +18,11 @@
         "command": "e",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You don't see a"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You walk to a climbing wall"
           }
         ]
@@ -31,7 +31,7 @@
         "command": "climb rope",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You don't see any"
           },
           {
@@ -44,7 +44,7 @@
         "command": "go plank",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You must be standing"
           },
           {
@@ -57,7 +57,7 @@
         "command": "go path",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You must be standing"
           },
           {
@@ -81,7 +81,7 @@
             "outcome": "You stand up"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You are already standing."
           }
         ]
@@ -90,11 +90,11 @@
         "command": "s",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You don't see a"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You walk to a mud pit"
           }
         ]
@@ -103,7 +103,7 @@
         "command": "jump rope",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You don't see a"
           },
           {
@@ -116,7 +116,7 @@
         "command": "go path",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You must be standing"
           },
           {
@@ -129,7 +129,7 @@
         "command": "go track",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You must be standing"
           },
           {
@@ -142,7 +142,7 @@
         "command": "go coal",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You must be standing"
           },
           {
@@ -163,7 +163,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -177,7 +177,7 @@
         "command": "shoot",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -190,7 +190,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -204,7 +204,7 @@
         "command": "handshot",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -217,7 +217,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -231,7 +231,7 @@
         "command": "headshot",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -244,7 +244,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -258,7 +258,7 @@
         "command": "quicksh",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -283,7 +283,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -297,7 +297,7 @@
         "command": "shoot",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -310,7 +310,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -324,7 +324,7 @@
         "command": "headshot",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -337,7 +337,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -351,7 +351,7 @@
         "command": "quicksh",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -376,7 +376,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -390,7 +390,7 @@
         "command": "quicksh",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -415,7 +415,7 @@
         "command": "quickload bow",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already loaded"
           },
           {
@@ -429,7 +429,7 @@
         "command": "shoot",
         "parse": [
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "isn't loaded"
           },
           {
@@ -473,16 +473,10 @@
       },
       {
         "command": "knee",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You slam your knee"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You try to knee"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You try to knee|You slam your knee"
+        }
       },
       {
         "command": "stomp",
@@ -493,16 +487,10 @@
       },
       {
         "command": "kneeb",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You kick"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You try to kick"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You try to kick|You kick"
+        }
       }
     ],
     "scriptFriendlyName": "Brawling Basic",
@@ -926,7 +914,7 @@
             "outcome": "You bait a"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "is already baited"
           }
         ]
@@ -953,7 +941,7 @@
             "outcome": "You remove the bandages from"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "There are no bandages there"
           }
         ]
@@ -1033,7 +1021,7 @@
             "outcome": "You remove the bandages from"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "There are no bandages there"
           }
         ]
@@ -1233,7 +1221,7 @@
             "outcome": "You manage to palm"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "You are already palming that"
           }
         ]
@@ -1241,7 +1229,7 @@
       {
         "command": "unpalm",
         "parse": {
-          "moveNextWhen": "",
+          "moveNextNow": true,
           "outcome": "You flip your wrist"
         }
       }
@@ -1540,7 +1528,7 @@
             "outcome": "With your weapon turned"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "This maneuver needs to follow"
           }
         ]
@@ -1581,7 +1569,7 @@
             "outcome": "you slash upward at"
           },
           {
-            "moveNextWhen": "",
+            "moveNextNow": true,
             "outcome": "This maneuver needs to follow"
           }
         ]
