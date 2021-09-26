@@ -25,6 +25,7 @@ let target = null;
 let commandList = [];
 let currentCmdIndex = 0;
 let currentMoveNextWhen = null;
+let moveNextNow = false;
 let commandOverride = null;
 let lastCommandRan = null;
 
@@ -325,6 +326,7 @@ function killCurrentScript() {
   commandOverride = "";
   currentCmdIndex = 0;
   currentMoveNextWhen = null;
+  moveNextNow = false;
   currentScriptType = "";
   currentScriptName = "";
   scriptPaused = false;
@@ -335,6 +337,7 @@ function killCurrentScript() {
  */
 function combatScript(data) {
   const matchFound = matchExpectedParse(data);
+
   if (matchFound) {
     if (currentCmdIndex === commandList.length - 1) {
       if (addAttack) {
@@ -347,9 +350,12 @@ function combatScript(data) {
       currentCmdIndex++;
     }
 
-    // If the currentMoveNextWhen is null here, send the next command now:
-    if (!currentMoveNextWhen) {
-      sendNextCommand();
+    // If the parse has moveNextNow set to true, or if  currentMoveNextWhen is null, send the next command now:
+    if (moveNextNow || !currentMoveNextWhen) {
+      bkg.console.log("combatScript-sending next command now");
+      // Delay to avoid commands being sent too close together.
+      sendNextCommand(400);
+      return;
     }
   }
 
@@ -448,11 +454,12 @@ function combatScript(data) {
     continueOnWalkIn &&
     (data.indexOf("walks in") >= 0 || data.indexOf(" in from a") >= 0)
   ) {
-    sendNextCommand();
+    sendNextCommand(400);
   }
 
   // Main work for combat loop:
   if (
+    currentMoveNextWhen &&
     currentMoveNextWhen.length > 0 &&
     data.indexOf(currentMoveNextWhen) >= 0
   ) {
@@ -474,15 +481,17 @@ function nonComScript(data) {
       currentCmdIndex++;
     }
 
-    // If the currentMoveNextWhen is not set, send the next command now:
-    if (!currentMoveNextWhen) {
+    // If the parse has moveNextNow set to true, or if  currentMoveNextWhen is null, send the next command now:
+    if (moveNextNow || !currentMoveNextWhen) {
       // Delay to avoid commands being sent too close together.
-      sendNextCommand(700);
+      sendNextCommand(400);
+      return;
     }
   }
 
-  // Send the next command after the configured currentMoveNextWhen is detected:
+  // Main work for nonCom loop:
   if (
+    currentMoveNextWhen &&
     currentMoveNextWhen.length > 0 &&
     data.indexOf(currentMoveNextWhen) >= 0
   ) {
@@ -499,6 +508,10 @@ function sendNextCommand(additionalDelay) {
     return;
   }
 
+	const commandDelayInMs = getCommandDelayInMs(additionalDelay);
+
+	bkg.console.log("commandDelayInMs: " + commandDelayInMs);
+
   setTimeout(function () {
     // Set override or use current command value:
     let nextCommand;
@@ -513,7 +526,8 @@ function sendNextCommand(additionalDelay) {
 
     // Reset to a default here now to prevent it from sending back to back commands.
     currentMoveNextWhen = "You are no longer busy";
-  }, getCommandDelayInMs(additionalDelay));
+    moveNextNow = false;
+  }, commandDelayInMs);
 }
 
 /**
@@ -587,27 +601,41 @@ function matchExpectedParse(data) {
 
   let matchFound = false;
   const parse = commandList[currentCmdIndex].parse;
+
   // If the expected parse check is an array, check each:
   if (Array.isArray(parse)) {
     for (var i = 0; i < parse.length; i++) {
-      if (data.indexOf(parse[i].outcome) >= 0) {
+      if (matchOutcome(data, parse[i].outcome)) {
         matchFound = true;
-
+        if (parse[i].moveNextNow) {
+          moveNextNow = true;
+        }
         // Set value to detect for moving onto the next command:
         currentMoveNextWhen = parse[i].moveNextWhen;
+        break;
       }
     }
   } else {
-    if (data.indexOf(parse.outcome) >= 0) {
-      // The parse is just a string, check it:
-      matchFound = data.indexOf(parse.outcome) >= 0;
-
+    if (matchOutcome(data, parse.outcome)) {
+      matchFound = true;
+      if (parse.moveNextNow) {
+        moveNextNow = true;
+      }
       // Set value to detect for moving onto the next command:
       currentMoveNextWhen = parse.moveNextWhen;
     }
   }
 
   return matchFound;
+}
+
+function matchOutcome(data, outcome) {
+  // Support a pipe delimeter for outcome strings.
+  const outcomeSplit = outcome.split("|").map(function (item) {
+    return item.trim();
+  });
+
+  return outcomeSplit.some((outcome) => data.indexOf(outcome) >= 0);
 }
 
 /*********************************************************************************************/
@@ -622,8 +650,8 @@ const delay = (function () {
 })();
 
 function getCommandDelayInMs(additionalDelay) {
-  // Between 700 and 1000 miliseconds
-  let commandDelay = Math.floor(Math.random() * 300) + 700;
+  // Between 900 and 1100 miliseconds
+  let commandDelay = Math.floor(Math.random() * 200) + 900;
 
   if (additionalDelay) {
     commandDelay += additionalDelay;
