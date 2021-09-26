@@ -475,7 +475,7 @@
         "command": "knee",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "You try to knee|You slam your knee"
+          "outcome": "You slam your knee|You try to knee"
         }
       },
       {
@@ -489,7 +489,7 @@
         "command": "kneeb",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "You try to kick|You kick"
+          "outcome": "You kick|You try to kick"
         }
       }
     ],
@@ -525,16 +525,10 @@
       },
       {
         "command": "gouge",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "you viciously gouge at"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You attempt a heavy raking punch"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you viciously gouge at|You attempt a heavy raking punch"
+        }
       },
       {
         "command": "doublej",
@@ -597,16 +591,10 @@
       },
       {
         "command": "hbash",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "miss with your downwards bash"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "jump up, bashing at"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "jump up, bashing at|miss with your downwards bash"
+        }
       }
     ],
     "scriptFriendlyName": "Club Core",
@@ -818,16 +806,10 @@
       },
       {
         "command": "sbash",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You bash"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "with your shield bash!"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You bash|with your shield bash!"
+        }
       },
       {
         "command": "edgebash",
@@ -838,16 +820,10 @@
       },
       {
         "command": "supbash",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You bash upward"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "with the foot of your shield bash!"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You bash upward|with the foot of your shield bash!"
+        }
       },
       {
         "command": "kick",
@@ -865,16 +841,10 @@
       },
       {
         "command": "knee",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You slam your knee"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You try to knee"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slam your knee|You try to knee"
+        }
       },
       {
         "command": "stomp",
@@ -885,16 +855,10 @@
       },
       {
         "command": "kneeb",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You kick"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You try to kick"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You kick|You try to kick"
+        }
       }
     ],
     "scriptFriendlyName": "Club Shield & Brawl",
@@ -1119,29 +1083,17 @@
       },
       {
         "command": "find sapling",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You have found a suitable looking"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "There do not appear to be any viable saplings"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You have found a suitable looking|There do not appear to be any viable saplings"
+        }
       },
       {
         "command": "find berries",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You walk around the area, picking berries"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "After a short search, you fail"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You walk around the area, picking berries|After a short search, you fail"
+        }
       }
     ],
     "scriptFriendlyName": "Outdoors Basic",
@@ -1187,16 +1139,10 @@
       },
       {
         "command": "find sapling",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You have found a suitable looking"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "There do not appear to be any viable saplings"
-          }
-        ]
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You have found a suitable looking|There do not appear to be any viable saplings"
+        }
       }
     ],
     "scriptFriendlyName": "Outdoors Without Berries",
@@ -1210,15 +1156,7 @@
         "parse": [
           {
             "moveNextWhen": "You are no longer busy",
-            "outcome": "You barely manage to palm"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You nearly drop a"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You manage to palm"
+            "outcome": "You barely manage to palm|You nearly drop a|You manage to palm"
           },
           {
             "moveNextNow": true,
