@@ -6,7 +6,7 @@
 /*********************************************************************************************/
 
 const bkg = chrome.extension.getBackgroundPage();
-bkg.console.log("background.js initialized...");
+bkgConsoleLog("background.js initialized...");
 
 // Chrome
 const targetTabTitle = "The Eternal City - Orchil (Beta) - Skotos";
@@ -42,6 +42,7 @@ let scriptPaused = false;
 let currentScriptName = null;
 let currentScriptType = null;
 let currentScripts = null;
+let currentScript = null;
 function getCurrentScripts() {
   return currentScripts;
 }
@@ -137,13 +138,15 @@ loadScripts();
  */
 function sendCommand(msg) {
   if (!msg) {
-    bkg.console.log("sendCommand called with null or empty command");
+    bkgConsoleLog("sendCommand called with null or empty command");
     return;
   }
 
+	bkgConsoleLog(`Command sent: ${msg}`);
+	
   chrome.tabs.query({ url: targetTabUrl }, function (tabs) {
     if (tabs.length === 0) {
-      bkg.console.log("Tab not found, url changed?");
+      bkgConsoleLog("Tab not found, url changed?");
     }
     chrome.tabs.sendMessage(tabs[0].id, {
       type: "tec-message-send",
@@ -163,7 +166,7 @@ function sendCommand(msg) {
 function sendClientMessage(msg) {
   chrome.tabs.query({ url: targetTabUrl }, function (tabs) {
     if (tabs.length === 0) {
-      bkg.console.log("Tab not found, title changed?");
+      bkgConsoleLog("Tab not found, title changed?");
     }
     chrome.tabs.sendMessage(tabs[0].id, {
       type: "tec-client-message",
@@ -179,7 +182,7 @@ function sendClientMessage(msg) {
  * Entry point for figuring out what to do with messages received from the server.
  */
 function parseMessage(data) {
-  bkg.console.log(data);
+  bkgConsoleLog(data, false);
 
   if (scriptPaused === true) return;
 
@@ -258,7 +261,7 @@ function runScriptByName(scriptName, options) {
   });
 
   if (!script) {
-    bkg.console.log(`No script found matching name: ${scriptName}`);
+    bkgConsoleLog(`No script found matching name: ${scriptName}`);
   } else {
     killCurrentScript();
 
@@ -266,13 +269,16 @@ function runScriptByName(scriptName, options) {
 
     target = options.target || "";
     weaponItemName = options.weaponItemName || "";
-    shouldKill = options.shouldKill;
+    shouldKill = 
+			options.shouldKill !== null ? options.shouldKill : script.shouldKill;
     shouldKillParse = script.shouldKillParse;
-    continueOnWalkIn = options.continueOnWalkIn;
+    continueOnWalkIn = 
+			options.continueOnWalkIn !== null ? options.continueOnWalkIn : script.continueOnWalkIn;
     addAttack = script.addAttack;
     stance = script.stanceCommand;
     currentScriptType = script.scriptType;
     currentScriptName = script.scriptName;
+		currentScript = script;
     scriptPaused = false;
 
     script.commandList.forEach(function (command, index) {
@@ -303,8 +309,6 @@ function runSimpleRepeatWithDelay(command) {
     if (!runRepeatWithDelay) clearInterval(intr);
 
     if (!scriptPaused && runRepeatWithDelay) sendCommand(command);
-
-    bkg.console.log("runSimpleRepeatWithDelay ran");
   }, 1000);
 }
 
@@ -329,6 +333,7 @@ function killCurrentScript() {
   moveNextNow = false;
   currentScriptType = "";
   currentScriptName = "";
+	currentscript = null;
   scriptPaused = false;
 }
 
@@ -352,7 +357,6 @@ function combatScript(data) {
 
     // If the parse has moveNextNow set to true, or if  currentMoveNextWhen is null, send the next command now:
     if (moveNextNow || !currentMoveNextWhen) {
-      bkg.console.log("combatScript-sending next command now");
       // Delay to avoid commands being sent too close together.
       sendNextCommand(400);
       return;
@@ -372,10 +376,11 @@ function combatScript(data) {
   if (shouldKill) {
     // Override based on specific scenarios
     // TODO: Move this into something more dynamic.
+		const runningAttack = currentScript.addAttack;
     if (
       data.indexOf("falls unconscious") >= 0 ||
-      data.indexOf("You hit") >= 0 ||
-      data.indexOf("You miss") >= 0
+      (!currentScript.addAttack && data.indexOf("You hit") >= 0) ||
+      (!currentScript.addAttack && data.indexOf("You miss") >= 0)
     ) {
       commandOverride = `kill ${target}`;
     }
@@ -504,13 +509,13 @@ function nonComScript(data) {
  */
 function sendNextCommand(additionalDelay) {
   if (!shouldSendNextCommand()) {
-    bkg.console.log(`shouldSendNextCommand was false, don't send command.`);
+    bkgConsoleLog(`shouldSendNextCommand was false, don't send command.`);
     return;
   }
 
 	const commandDelayInMs = getCommandDelayInMs(additionalDelay);
 
-	bkg.console.log("commandDelayInMs: " + commandDelayInMs);
+	bkgConsoleLog("commandDelayInMs: " + commandDelayInMs);
 
   setTimeout(function () {
     // Set override or use current command value:
@@ -595,7 +600,7 @@ function getFormattedCommand() {
  */
 function matchExpectedParse(data) {
   if (commandList.length < 1) {
-    bkg.console.log("CommandList is empty... stop running?");
+    bkgConsoleLog("CommandList is empty... stop running?");
     return false;
   }
 
@@ -751,8 +756,8 @@ function slashCommand(command) {
     const scriptName = commandParams[1];
     const target = commandParams[2];
     const weaponItemName = commandParams[3];
-    let shouldKill = true;
-    let continueOnWalkIn = true;
+    let shouldKill = null;
+    let continueOnWalkIn = null;
 
     if (commandParams.length >= 5)
       shouldKill = stringToBoolean(commandParams[4]);
@@ -824,4 +829,8 @@ function getRunningCommand() {
   }
 
   return runningCmd;
+}
+
+function bkgConsoleLog(message, shouldColor = true) {
+	bkg.console.log(`%c${message}`, shouldColor ? 'color: darkred; background: yellow;' : '');
 }

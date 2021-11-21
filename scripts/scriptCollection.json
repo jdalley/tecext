@@ -499,6 +499,71 @@
     "shouldKillParse": "with your bare hands",
     "stanceCommand": ""
   },
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "sbash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You bash|with your shield bash!"
+        }
+      },
+      {
+        "command": "edgebash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Tilting your shield forward"
+        }
+      },
+      {
+        "command": "supbash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You bash upward|with the foot of your shield bash!"
+        }
+      },
+      {
+        "command": "kick",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You kick your leg out at"
+        }
+      },
+      {
+        "command": "butt",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "slam your head"
+        }
+      },
+      {
+        "command": "knee",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slam your knee|You try to knee"
+        }
+      },
+      {
+        "command": "stomp",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You stomp"
+        }
+      },
+      {
+        "command": "kneeb",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You kick|You try to kick"
+        }
+      }
+    ],
+    "scriptFriendlyName": "Brawl & Shield",
+    "scriptName": "brawlShield",
+    "scriptType": "combat",
+    "shouldKill": false
+  },
   {
     "addAttack": false,
     "commandList": [
@@ -1235,6 +1300,89 @@
     "shouldKill": true,
     "shouldKillParse": "You strangle a",
     "stanceCommand": "pankr"
+  },
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "sbash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You bash|with your shield bash!"
+        }
+      },
+      {
+        "command": "edgebash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Tilting your shield forward"
+        }
+      },
+      {
+        "command": "supbash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You bash upward|with the foot of your shield bash!"
+        }
+      },
+      {
+        "command": "kick",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You kick your leg out at"
+        }
+      },
+      {
+        "command": "knee",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slam your knee|You try to knee"
+        }
+      }
+    ],
+    "scriptFriendlyName": "Shield & Brawl",
+    "scriptName": "shieldBrawl",
+    "scriptType": "combat",
+    "shouldKill": false
+  },
+	{
+    "addAttack": true,
+    "commandList": [
+      {
+        "command": "stab",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You make a quick stabbing"
+        }
+      },
+      {
+        "command": "jab",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You jab at"
+        }
+      },
+      {
+        "command": "slash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slash horizontally"
+        }
+      },
+			{
+        "command": "smash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you swing the butt"
+        }
+      }
+    ],
+    "scriptFriendlyName": "Spear Ludus",
+    "scriptName": "spearLudus",
+    "scriptType": "combat",
+    "shouldKill": false,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
   },
   {
     "addAttack": false,
