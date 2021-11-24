@@ -1,33 +1,33 @@
 body {
-  min-width: 400px;
-  height: 100%;
-  overflow: hidden;
+	min-width: 400px;
+	height: 100%;
+	overflow: hidden;
 }
 
 .popup-container {
-  margin-top: 15px;
+	margin-top: 15px;
 }
 
 .popup-container input[type="text"] {
-  width: 239px;
-  padding-left: 3px;
-  margin-right: 5px;
+	width: 239px;
+	padding-left: 3px;
+	margin-right: 5px;
 }
 
 .popup-container select {
-  height: 30px;
-  width: 239px;
-  margin-right: 5px;
+	height: 30px;
+	width: 239px;
+	margin-right: 5px;
 }
 
 .popup-container button {
-  min-width: 105px;
+	min-width: 105px;
 }
 
 .popup-container main {
-  height: 100%;
+	height: 100%;
 }
 
 .popup-container div {
-  padding-bottom: 5px;
+	padding-bottom: 5px;
 }

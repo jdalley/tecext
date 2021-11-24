@@ -9,78 +9,78 @@ const script = document.createElement("script");
 script.src = chrome.extension.getURL("js/injected.js");
 (document.head || document.documentElement).appendChild(script);
 script.onload = function () {
-  script.remove();
+	script.remove();
 };
 
 // Listen for received messages from the injected script:
 document.addEventListener("tecReceiveMessage", function (e) {
-  // Send received message to the background script.
-  chrome.runtime.sendMessage({
-    type: "tec-receive-message",
-    message: e.detail,
-  });
+	// Send received message to the background script.
+	chrome.runtime.sendMessage({
+		type: "tec-receive-message",
+		message: e.detail,
+	});
 });
 
 // Listen for received commands from the injected script:
 document.addEventListener("tecSendCommand", function (e) {
-  // Send received command to the background script.
-  chrome.runtime.sendMessage({
-    type: "tec-send-command",
-    message: e.detail,
-  });
+	// Send received command to the background script.
+	chrome.runtime.sendMessage({
+		type: "tec-send-command",
+		message: e.detail,
+	});
 });
 
 // Listen for in-page UI related commands from the injected script:
 document.addEventListener("tecUICommand", function (e) {
-  switch (e.detail.command) {
-    case "openEditScripts":
-      // Open the edit-scripts popup
-      chrome.runtime.sendMessage({
-        type: "tec-edit-scripts",
-        message: e.detail,
-      });
-      break;
-    default:
-  }
+	switch (e.detail.command) {
+		case "openEditScripts":
+			// Open the edit-scripts popup
+			chrome.runtime.sendMessage({
+				type: "tec-edit-scripts",
+				message: e.detail,
+			});
+			break;
+		default:
+	}
 });
 
 // Listen for messages from the background script to send to the injected script:
 chrome.extension.onMessage.addListener(function (
-  request,
-  sender,
-  sendResponse
+	request,
+	sender,
+	sendResponse
 ) {
-  if (request.type == "tec-message-send") {
-    // Send message to the injected script:
-    document.dispatchEvent(
-      new CustomEvent("tecSendMessage", {
-        detail: {
-          timestamp: request.message.timestamp,
-          data: request.message.data,
-        },
-      })
-    );
-  }
+	if (request.type == "tec-message-send") {
+		// Send message to the injected script:
+		document.dispatchEvent(
+			new CustomEvent("tecSendMessage", {
+				detail: {
+					timestamp: request.message.timestamp,
+					data: request.message.data,
+				},
+			})
+		);
+	}
 });
 
 // Write messages from the background script to the game window
 chrome.extension.onMessage.addListener(function (
-  request,
-  sender,
-  sendResponse
+	request,
+	sender,
+	sendResponse
 ) {
-  if (request.type == "tec-client-message") {
-    // Add message to output
-    const output = document.getElementById("output");
-    const div = document.createElement("div");
-    const text = document.createTextNode(`\r\n${request.message.data}`);
+	if (request.type == "tec-client-message") {
+		// Add message to output
+		const output = document.getElementById("output");
+		const div = document.createElement("div");
+		const text = document.createTextNode(`\r\n${request.message.data}`);
 
-    div.appendChild(text);
-    div.style.color = "red";
-    div.style.fontSize = "smaller";
-    output.appendChild(div);
+		div.appendChild(text);
+		div.style.color = "red";
+		div.style.fontSize = "smaller";
+		output.appendChild(div);
 
-    // scroll to bottom
-    output.scrollTop = output.scrollHeight;
-  }
+		// scroll to bottom
+		output.scrollTop = output.scrollHeight;
+	}
 });

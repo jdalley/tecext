@@ -1,95 +1,95 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>TEC Extender</title>
-    <link rel="stylesheet" href="css/bootstrap.4.1.1.min.css" />
-    <link rel="stylesheet" href="css/popup.css" />
-    <script src="js/popup.js"></script>
-  </head>
+	<head>
+		<title>TEC Extender</title>
+		<link rel="stylesheet" href="css/bootstrap.4.1.1.min.css" />
+		<link rel="stylesheet" href="css/popup.css" />
+		<script src="js/popup.js"></script>
+	</head>
 
-  <body>
-    <main role="main">
-      <div class="container popup-container">
-        <div>
-          <input
-            id="commandInput"
-            name="commandInput"
-            type="text"
-            placeholder="Send command..."
-          />
-          <button
-            type="button"
-            id="sendCommand"
-            name="sendCommand"
-            class="btn btn-primary"
-          >
-            Send
-          </button>
-        </div>
-        <div>
-          <input
-            id="repeatInput"
-            name="repeatInput"
-            type="text"
-            placeholder="Command to repeat..."
-          />
-          <button
-            type="button"
-            id="sendRepeat"
-            name="sendRepeat"
-            class="btn btn-primary"
-            value="simpleCommandRepeat"
-          >
-            Repeat
-          </button>
-        </div>
-        <div>
-          <label for="scriptSelect">Choose a script to run:</label>
-        </div>
-        <div>
-          <select id="scriptSelect" name="scriptSelect"></select>
-          <button
-            type="button"
-            id="editScripts"
-            name="editScripts"
-            class="btn btn-dark"
-          >
-            Edit Scripts
-          </button>
-        </div>
-        <div>
-          <input
-            id="weaponItemName"
-            name="weaponItemName"
-            type="text"
-            placeholder="Weapon/item name..."
-          />
-        </div>
-        <div>
-          <input
-            id="targetInput"
-            name="targetInput"
-            type="text"
-            placeholder="Target name..."
-          />
-          <button type="button" id="runScript" class="btn btn-success">
-            Run Script
-          </button>
-        </div>
-        <div>
-          <input type="checkbox" id="shouldKill" name="shouldKill" checked />
-          <label for="shouldKill">Use 'kill' command on KO?</label>
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            id="continueOnWalkIn"
-            name="continueOnWalkIn"
-            checked
-          />
-          <label for="continueOnWalkIn">Continue script on 'walks in/arrives'?</label>
-        </div>
-        <div class="mt-2">
+	<body>
+		<main role="main">
+			<div class="container popup-container">
+				<div>
+					<input
+						id="commandInput"
+						name="commandInput"
+						type="text"
+						placeholder="Send command..."
+					/>
+					<button
+						type="button"
+						id="sendCommand"
+						name="sendCommand"
+						class="btn btn-primary"
+					>
+						Send
+					</button>
+				</div>
+				<div>
+					<input
+						id="repeatInput"
+						name="repeatInput"
+						type="text"
+						placeholder="Command to repeat..."
+					/>
+					<button
+						type="button"
+						id="sendRepeat"
+						name="sendRepeat"
+						class="btn btn-primary"
+						value="simpleCommandRepeat"
+					>
+						Repeat
+					</button>
+				</div>
+				<div>
+					<label for="scriptSelect">Choose a script to run:</label>
+				</div>
+				<div>
+					<select id="scriptSelect" name="scriptSelect"></select>
+					<button
+						type="button"
+						id="editScripts"
+						name="editScripts"
+						class="btn btn-dark"
+					>
+						Edit Scripts
+					</button>
+				</div>
+				<div>
+					<input
+						id="weaponItemName"
+						name="weaponItemName"
+						type="text"
+						placeholder="Weapon/item name..."
+					/>
+				</div>
+				<div>
+					<input
+						id="targetInput"
+						name="targetInput"
+						type="text"
+						placeholder="Target name..."
+					/>
+					<button type="button" id="runScript" class="btn btn-success">
+						Run Script
+					</button>
+				</div>
+				<div>
+					<input type="checkbox" id="shouldKill" name="shouldKill" checked />
+					<label for="shouldKill">Use 'kill' command on KO?</label>
+				</div>
+				<div>
+					<input
+						type="checkbox"
+						id="continueOnWalkIn"
+						name="continueOnWalkIn"
+						checked
+					/>
+					<label for="continueOnWalkIn">Continue script on 'walks in/arrives'?</label>
+				</div>
+				<div class="mt-2">
 					<button
 						type="button"
 						id="pauseScript"
@@ -114,8 +114,8 @@
 					>
 						Stop Script
 					</button>
-        </div>
-      </div>
-    </main>
-  </body>
+				</div>
+			</div>
+		</main>
+	</body>
 </html>
