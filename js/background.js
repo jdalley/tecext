@@ -307,7 +307,7 @@ function runSimpleRepeatWithDelay(command) {
  * Kill it with fire.
  */
 function killCurrentScript() {
-	if (currentScriptName) {
+	if (currentScriptName || lastCommandRan) {
 		sendClientMessage(`Stopping script: ${getRunningCommand()}`);
 	}
 
