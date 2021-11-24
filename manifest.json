@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "TEC Extender",
   "short_name": "tecext",
-  "description": "Extensions and goodies for TEC",
+  "description": "Extensions and goodies for The Eternal City",
   "version": "1.1.0",
   "browser_action": {
     "default_icon": "images/icon32.png"

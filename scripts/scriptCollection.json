@@ -1346,7 +1346,7 @@
     "shouldKill": false
   },
 	{
-    "addAttack": true,
+    "addAttack": false,
     "commandList": [
       {
         "command": "stab",
@@ -1374,6 +1374,13 @@
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "you swing the butt"
+        }
+      },
+			{
+        "command": "upslash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
         }
       }
     ],

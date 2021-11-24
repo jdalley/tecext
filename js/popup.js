@@ -57,8 +57,18 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("stopScript").addEventListener("click", function (e) {
-    // Kill any currently running script.
+    // Kill the current script.
     chrome.extension.getBackgroundPage().killCurrentScript();
+  });
+
+	document.getElementById("pauseScript").addEventListener("click", function (e) {
+    // Pause the current script.
+    chrome.extension.getBackgroundPage().pauseCurrentScript();
+  });
+
+	document.getElementById("resumeScript").addEventListener("click", function (e) {
+    // Resume the current script.
+    chrome.extension.getBackgroundPage().resumeCurrentScript();
   });
 
   // Edit script modal

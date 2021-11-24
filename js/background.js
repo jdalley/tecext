@@ -58,8 +58,8 @@ function openPopupWindow(tab) {
     {
       url: chrome.runtime.getURL("popup.html"),
       type: "popup",
-      height: 425,
-      width: 395,
+      height: 435,
+      width: 399,
     },
     function (win) {
       // Do something with the new window?
@@ -264,6 +264,7 @@ function runScriptByName(scriptName, options) {
     bkgConsoleLog(`No script found matching name: ${scriptName}`);
   } else {
     killCurrentScript();
+		sendClientMessage(`Starting script: ${script.scriptName}`);
 
     currentMoveNextWhen = "You are no longer busy";
 
@@ -316,6 +317,10 @@ function runSimpleRepeatWithDelay(command) {
  * Kill it with fire.
  */
 function killCurrentScript() {
+	if (currentScriptName) {
+		sendClientMessage(`Stopping script: ${getRunningCommand()}`);
+	}
+
   target = "";
   weaponItemName = "";
   shouldKill = false;
@@ -337,6 +342,23 @@ function killCurrentScript() {
   scriptPaused = false;
 }
 
+/** 
+ * Pause the current script
+ */
+function pauseCurrentScript() {
+	scriptPaused = true;
+	sendClientMessage(`Paused: ${getRunningCommand()}`);
+}
+
+/**
+ * Resume the current script
+ */
+function resumeCurrentScript() {
+	scriptPaused = false;
+	sendNextCommand();
+	sendClientMessage(`Resumed: ${getRunningCommand()}`);
+}
+
 /**
  * Used to parse and act on incoming game message data for combat scripts.
  */
@@ -355,7 +377,8 @@ function combatScript(data) {
       currentCmdIndex++;
     }
 
-    // If the parse has moveNextNow set to true, or if  currentMoveNextWhen is null, send the next command now:
+    // If the parse has moveNextNow set to true, or if currentMoveNextWhen
+		// is null, send the next command now:
     if (moveNextNow || !currentMoveNextWhen) {
       // Delay to avoid commands being sent too close together.
       sendNextCommand(400);
@@ -363,25 +386,13 @@ function combatScript(data) {
     }
   }
 
-  // TODO: The custom checks below should probably be moved into a configurable area.
-
-  // Handle addAttack commandOverride off-switch
-  if (
-    commandOverride.indexOf("att") >= 0 &&
-    (data.indexOf("You hit") >= 0 || data.indexOf("You miss") >= 0)
-  ) {
-    commandOverride = "";
-  }
-
   if (shouldKill) {
     // Override based on specific scenarios
     // TODO: Move this into something more dynamic.
 		const runningAttack = currentScript.addAttack;
-    if (
-      data.indexOf("falls unconscious") >= 0 ||
+    if (data.indexOf("falls unconscious") >= 0 ||
       (!currentScript.addAttack && data.indexOf("You hit") >= 0) ||
-      (!currentScript.addAttack && data.indexOf("You miss") >= 0)
-    ) {
+      (!currentScript.addAttack && data.indexOf("You miss") >= 0)) {
       commandOverride = `kill ${target}`;
     }
 
@@ -392,12 +403,43 @@ function combatScript(data) {
     }
 
     // Detect weapon-specific kill echo and wipe the override for next no longer busy.
-    if (
-      data.indexOf(shouldKillParse) >= 0 &&
-      commandOverride.indexOf("kill") >= 0
-    ) {
+    if (data.indexOf(shouldKillParse) >= 0 &&
+      commandOverride.indexOf("kill") >= 0) {
       commandOverride = "";
     }
+  }
+
+	// Attempt to continue script after a critter/target walks in/arrives.
+  if (continueOnWalkIn) {
+	  if (data.indexOf("walks in") >= 0 
+			|| data.indexOf(" in from a") >= 0 
+			|| data.indexOf(" arrives.") >= 0)  {
+			sendNextCommand(400);
+		}
+	}
+	
+	// Check extra parses to react to.
+	combatGlobals(data);
+
+	// Main work for combat loop:
+  if (currentMoveNextWhen &&
+    currentMoveNextWhen.length > 0 &&
+    data.indexOf(currentMoveNextWhen) >= 0) {
+    sendNextCommand();
+  }
+}
+
+/**
+ * Collection of parses to handle various scenarios that come up during combat.
+ * These scenarios require special commands or responses.
+ * TODO: These checks should probably be moved into a configurable area.
+ */
+function combatGlobals(data) {
+  // Handle addAttack commandOverride off-switch
+  if (commandOverride.indexOf("att") >= 0 &&
+    (data.indexOf("You hit") >= 0 || data.indexOf("You miss") >= 0)
+  ) {
+    commandOverride = "";
   }
 
   // Handle sweeped/knocked down after failed attack attempt:
@@ -432,6 +474,20 @@ function combatScript(data) {
       `${commandList[currentCmdIndex].command} ${target}`,
     ]);
   }
+	if (data.indexOf("You must be wielding your weapon in two hands") >= 0) {
+    sendDelayedCommands([
+      `wield ${weaponItemName}`,
+      `${commandList[currentCmdIndex].command} ${target}`,
+    ]);
+  }
+
+	// Handle entagled weapon
+	if (data.indexOf("You cannot attack with an entangled weapon") >= 0) {
+    sendDelayedCommands([
+      `free`,
+      `${commandList[currentCmdIndex].command} ${target}`,
+    ]);
+  }
 
   // Handle distance/approaching
   if (data.indexOf("is not close enough") >= 0) {
@@ -448,27 +504,6 @@ function combatScript(data) {
     if (stance) {
       sendDelayedCommands([stance]);
     }
-  }
-
-  // Naive attempt to continue after having no target when something 'arrives'
-  if (data.indexOf(" arrives.") >= 0) {
-    sendNextCommand();
-  }
-
-  if (
-    continueOnWalkIn &&
-    (data.indexOf("walks in") >= 0 || data.indexOf(" in from a") >= 0)
-  ) {
-    sendNextCommand(400);
-  }
-
-  // Main work for combat loop:
-  if (
-    currentMoveNextWhen &&
-    currentMoveNextWhen.length > 0 &&
-    data.indexOf(currentMoveNextWhen) >= 0
-  ) {
-    sendNextCommand();
   }
 }
 
@@ -714,16 +749,16 @@ function slashCommand(command) {
   if (commandName === "/help") {
     sendClientMessage(
       dedent(`
-            Here are the available commands:
-            /scripts - List of currently defined scripts
-            /editscripts - Open the edit scripts window
-            /current - Display the currently running script
-            /start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] - Start a script by name, * = optional, default true
-            /stop - Stop the currently running script
-            /repeat [command] - Repeats a given command with a random delay inbetween each attempt
-            /repeatnlb [command] - Repeats a given command, expects 'No longer busy' inbetween
-            /pause - Pause the current script
-            /resume - Resume the current script
+				Here are the available commands:
+				/scripts |> List of currently defined scripts
+				/editscripts |> Open the edit scripts window
+				/current |> Display the currently running script
+				/start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] |> Start a script by name; * = optional, default to script's values
+				/stop |> Stop the currently running script
+				/repeat [command] |> Repeats a given command with a random delay inbetween each attempt
+				/repeatnlb [command] |> Repeats a given command, expects 'No longer busy' inbetween
+				/pause |> Pause the current script
+				/resume |> Resume the current script
         `)
     );
   } else if (commandName === "/scripts") {
@@ -782,7 +817,6 @@ function slashCommand(command) {
     );
   } else if (commandName === "/stop") {
     killCurrentScript();
-    sendClientMessage(`Script stopped.`);
   } else if (commandName === "/repeat") {
     lastCommandRan = command;
     // Grab the entire command after the command name to use verbatim.
@@ -791,7 +825,7 @@ function slashCommand(command) {
       sendClientMessage(`A command to repeat is expected when using /repeat`);
 
     const cmd = cmdParams[1].trim();
-    scriptPaused = false;
+		scriptPaused = false;
     runSimpleRepeatWithDelay(cmd);
     sendClientMessage(`Starting to repeat the command: ${cmd}`);
   } else if (commandName === "/repeatnlb") {
@@ -808,12 +842,9 @@ function slashCommand(command) {
     runSimpleRepeat(cmd);
     sendClientMessage(`Starting to repeat the command: ${cmd}`);
   } else if (commandName === "/pause") {
-    scriptPaused = true;
-    sendClientMessage(`Paused: ${getRunningCommand()}`);
+    pauseCurrentScript();
   } else if (commandName === "/resume") {
-    scriptPaused = false;
-    sendNextCommand();
-    sendClientMessage(`Resumed: ${getRunningCommand()}`);
+    resumeCurrentScript();
   } else {
     sendClientMessage(`Slash command ${command} not found.`);
   }

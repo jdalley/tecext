@@ -9,14 +9,14 @@ body {
 }
 
 .popup-container input[type="text"] {
-  width: 221px;
+  width: 239px;
   padding-left: 3px;
   margin-right: 5px;
 }
 
 .popup-container select {
   height: 30px;
-  width: 221px;
+  width: 239px;
   margin-right: 5px;
 }
 

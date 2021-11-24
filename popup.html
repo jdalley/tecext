@@ -2,14 +2,7 @@
 <html>
   <head>
     <title>TEC Extender</title>
-
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-      integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
-      crossorigin="anonymous"
-    />
-
+    <link rel="stylesheet" href="css/bootstrap.4.1.1.min.css" />
     <link rel="stylesheet" href="css/popup.css" />
     <script src="js/popup.js"></script>
   </head>
@@ -28,7 +21,7 @@
             type="button"
             id="sendCommand"
             name="sendCommand"
-            class="btn btn-basic"
+            class="btn btn-primary"
           >
             Send
           </button>
@@ -44,7 +37,7 @@
             type="button"
             id="sendRepeat"
             name="sendRepeat"
-            class="btn btn-basic"
+            class="btn btn-primary"
             value="simpleCommandRepeat"
           >
             Repeat
@@ -59,7 +52,7 @@
             type="button"
             id="editScripts"
             name="editScripts"
-            class="btn btn-basic"
+            class="btn btn-dark"
           >
             Edit Scripts
           </button>
@@ -85,7 +78,7 @@
         </div>
         <div>
           <input type="checkbox" id="shouldKill" name="shouldKill" checked />
-          <label for="shouldKill">Use kill on KO?</label>
+          <label for="shouldKill">Use 'kill' command on KO?</label>
         </div>
         <div>
           <input
@@ -94,17 +87,33 @@
             name="continueOnWalkIn"
             checked
           />
-          <label for="continueOnWalkIn">Continue on 'walks in'?</label>
+          <label for="continueOnWalkIn">Continue script on 'walks in/arrives'?</label>
         </div>
-        <div>
-          <button
-            type="button"
-            id="stopScript"
-            name="stopScript"
-            class="btn btn-danger"
-          >
-            Stop Script
-          </button>
+        <div class="mt-2">
+					<button
+						type="button"
+						id="pauseScript"
+						name="pauseScript"
+						class="btn btn-warning"
+					>
+						Pause Script
+					</button>
+					<button
+						type="button"
+						id="resumeScript"
+						name="resumeScript"
+						class="btn btn-success"
+					>
+						Resume Script
+					</button>
+					<button
+						type="button"
+						id="stopScript"
+						name="stopScript"
+						class="btn btn-danger"
+					>
+						Stop Script
+					</button>
         </div>
       </div>
     </main>
