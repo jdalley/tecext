@@ -113,20 +113,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
   openPopupWindow(tab);
 });
 
-// Add the context menu for opening the popout window:
-chrome.contextMenus.removeAll(function () {
-  chrome.contextMenus.create({
-    id: "open-tec-ui",
-    title: "[TEC] Open UI...",
-    contexts: ["all"],
-  });
-  chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    if (info.menuItemId == "open-tec-ui") {
-      openPopupWindow();
-    }
-  });
-});
-
 // Initial script load:
 loadScripts();
 

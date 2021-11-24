@@ -3,7 +3,7 @@
   "name": "TEC Extender",
   "short_name": "tecext",
   "description": "Extensions and goodies for The Eternal City",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "browser_action": {
     "default_icon": "images/icon32.png"
   },
@@ -26,12 +26,9 @@
   ],
   "web_accessible_resources": ["js/content.js", "js/injected.js"],
   "permissions": [
-    "contextMenus",
-    "debugger",
     "background",
     "tabs",
-    "storage",
-    "activeTab"
+    "storage"
   ],
   "content_security_policy": "script-src 'self'; object-src 'self';"
 }
