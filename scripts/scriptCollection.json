@@ -273,6 +273,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "you twist sharply",
+		"continueOnWalkIn": true,
     "stanceCommand": "",
     "weaponItemName": ""
   },
@@ -366,6 +367,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "you twist sharply",
+		"continueOnWalkIn": true,
     "stanceCommand": "",
     "weaponItemName": ""
   },
@@ -405,6 +407,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "you twist sharply",
+		"continueOnWalkIn": true,
     "stanceCommand": "",
     "weaponItemName": ""
   },
@@ -444,6 +447,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "you twist sharply",
+		"continueOnWalkIn": true,
     "stanceCommand": "",
     "weaponItemName": ""
   },
@@ -496,7 +500,9 @@
     "scriptFriendlyName": "Brawling Basic",
     "scriptName": "brawlBasic",
     "scriptType": "combat",
+		"shouldKill": true,
     "shouldKillParse": "with your bare hands",
+		"continueOnWalkIn": true,
     "stanceCommand": ""
   },
 	{
@@ -562,7 +568,8 @@
     "scriptFriendlyName": "Brawl & Shield",
     "scriptName": "brawlShield",
     "scriptType": "combat",
-    "shouldKill": false
+    "shouldKill": false,
+		"continueOnWalkIn": true
   },
   {
     "addAttack": false,
@@ -621,6 +628,7 @@
     "scriptName": "cestusBasic",
     "scriptType": "combat",
     "shouldKillParse": "Your quick, vicious blow",
+		"continueOnWalkIn": true,
     "stanceCommand": ""
   },
   {
@@ -667,6 +675,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You bash",
+		"continueOnWalkIn": true,
     "stanceCommand": "iunius"
   },
   {
@@ -748,6 +757,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You bash",
+		"continueOnWalkIn": true,
     "stanceCommand": "iunius"
   },
   {
@@ -792,8 +802,9 @@
     "scriptFriendlyName": "Club Ludus",
     "scriptName": "clubLudus",
     "scriptType": "combat",
-    "shouldKill": true,
+    "shouldKill": false,
     "shouldKillParse": "You bash",
+		"continueOnWalkIn": true,
     "stanceCommand": "iunius"
   },
   {
@@ -931,6 +942,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You bash",
+		"continueOnWalkIn": true,
     "stanceCommand": "iunius"
   },
   {
@@ -1038,6 +1050,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "With massive force",
+		"continueOnWalkIn": true,
     "stanceCommand": "wgrip"
   },
   {
@@ -1299,6 +1312,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You strangle a",
+		"continueOnWalkIn": true,
     "stanceCommand": "pankr"
   },
 	{
@@ -1343,7 +1357,8 @@
     "scriptFriendlyName": "Shield & Brawl",
     "scriptName": "shieldBrawl",
     "scriptType": "combat",
-    "shouldKill": false
+    "shouldKill": false,
+		"continueOnWalkIn": true
   },
 	{
     "addAttack": false,
@@ -1389,6 +1404,7 @@
     "scriptType": "combat",
     "shouldKill": false,
     "shouldKillParse": "You thrust your",
+		"continueOnWalkIn": true,
     "stanceCommand": ""
   },
   {
@@ -1435,6 +1451,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You bash a",
+		"continueOnWalkIn": true,
     "stanceCommand": "skirmish"
   },
   {
@@ -1502,6 +1519,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You bash a",
+		"continueOnWalkIn": true,
     "stanceCommand": "skirmish"
   },
   {
@@ -1548,6 +1566,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "",
+		"continueOnWalkIn": true,
     "stanceCommand": "harpoon"
   },
   {
@@ -1594,6 +1613,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "With massive force",
+		"continueOnWalkIn": true,
     "stanceCommand": "wgrip"
   },
   {
@@ -1687,6 +1707,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "With massive force",
+		"continueOnWalkIn": true,
     "stanceCommand": "wgrip"
   },
   {
@@ -1747,6 +1768,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "With massive force",
+		"continueOnWalkIn": true,
     "stanceCommand": "wgrip"
   },
   {
@@ -1765,6 +1787,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "With massive force",
+		"continueOnWalkIn": true,
     "stanceCommand": "wgrip"
   },
   {
@@ -1783,6 +1806,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "With massive force",
+		"continueOnWalkIn": true,
     "stanceCommand": "wgrip"
   },
   {

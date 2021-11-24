@@ -250,15 +250,21 @@ function runScriptByName(scriptName, options) {
 		bkgConsoleLog(`No script found matching name: ${scriptName}`);
 	} else {
 		killCurrentScript();
-		sendClientMessage(`Starting script: ${script.scriptName}`);
+		sendClientMessage(
+			`Starting script: ${scriptName} (${script.scriptFriendlyName})`
+		);
 
 		currentMoveNextWhen = "You are no longer busy";
 
 		target = options.target || "";
 		weaponItemName = options.weaponItemName || "";
-		shouldKill = options.shouldKill;
+		shouldKill =
+			options.shouldKill !== null ? options.shouldKill : script.shouldKill;
 		shouldKillParse = script.shouldKillParse;
-		continueOnWalkIn = options.continueOnWalkIn;
+		continueOnWalkIn =
+			options.continueOnWalkIn !== null
+				? options.continueOnWalkIn
+				: script.continueOnWalkIn;
 		addAttack = script.addAttack;
 		stance = script.stanceCommand;
 		currentScriptType = script.scriptType;
@@ -739,107 +745,122 @@ function slashCommand(command) {
 	const commandParams = command.split(/\s+/);
 	const commandName = commandParams[0];
 
-	if (commandName === "/help") {
-		sendClientMessage(
-			dedent(`
-				Here are the available commands:
-				/scripts |> List of currently defined scripts
-				/editscripts |> Open the edit scripts window
-				/current |> Display the currently running script
-				/start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] |> Start a script by name; * = optional (defaults to true)
-				/stop |> Stop the currently running script
-				/repeat [command] |> Repeats a given command with a random delay inbetween each attempt
-				/repeatnlb [command] |> Repeats a given command, expects 'No longer busy' inbetween
-				/pause |> Pause the current script
-				/resume |> Resume the current script
-				`)
-		);
-	} else if (commandName === "/scripts") {
-		const scripts = currentScripts
-			.map((s) => s.scriptName)
-			.toString()
-			.replace(/,/g, "\r\n");
-		sendClientMessage(
-			dedent(
-				`Here are the names of available scripts:
-						${scripts}`
-			)
-		);
-	} else if (commandName === "/editscripts") {
-		openEditScripts();
-	} else if (commandName === "/current") {
-		sendClientMessage(`The current script is: ${currentScriptName}`);
-	} else if (commandName === "/start") {
-		lastCommandRan = command;
-		// Remove empty param option if found
-		if (commandParams.includes("")) {
-			commandParams.splice(commandParams.indexOf(""), 1);
-		}
-
-		if (commandParams.length <= 1)
+	switch (commandName) {
+		case "/help":
 			sendClientMessage(
-				`A script name parameter is expected when using /scripts`
+				dedent(`
+					Here are the available commands:
+					/scripts |> List of currently defined scripts
+					/editscripts |> Open the edit scripts window
+					/current |> Display the currently running script
+					/start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] |> Start a script by name; * = optional (defaults to true)
+					/stop |> Stop the currently running script
+					/repeat [command] |> Repeats a given command with a random delay inbetween each attempt
+					/repeatnlb [command] |> Repeats a given command, expects 'No longer busy' inbetween
+					/pause |> Pause the current script
+					/resume |> Resume the current script
+					`)
 			);
+			break;
+		case "/scripts":
+			const scripts = currentScripts
+				.map((s) => s.scriptName)
+				.toString()
+				.replace(/,/g, "\r\n");
 
-		const scriptName = commandParams[1];
-		const target = commandParams[2];
-		const weaponItemName = commandParams[3];
-		let shouldKill = true;
-		let continueOnWalkIn = true;
-
-		if (commandParams.length >= 5)
-			shouldKill = stringToBoolean(commandParams[4]);
-		if (commandParams.length >= 6)
-			continueOnWalkIn = stringToBoolean(commandParams[5]);
-
-		const script = currentScripts.find((s) => {
-			return s.scriptName.toLowerCase() === scriptName.toLowerCase();
-		});
-
-		if (!script) sendClientMessage(`Script not found.`);
-
-		runScriptByName(scriptName, {
-			target: target,
-			weaponItemName: weaponItemName,
-			shouldKill: shouldKill,
-			continueOnWalkIn: continueOnWalkIn,
-		});
-
-		sendClientMessage(
-			`Starting script: ${scriptName} (${script.scriptFriendlyName})`
-		);
-	} else if (commandName === "/stop") {
-		killCurrentScript();
-	} else if (commandName === "/repeat") {
-		lastCommandRan = command;
-		// Grab the entire command after the command name to use verbatim.
-		const cmdParams = command.split("/repeat");
-		if (cmdParams.length <= 1)
-			sendClientMessage(`A command to repeat is expected when using /repeat`);
-
-		const cmd = cmdParams[1].trim();
-		scriptPaused = false;
-		runSimpleRepeatWithDelay(cmd);
-		sendClientMessage(`Starting to repeat the command: ${cmd}`);
-	} else if (commandName === "/repeatnlb") {
-		lastCommandRan = command;
-		// Grab the entire command after the command name to use verbatim.
-		const cmdParams = command.split("/repeatnlb");
-		if (cmdParams.length <= 1)
 			sendClientMessage(
-				`A command to repeat is expected when using /repeatnlb`
+				dedent(
+					`Here are the names of available scripts:
+							${scripts}`
+				)
 			);
+			break;
+		case "/editscripts":
+			openEditScripts();
+			break;
+		case "/current":
+			sendClientMessage(`The current script is: ${currentScriptName}`);
+			break;
+		case "/start":
+			// Remove empty param option if found
+			if (commandParams.includes("")) {
+				commandParams.splice(commandParams.indexOf(""), 1);
+			}
 
-		const cmd = cmdParams[1].trim();
-		scriptPaused = false;
-		runSimpleRepeat(cmd);
-		sendClientMessage(`Starting to repeat the command: ${cmd}`);
-	} else if (commandName === "/pause") {
-		pauseCurrentScript();
-	} else if (commandName === "/resume") {
-		resumeCurrentScript();
-	} else {
-		sendClientMessage(`Slash command ${command} not found.`);
+			if (commandParams.length <= 1) {
+				sendClientMessage(
+					`A script name parameter is expected when using /scripts`
+				);
+			}
+
+			const scriptName = commandParams[1];
+			const target = commandParams[2];
+			const weaponItemName = commandParams[3];
+			let shouldKill = null;
+			let continueOnWalkIn = null;
+
+			if (commandParams.length >= 5) {
+				shouldKill = stringToBoolean(commandParams[4]);
+			}
+			if (commandParams.length >= 6) {
+				continueOnWalkIn = stringToBoolean(commandParams[5]);
+			}
+
+			const script = currentScripts.find((s) => {
+				return s.scriptName.toLowerCase() === scriptName.toLowerCase();
+			});
+
+			if (!script) {
+				sendClientMessage(`Script not found.`);
+			}
+
+			runScriptByName(scriptName, {
+				target: target,
+				weaponItemName: weaponItemName,
+				shouldKill: shouldKill,
+				continueOnWalkIn: continueOnWalkIn,
+			});
+			lastCommandRan = command;
+			break;
+		case "/stop":
+			killCurrentScript();
+			break;
+		case "/repeat":
+			// Grab the entire command after the command name to use verbatim.
+			const repeatParams = command.split("/repeat");
+			if (repeatParams.length <= 1) {
+				sendClientMessage(`A command to repeat is expected when using /repeat`);
+			}
+
+			const repeatCmd = repeatParams[1].trim();
+			scriptPaused = false;
+			runSimpleRepeatWithDelay(repeatCmd);
+			lastCommandRan = command;
+			sendClientMessage(`Starting to repeat the command: ${repeatCmd}`);
+			break;
+		case "/repeatnlb":
+			// Grab the entire command after the command name to use verbatim.
+			const repeatNlbParams = command.split("/repeatnlb");
+			if (repeatNlbParams.length <= 1) {
+				sendClientMessage(
+					`A command to repeat is expected when using /repeatnlb`
+				);
+			}
+
+			const repeatNlbCmd = repeatNlbParams[1].trim();
+			scriptPaused = false;
+			runSimpleRepeat(repeatNlbCmd);
+			lastCommandRan = command;
+			sendClientMessage(`Starting to repeat the command: ${repeatNlbCmd}`);
+			break;
+		case "/pause":
+			pauseCurrentScript();
+			break;
+		case "/resume":
+			resumeCurrentScript();
+			break;
+		default:
+			sendClientMessage(`Slash command ${command} not found.`);
 	}
 }
 
