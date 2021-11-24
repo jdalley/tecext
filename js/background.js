@@ -256,13 +256,9 @@ function runScriptByName(scriptName, options) {
 
 		target = options.target || "";
 		weaponItemName = options.weaponItemName || "";
-		shouldKill =
-			options.shouldKill !== null ? options.shouldKill : script.shouldKill;
+		shouldKill = options.shouldKill;
 		shouldKillParse = script.shouldKillParse;
-		continueOnWalkIn =
-			options.continueOnWalkIn !== null
-				? options.continueOnWalkIn
-				: script.continueOnWalkIn;
+		continueOnWalkIn = options.continueOnWalkIn;
 		addAttack = script.addAttack;
 		stance = script.stanceCommand;
 		currentScriptType = script.scriptType;
@@ -380,8 +376,8 @@ function combatScript(data) {
 		const runningAttack = currentScript.addAttack;
 		if (
 			data.indexOf("falls unconscious") >= 0 ||
-			(!currentScript.addAttack && data.indexOf("You hit") >= 0) ||
-			(!currentScript.addAttack && data.indexOf("You miss") >= 0)
+			(commandOverride.indexOf("att") === -1 &&
+				(data.indexOf("You hit") >= 0 || data.indexOf("You miss") >= 0))
 		) {
 			commandOverride = `kill ${target}`;
 		}
@@ -750,7 +746,7 @@ function slashCommand(command) {
 				/scripts |> List of currently defined scripts
 				/editscripts |> Open the edit scripts window
 				/current |> Display the currently running script
-				/start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] |> Start a script by name; * = optional, default to script's values
+				/start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] |> Start a script by name; * = optional (defaults to true)
 				/stop |> Stop the currently running script
 				/repeat [command] |> Repeats a given command with a random delay inbetween each attempt
 				/repeatnlb [command] |> Repeats a given command, expects 'No longer busy' inbetween
@@ -788,8 +784,8 @@ function slashCommand(command) {
 		const scriptName = commandParams[1];
 		const target = commandParams[2];
 		const weaponItemName = commandParams[3];
-		let shouldKill = null;
-		let continueOnWalkIn = null;
+		let shouldKill = true;
+		let continueOnWalkIn = true;
 
 		if (commandParams.length >= 5)
 			shouldKill = stringToBoolean(commandParams[4]);
