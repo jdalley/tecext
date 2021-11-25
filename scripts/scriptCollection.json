@@ -1399,8 +1399,8 @@
         }
       }
     ],
-    "scriptFriendlyName": "Spear Ludus",
-    "scriptName": "spearLudus",
+    "scriptFriendlyName": "Spear Short Range",
+    "scriptName": "spearShort",
     "scriptType": "combat",
     "shouldKill": false,
     "shouldKillParse": "You thrust your",
