@@ -493,7 +493,7 @@ function combatGlobals(data) {
 	// Handle distance/approaching
 	if (data.indexOf("is not close enough") >= 0) {
 		sendDelayedCommands([
-			`app ${target}`,
+			`engage ${target}`,
 			commandOverride
 				? commandOverride
 				: `${commandList[currentCmdIndex].command} ${target}`,
