@@ -160,20 +160,6 @@
 		"addAttack": false,
 		"commandList": [
 			{
-				"command": "quickload bow",
-				"parse": [
-					{
-						"moveNextNow": true,
-						"outcome": "is already loaded"
-					},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "With a quick fluid motion you load"
-					}
-				],
-				"targetRequired": "false"
-			},
-			{
 				"command": "shoot",
 				"parse": [
 					{
@@ -185,20 +171,6 @@
 						"outcome": "You fire a"
 					}
 				]
-			},
-			{
-				"command": "quickload bow",
-				"parse": [
-					{
-						"moveNextNow": true,
-						"outcome": "is already loaded"
-					},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "With a quick fluid motion you load"
-					}
-				],
-				"targetRequired": "false"
 			},
 			{
 				"command": "handshot",
@@ -214,20 +186,6 @@
 				]
 			},
 			{
-				"command": "quickload bow",
-				"parse": [
-					{
-						"moveNextNow": true,
-						"outcome": "is already loaded"
-					},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "With a quick fluid motion you load"
-					}
-				],
-				"targetRequired": "false"
-			},
-			{
 				"command": "headshot",
 				"parse": [
 					{
@@ -239,20 +197,6 @@
 						"outcome": "You fire a"
 					}
 				]
-			},
-			{
-				"command": "quickload bow",
-				"parse": [
-					{
-						"moveNextNow": true,
-						"outcome": "is already loaded"
-					},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "With a quick fluid motion you load"
-					}
-				],
-				"targetRequired": "false"
 			},
 			{
 				"command": "quicksh",
@@ -1229,25 +1173,6 @@
 		"scriptType": "nonCom"
 	},
 	{
-		"addAttack": false,
-		"commandList": [
-			{
-				"command": "swat",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "Shifting your grip"
-				}
-			}
-		],
-		"scriptFriendlyName": "Two-Handed Axe Min Gains",
-		"scriptName": "twoHandMin",
-		"scriptType": "combat",
-		"shouldKill": true,
-		"shouldKillParse": "With massive force",
-		"continueOnWalkIn": true,
-		"stanceCommand": "wgrip"
-	},
-	{
 		"commandList": [
 			{
 				"command": "echo <target>",
@@ -1415,7 +1340,7 @@
 				"parse": [
 					{
 						"moveNextWhen": "You are no longer busy",
-						"outcome": "You barely manage to palm|You nearly drop a|You manage to palm"
+						"outcome": "You very nimbly palm|You barely manage to palm|You nearly drop a|You manage to palm"
 					},
 					{
 						"moveNextNow": true,
@@ -1540,6 +1465,33 @@
 		"scriptType": "combat",
 		"shouldKill": false,
 		"continueOnWalkIn": true
+	},
+	{
+		"commandList": [
+			{
+				"command": "stand",
+				"parse": [
+					{
+						"moveNextNow": true,
+						"outcome": "You are already standing"
+					},
+					{
+						"moveNextNow": true,
+						"outcome": "You stand up"
+					}
+				]
+			},
+			{
+				"command": "signpost",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You slip to one side"
+				}
+			}
+		],
+		"scriptFriendlyName": "Signpost",
+		"scriptName": "signpost",
+		"scriptType": "nonCom"
 	},
 	{
 		"addAttack": false,
@@ -1707,6 +1659,60 @@
 		"addAttack": false,
 		"commandList": [
 			{
+				"command": "jab",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You jab at"
+				}
+			},
+			{
+				"command": "slash",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You slash horizontally"
+				}
+			},
+			{
+				"command": "swat",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "Using the flat of your"
+				}
+			},
+			{
+				"command": "chop",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You bring down your"
+				}
+			},
+			{
+				"command": "stab",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You make a quick stabbing"
+				}
+			},
+			{
+				"command": "side",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "Using both arms, you bring your"
+				}
+			}
+		],
+		"scriptFriendlyName": "Sword Ludus",
+		"scriptName": "swordLudus",
+		"scriptType": "combat",
+		"shouldKill": false,
+		"shouldKillParse": "",
+		"continueOnWalkIn": true,
+		"stanceCommand": ""
+	},
+	{
+		"addAttack": false,
+		"commandList": [
+			{
 				"command": "qrake",
 				"parse": {
 					"moveNextWhen": "You are no longer busy",
@@ -1791,6 +1797,67 @@
 		],
 		"scriptFriendlyName": "Two-Handed Axe Basic",
 		"scriptName": "twoHandBasic",
+		"scriptType": "combat",
+		"shouldKill": true,
+		"shouldKillParse": "With massive force",
+		"continueOnWalkIn": true,
+		"stanceCommand": "wgrip"
+	},
+	{
+		"addAttack": false,
+		"commandList": [
+			{
+				"command": "overh",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "directing a heavy chop"
+				}
+			},
+			{
+				"command": "cchop",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "diagonal chop"
+				}
+			},
+			{
+				"command": "hslash",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "wide-arced slash"
+				}
+			},
+			{
+				"command": "break",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You plant your feet into the ground"
+				}
+			},
+			{
+				"command": "swat",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "Shifting your grip"
+				}
+			},
+			{
+				"command": "strike",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You slide your lower hand"
+				}
+			},
+			{
+				"command": "chop",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You raise your"
+				}
+			}
+		],
+		"scriptFriendlyName": "Two-Handed Axe Core",
+		"scriptName": "twoHandCore",
 		"scriptType": "combat",
 		"shouldKill": true,
 		"shouldKillParse": "With massive force",
@@ -1895,57 +1962,15 @@
 		"addAttack": false,
 		"commandList": [
 			{
-				"command": "overh",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "directing a heavy chop"
-				}
-			},
-			{
-				"command": "cchop",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "diagonal chop"
-				}
-			},
-			{
-				"command": "hslash",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "wide-arced slash"
-				}
-			},
-			{
-				"command": "break",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "You plant your feet into the ground"
-				}
-			},
-			{
 				"command": "swat",
 				"parse": {
 					"moveNextWhen": "You are no longer busy",
 					"outcome": "Shifting your grip"
 				}
-			},
-			{
-				"command": "strike",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "You slide your lower hand"
-				}
-			},
-			{
-				"command": "chop",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "You raise your"
-				}
 			}
 		],
-		"scriptFriendlyName": "Two-Handed Axe Core",
-		"scriptName": "twoHandCore",
+		"scriptFriendlyName": "Two-Handed Axe Min Gains",
+		"scriptName": "twoHandMin",
 		"scriptType": "combat",
 		"shouldKill": true,
 		"shouldKillParse": "With massive force",

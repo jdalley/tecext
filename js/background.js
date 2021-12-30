@@ -483,7 +483,7 @@ function combatGlobals(data) {
 	// Handle entagled weapon
 	if (data.indexOf("You cannot attack with an entangled weapon") >= 0 
 		|| data.indexOf("You cannot use that action while grappling") >= 0
-		|| data.indexOf("You are unable to do that, as you are snared by") >= 0) {
+		|| data.indexOf("You are unable to do that,") >= 0) {
 		sendDelayedCommands([
 			`free`,
 			`${commandList[currentCmdIndex].command} ${target}`,
