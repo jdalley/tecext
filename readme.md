@@ -1,9 +1,19 @@
-## TEC Extender
+# TEC Extender
 
 Extensions and goodies for The Eternal City's Orchil client: http://client.eternalcitygame.com/tec/tec.htm
 
-### Installation Instructions
+## Installation
+### Walkthrough & Guide
+Here's a GREAT walkthrough written by JagerBtFM which does a much better job than the descriptions below of explaining how to get up and running with the extension. Thanks Jager!
 
+https://docs.google.com/document/d/1s0jJVMRsAlHK2J7mT21lr1SA6segsAIY/edit
+
+### Chrome Web Store
+The TEC Extender is now on the Chrome Web Store! Grab it here if you prefer to have it auto update over time and not manually install a specific version: https://chrome.google.com/webstore/detail/tec-extender/aegdmagbofbclblaidikleeophbplmad
+
+**Note:** As it takes time for new versions to be approved on the web store, this version may be behind compared to what can be found here on GitHub. If you find it's missing features, you can always uninstall it temporarily and grab the latest version here instead. 
+
+### Manual Installation Instructions
 After cloning/downloading a copy of this repository:
 
 1. Navigate to ```chrome://extensions```
@@ -17,7 +27,7 @@ You should see something like this under chrome://extensions if all goes well:
 ![Extensions](https://github.com/jdalley/tecext/blob/main/images/extensions.png)
 
 
-### Debugging and Viewing Commands for Debugging
+## Debugging and Viewing Commands for Debugging
 
 1. Make sure you have Orchil opened in your browser, if you installed the extension after having it open you'll have to refresh the page (ctrl + F5 for a no-cache reload).
 2. In chrome://extensions, in the TEC Extender block, you should see 'Inspect views background page', click on background page:
@@ -28,7 +38,7 @@ Here's an example of what you'll see in the Dev Tools window:
 
 ![Background Dev Tools](https://github.com/jdalley/tecext/blob/main/images/backgroundtools.png "Background Dev Tools")
 
-### UI and Scripts
+## UI and Scripts
 
 The UI is very much temporary and doesn't make a ton of sense, so let's called it mega-alpha for now.
 
@@ -60,7 +70,7 @@ You can also get to the 'Edit Scripts' popup by clicking on the following button
 
 ![image](https://user-images.githubusercontent.com/232725/85637391-b0e63980-b648-11ea-801f-0fe4338437e9.png)
 
-### Slash Commands
+## Slash Commands
 
 Additionally, there are some slash commands you can enter in the game input to take advantage of some features without leaving the input. Type `/help` to view available command information, where you'll get output like this in red text:
 
