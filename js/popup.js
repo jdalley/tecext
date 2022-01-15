@@ -17,14 +17,20 @@ document.addEventListener("DOMContentLoaded", function () {
 			const command = document.getElementById("commandInput").value;
 
 			if (command) {
-				chrome.extension.getBackgroundPage().sendCommand(command);
+				chrome.runtime.sendMessage({
+					type: "popup-send-command",
+					message: command
+				});
 			}
 		});
 	document
 		.getElementById("commandInput")
 		.addEventListener("keydown", function (e) {
-			if (e.keyCode == 13 && this.value) {
-				chrome.extension.getBackgroundPage().sendCommand(this.value);
+			if (e.key == "Enter" && this.value) {
+				chrome.runtime.sendMessage({
+					type: "popup-send-command",
+					message: this.value
+				});
 				this.value = "";
 			}
 		});
@@ -33,7 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("sendRepeat").addEventListener("click", function (e) {
 		const repeatCommand = document.getElementById("repeatInput").value;
 		if (repeatCommand) {
-			chrome.extension.getBackgroundPage().runSimpleRepeat(repeatCommand);
+			chrome.runtime.sendMessage({
+				type: "popup-send-repeat",
+				message: repeatCommand
+			});
 		}
 	});
 
@@ -48,27 +57,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		// This will become data driven later, via json/local storage with defaults.
 		// TODO: Move options into its own JSON config, load it like scripts are loaded.
-		chrome.extension.getBackgroundPage().runScriptByName(scriptName, {
-			target: target,
-			weaponItemName: weaponItemName,
-			shouldKill: shouldKill,
-			continueOnWalkIn: continueOnWalkIn,
+		chrome.runtime.sendMessage({
+			type: "popup-run-script",
+			message: {
+				scriptName: scriptName,
+				target: target,
+				weaponItemName: weaponItemName,
+				shouldKill: shouldKill,
+				continueOnWalkIn: continueOnWalkIn,
+			}
 		});
 	});
 
 	document.getElementById("stopScript").addEventListener("click", function (e) {
 		// Kill the current script.
-		chrome.extension.getBackgroundPage().killCurrentScript();
+		chrome.runtime.sendMessage({ type: "popup-kill-script" });
 	});
 
 	document.getElementById("pauseScript").addEventListener("click", function (e) {
 		// Pause the current script.
-		chrome.extension.getBackgroundPage().pauseCurrentScript();
+		chrome.runtime.sendMessage({ type: "popup-pause-script"	});
 	});
 
 	document.getElementById("resumeScript").addEventListener("click", function (e) {
 		// Resume the current script.
-		chrome.extension.getBackgroundPage().resumeCurrentScript();
+		chrome.runtime.sendMessage({ type: "popup-resume-script" });
 	});
 
 	// Edit script modal
@@ -110,13 +123,15 @@ function loadScriptSelect() {
 	select.innerText = null;
 
 	// Load scripts from background:
-	const scripts = chrome.extension.getBackgroundPage().getCurrentScripts();
-	if (scripts) {
-		scripts.forEach((element) => {
-			const opt = document.createElement("option");
-			opt.value = element.scriptName;
-			opt.innerHTML = element.scriptFriendlyName;
-			select.appendChild(opt);
-		});
-	}
+	chrome.runtime.sendMessage({ type: "popup-get-scripts" }, function (response) {
+		// response will be an array of script objects
+		if (response) {
+			response.forEach((element) => {
+				const opt = document.createElement("option");
+				opt.value = element.scriptName;
+				opt.innerHTML = element.scriptFriendlyName;
+				select.appendChild(opt);
+			});
+		}
+	});
 }

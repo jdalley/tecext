@@ -6,7 +6,7 @@
 // Inject the script used to work directly with the contents of the page; hooking into
 // relevant events, variables, and data from web sockets.
 const script = document.createElement("script");
-script.src = chrome.extension.getURL("js/injected.js");
+script.src = chrome.runtime.getURL("js/injected.js");
 (document.head || document.documentElement).appendChild(script);
 script.onload = function () {
 	script.remove();
@@ -45,7 +45,7 @@ document.addEventListener("tecUICommand", function (e) {
 });
 
 // Listen for messages from the background script to send to the injected script:
-chrome.extension.onMessage.addListener(function (
+chrome.runtime.onMessage.addListener(function (
 	request,
 	sender,
 	sendResponse
@@ -64,7 +64,7 @@ chrome.extension.onMessage.addListener(function (
 });
 
 // Write messages from the background script to the game window
-chrome.extension.onMessage.addListener(function (
+chrome.runtime.onMessage.addListener(function (
 	request,
 	sender,
 	sendResponse

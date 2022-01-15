@@ -11,10 +11,16 @@ const options = {
 const editor = new JSONEditor(container, options);
 
 // Load the current user scripts from the background:
-const currentScriptsJson = chrome.extension
-	.getBackgroundPage()
-	.getCurrentScripts();
-editor.set(currentScriptsJson);
+chrome.runtime.sendMessage({ type: "popup-get-scripts" }, function (response) {
+	// response will be an array of script objects
+	if (response) {
+		editor.set(response);
+	}
+	else {
+		editor.set("No scripts found");
+	}
+});
+
 
 /**
  *   This script handles the logic driving the Edit Scripts page:
@@ -24,9 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("saveScript").addEventListener("click", function (e) {
 		const scriptsJson = editor.get();
 		if (scriptsJson) {
-			chrome.extension.getBackgroundPage().saveScripts(scriptsJson);
+			chrome.runtime.sendMessage({ 
+				type: "editor-set-scripts",
+				message: scriptsJson
+			});
 		}
-
 		close();
 	});
 

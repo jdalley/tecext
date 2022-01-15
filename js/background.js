@@ -5,8 +5,7 @@
 
 /*********************************************************************************************/
 
-const bkg = chrome.extension.getBackgroundPage();
-bkgConsoleLog("background.js initialized...");
+consoleLog("background.js initialized...");
 
 // Chrome
 const targetTabTitle = "The Eternal City - Orchil (Beta) - Skotos";
@@ -109,7 +108,7 @@ function saveScripts(scripts) {
 }
 
 // Open popout window when the main extension icon is clicked:
-chrome.browserAction.onClicked.addListener(function (tab) {
+chrome.action.onClicked.addListener(function (tab) {
 	openPopupWindow(tab);
 });
 
@@ -124,15 +123,15 @@ loadScripts();
  */
 function sendCommand(msg) {
 	if (!msg) {
-		bkgConsoleLog("sendCommand called with null or empty command");
+		consoleLog("sendCommand called with null or empty command");
 		return;
 	}
 
-	bkgConsoleLog(`Command sent: ${msg}`);
+	consoleLog(`Command sent: ${msg}`);
 
 	chrome.tabs.query({ url: targetTabUrl }, function (tabs) {
 		if (tabs.length === 0) {
-			bkgConsoleLog("Tab not found, url changed?");
+			consoleLog("Tab not found, url changed?");
 		}
 		chrome.tabs.sendMessage(tabs[0].id, {
 			type: "tec-message-send",
@@ -152,7 +151,7 @@ function sendCommand(msg) {
 function sendClientMessage(msg) {
 	chrome.tabs.query({ url: targetTabUrl }, function (tabs) {
 		if (tabs.length === 0) {
-			bkgConsoleLog("Tab not found, title changed?");
+			consoleLog("Tab not found, title changed?");
 		}
 		chrome.tabs.sendMessage(tabs[0].id, {
 			type: "tec-client-message",
@@ -168,7 +167,7 @@ function sendClientMessage(msg) {
  * Entry point for figuring out what to do with messages received from the server.
  */
 function parseMessage(data) {
-	bkgConsoleLog(data, false);
+	consoleLog(data, false);
 
 	if (scriptPaused === true) return;
 
@@ -201,37 +200,88 @@ function openEditScripts() {
 	);
 }
 
-// Listen for received messages from content.js (ultimately from injected.js)
+// Listener for messages from injected.js, content.js, popup.js, and jsoneditor.js
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	// request.message.timestamp
-	// request.message.data
-	if (request.type == "tec-receive-message") {
-		parseMessage(request.message.data);
-	}
-});
+	switch (request.type) {
+		// Listen for received messages from content.js (ultimately from injected.js)
+		case "tec-receive-message":
+			parseMessage(request.message.data);
+			break;
 
-// Listen for received commands from content.js (ultimately from injected.js)
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	if (
-		request.type == "tec-send-command" &&
-		request.message.command !== "undefined"
-	) {
-		const cmdTrimmed = request.message.command.trim();
-		if (cmdTrimmed.indexOf("/") === 0) {
-			// Run the slash command
-			slashCommand(cmdTrimmed);
-		}
+		// Listen for received commands from content.js (ultimately from injected.js)
+		case "tec-send-command":
+			if (request.message.command !== "undefined") {
+				const cmdTrimmed = request.message.command.trim();
+				if (cmdTrimmed.indexOf("/") === 0) {
+					// Run the slash command
+					slashCommand(cmdTrimmed);
+				}
+			}
+			break;
+	
+		// Check for the command to open the edit scripts window from content.js (ultimately from injected.js)
+		case "tec-edit-scripts":
+			if (request.message.command !== "undefined") {
+				openEditScripts();
+			}
+			break;
+
+		// Send command from popup
+		case "popup-send-command":
+			if (request.message) {
+				sendCommand(request.message);
+			}
+			break;
+
+		// Start simple repeat from popup
+		case "popup-send-repeat":
+			if (request.message) {
+				runSimpleRepeat(request.message)
+			}
+			break;
+
+		case "popup-run-script": 
+			if (request.message.scriptName) {
+				runScriptByName(request.message.scriptName, request.message);
+			}
+			break;
+		
+		// Kill script from popup
+		case "popup-kill-script":
+			killCurrentScript();
+			break;
+		
+		// Pause script from popup
+		case "popup-pause-script":
+			pauseCurrentScript();
+			break;
+
+		// Resume script from popup
+		case "popup-resume-script":
+			resumeCurrentScript();
+			break;
+
+		// Send the current scripts to the popup
+		case "popup-get-scripts": 
+			sendResponse(getCurrentScripts());
+			break;
+
+		// Save changes to scripts from the JSON editor
+		case "editor-set-scripts":
+			if (request.message) {
+				saveScripts(request.message);
+			}
+			break;
+
+		default:
+			consoleLog(`Listener couldn't process request type: ${request.type}`);
+			break;
 	}
 });
 
 // Listen for the command to open the edit scripts window from content.js (ultimately from injected.js)
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	if (
-		request.type == "tec-edit-scripts" &&
-		request.message.command !== "undefined"
-	) {
-		openEditScripts();
-	}
+
 });
 
 /*********************************************************************************************/
@@ -247,7 +297,7 @@ function runScriptByName(scriptName, options) {
 	});
 
 	if (!script) {
-		bkgConsoleLog(`No script found matching name: ${scriptName}`);
+		consoleLog(`No script found matching name: ${scriptName}`);
 	} else {
 		killCurrentScript();
 		sendClientMessage(
@@ -545,13 +595,13 @@ function nonComScript(data) {
  */
 function sendNextCommand(additionalDelay) {
 	if (!shouldSendNextCommand()) {
-		bkgConsoleLog(`shouldSendNextCommand was false, don't send command.`);
+		consoleLog(`shouldSendNextCommand was false, don't send command.`);
 		return;
 	}
 
 	const commandDelayInMs = getCommandDelayInMs(additionalDelay);
 
-	bkgConsoleLog("commandDelayInMs: " + commandDelayInMs);
+	consoleLog("commandDelayInMs: " + commandDelayInMs);
 
 	setTimeout(function () {
 		// Set override or use current command value:
@@ -636,7 +686,7 @@ function getFormattedCommand() {
  */
 function matchExpectedParse(data) {
 	if (commandList.length < 1) {
-		bkgConsoleLog("CommandList is empty... stop running?");
+		consoleLog("CommandList is empty... stop running?");
 		return false;
 	}
 
@@ -878,8 +928,8 @@ function getRunningCommand() {
 	return runningCmd;
 }
 
-function bkgConsoleLog(message, shouldColor = true) {
-	bkg.console.log(
+function consoleLog(message, shouldColor = true) {
+	console.log(
 		`%c${message}`,
 		shouldColor ? "color: darkred; background: yellow;" : ""
 	);
