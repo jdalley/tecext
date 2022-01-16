@@ -4,52 +4,121 @@
 */
 
 /*********************************************************************************************/
+consoleLog("background.js initializing...");
 
-consoleLog("background.js initialized...");
+/*********************************************************************************************/
+/* Extension & Service Worker, and Chrome setup */
 
-// Chrome
 const targetTabTitle = "The Eternal City - Orchil (Beta) - Skotos";
 const targetTabUrl = "http://client.eternalcitygame.com/tec/tec.htm";
 
-// Simple repeat
-let runRepeat = false;
-let repeatCommand = null;
+// Collection of properties that make up the state of the extension
+const storageCache = {
+	// Simple repeat
+	runRepeat: false,
+	repeatCommand: null,
+	// Repeat constantly with a delay
+	runRepeatWithDelay: false,
+	repeatWithDelayCommand : null,
+	// General
+	target : null,
+	commandList : [],
+	currentCmdIndex : 0,
+	currentMoveNextWhen : null,
+	moveNextNow : false,
+	commandOverride : null,
+	lastCommandRan : null,
+	// Combat
+	shouldKill : false,
+	shouldKillParse : null,
+	continueOnWalkIn : false,
+	weaponItemName : null,
+	addAttack : false,
+	stance: null,
+	// Scripts
+	scriptPaused : false,
+	currentScriptName : null,
+	currentScriptType : null,
+	currentScript : null,
+};
 
-// Repeat constantly with a delay
-let runRepeatWithDelay = false;
-let repeatWithDelayCommand = null;
+// Store scripts separately from the cache due to potential size
+let userScripts = null;
 
-// General
-let target = null;
-let commandList = [];
-let currentCmdIndex = 0;
-let currentMoveNextWhen = null;
-let moveNextNow = false;
-let commandOverride = null;
-let lastCommandRan = null;
+let initStorageCache = getStorageCache().then(data => {
+	consoleLog(`assigning storageCache...`);
+	// Copy local storage data into storageCache
+	Object.assign(storageCache, data);
 
-// Combat
-let shouldKill = false;
-let shouldKillParse = null;
-let continueOnWalkIn = false;
-let weaponItemName = null;
-let addAttack = false;
-let stance;
+	// Load once per service worker init
+	if (!userScripts) {
+		consoleLog(`loading userScripts...`);
+		loadUserScripts();
+	}
+});
 
-// Scripts
-let scriptPaused = false;
-let currentScriptName = null;
-let currentScriptType = null;
-let currentScripts = null;
-let currentScript = null;
+function getStorageCache() {
+	consoleLog(`getting storageCache from storage...`);
+	return new Promise((resolve, reject) => {
+		// Asynchronously fetch all data from storage.local. 
+		// Set it with a default value if it doesn't exist.
+		chrome.storage.local.get({ storageCache: storageCache }, (data) => {
+			// Pass any observed errors down the promise chain.
+			if (chrome.runtime.lastError) {
+				return reject(chrome.runtime.lastError);
+			}
+			// Pass the data retrieved from storage down the promise chain.
+			resolve(data);
+		});
+  });
+}
 
-/*********************************************************************************************/
-/* Extension setup and Chrome things */
+function loadUserScripts() {
+	chrome.storage.local.get(['userScripts'], function(data) {
+		if (data && data["userScripts"]) {
+			userScripts = data["userScripts"];
+		} else {
+			// No userScripts found or saved yet, load the default scripts
+			fetch("/scripts/scriptCollection.json")
+				.then((res) => res.json())
+				.then((out) => {
+					if (out) {
+						userScripts = out;
+						chrome.storage.local.set({ userScripts: out });
+					}
+				});
+		}
+	});
+}
 
 /**
- * Setup popout window
+ * Intended to be called after an event happens that changes the state
+ * of the cache, requiring it be persisted to local storage.
  */
-function openPopupWindow(tab) {
+function saveStorageCache() {
+	consoleLog(`saving storageCache...`);
+	chrome.storage.local.set({ storageCache });
+}
+
+/**
+ *  Save scripts to the var and to local storage:
+ */
+function saveScripts(scripts) {
+	if (scripts) {
+		userScripts = scripts;
+		chrome.storage.local.set({ userScripts: scripts });
+
+		// Send message to popup that userScripts have been updated:
+		chrome.runtime.sendMessage({
+			msg: "reload-scripts-select",
+		});
+	}
+}
+
+/**
+ * Set up popout window
+ */
+ function openPopupWindow(tab) {
 	chrome.windows.create(
 		{
 			url: chrome.runtime.getURL("popup.html"),
@@ -63,51 +132,13 @@ function openPopupWindow(tab) {
 	);
 }
 
-/**
- * Load scripts from scriptCollection or local storage:
- */
-function loadScripts() {
-	consoleLog(`loadScripts was executed`);
-	chrome.storage.local.get("userScripts", function (data) {
-		if (data && data["userScripts"]) {
-			currentScripts = data["userScripts"];
-		} else {
-			fetch("/scripts/scriptCollection.json")
-				.then((res) => res.json())
-				.then((out) => {
-					if (out) {
-						currentScripts = out;
-						chrome.storage.local.set({ userScripts: out });
-					}
-				});
-		}
-	});
-
-	return false;
-}
-
-/**
- *  Save scripts to the var and to sync storage:
- */
-function saveScripts(scripts) {
-	if (scripts) {
-		currentScripts = scripts;
-		chrome.storage.local.set({ userScripts: scripts });
-
-		// Send message to popup that currentScripts have been updated:
-		chrome.runtime.sendMessage({
-			msg: "reload-scripts-select",
-		});
-	}
-}
-
 // Open popout window when the main extension icon is clicked:
-chrome.action.onClicked.addListener(function (tab) {
+chrome.action.onClicked.addListener(async function (tab) {
+	// Ensure cache has data to continue
+	await initStorageCache;
 	openPopupWindow(tab);
 });
 
-// Initial script load:
-loadScripts();
 
 /*********************************************************************************************/
 /** Communication with content scripts to send/receive messages to/from the game **/
@@ -163,25 +194,28 @@ function sendClientMessage(msg) {
 function parseMessage(data) {
 	consoleLog(data, false);
 
-	if (scriptPaused === true) return;
+	if (storageCache.scriptPaused === true) return;
 
-	if (runRepeat) {
+	if (storageCache.runRepeat) {
 		if (data.indexOf("You are no longer busy.") >= 0) {
+			// TODO: Replace with alarm
 			setTimeout(function () {
-				sendCommand(repeatCommand);
+				sendCommand(storageCache.repeatCommand);
 			}, getCommandDelayInMs());
 			return;
 		}
 	}
 
-	if (commandList.length > 0 && currentScriptType === "combat") {
+	if (storageCache.commandList.length > 0 && storageCache.currentScriptType === "combat") {
 		combatScript(data);
-	} else if (commandList.length > 0 && currentScriptType === "nonCom") {
+	} else if (storageCache.commandList.length > 0 && storageCache.currentScriptType === "nonCom") {
 		nonComScript(data);
 	}
 }
 
-// Open the edit scripts popup
+/**
+ * Open the edit scripts popup
+ */ 
 function openEditScripts() {
 	chrome.windows.create(
 		{
@@ -194,88 +228,104 @@ function openEditScripts() {
 	);
 }
 
-// Listener for messages from injected.js, content.js, popup.js, and jsoneditor.js
+/**
+ * Listener for messages from injected.js, content.js, popup.js, and jsoneditor.js
+ * and persist storageCache to local storage for applicable request types. 
+ */
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	switch (request.type) {
-		// Listen for received messages from content.js (ultimately from injected.js)
-		case "tec-receive-message":
-			parseMessage(request.message.data);
-			break;
+	(async () => {
+		// Ensure cache has data to continue
+		await initStorageCache;
 
-		// Listen for received commands from content.js (ultimately from injected.js)
-		case "tec-send-command":
-			if (request.message.command !== "undefined") {
-				const cmdTrimmed = request.message.command.trim();
-				if (cmdTrimmed.indexOf("/") === 0) {
-					// Run the slash command
-					slashCommand(cmdTrimmed);
+		switch (request.type) {
+			// Message received from content.js (ultimately from injected.js)
+			case "tec-receive-message":
+				parseMessage(request.message.data);
+				break;
+
+			// Command received from content.js (ultimately from injected.js)
+			case "tec-send-command":
+				if (request.message.command !== "undefined") {
+					const cmdTrimmed = request.message.command.trim();
+					if (cmdTrimmed.indexOf("/") === 0) {
+						// Run the slash command
+						slashCommand(cmdTrimmed);
+						saveStorageCache();
+					}
 				}
-			}
-			break;
-	
-		// Check for the command to open the edit scripts window from content.js (ultimately from injected.js)
-		case "tec-edit-scripts":
-			if (request.message.command !== "undefined") {
-				openEditScripts();
-			}
-			break;
-
-		// Send command from popup
-		case "popup-send-command":
-			if (request.message) {
-				sendCommand(request.message);
-			}
-			break;
-
-		// Start simple repeat from popup
-		case "popup-send-repeat":
-			if (request.message) {
-				runSimpleRepeat(request.message)
-			}
-			break;
-
-		case "popup-run-script": 
-			if (request.message.scriptName) {
-				runScriptByName(request.message.scriptName, request.message);
-			}
-			break;
+				break;
 		
-		// Kill script from popup
-		case "popup-kill-script":
-			killCurrentScript();
-			break;
-		
-		// Pause script from popup
-		case "popup-pause-script":
-			pauseCurrentScript();
-			break;
+			// Open the edit scripts window from content.js (ultimately from injected.js)
+			case "tec-edit-scripts":
+				if (request.message.command !== "undefined") {
+					openEditScripts();
+				}
+				break;
 
-		// Resume script from popup
-		case "popup-resume-script":
-			resumeCurrentScript();
-			break;
+			// Command sent from popup
+			case "popup-send-command":
+				if (request.message) {
+					sendCommand(request.message);
+				}
+				break;
 
-		// Send the current scripts to the popup
-		case "popup-get-scripts": 
-			sendResponse(currentScripts);
-			break;
+			// Start simple repeat from popup
+			case "popup-send-repeat":
+				if (request.message) {
+					runSimpleRepeat(request.message);
+					saveStorageCache();
+				}
+				break;
 
-		// Save changes to scripts from the JSON editor
-		case "editor-set-scripts":
-			if (request.message) {
-				saveScripts(request.message);
-			}
-			break;
+			// Start script by name with options from popup
+			case "popup-run-script": 
+				if (request.message.scriptName) {
+					runScriptByName(request.message.scriptName, request.message);
+					saveStorageCache();
+				}
+				break;
+			
+			// Kill script from popup
+			case "popup-kill-script":
+				killCurrentScript();
+				saveStorageCache();
+				break;
+			
+			// Pause script from popup
+			case "popup-pause-script":
+				pauseCurrentScript();
+				saveStorageCache();
+				break;
 
-		default:
-			consoleLog(`Listener couldn't process request type: ${request.type}`);
-			break;
-	}
-});
+			// Resume script from popup
+			case "popup-resume-script":
+				resumeCurrentScript();
+				saveStorageCache();
+				break;
 
-// Listen for the command to open the edit scripts window from content.js (ultimately from injected.js)
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+			// Return userScripts to the popup
+			case "popup-get-scripts": 
+				sendResponse(userScripts);
+				break;
 
+			// Save changes to userScripts from the JSON editor
+			case "editor-set-scripts":
+				consoleLog(`save scripts...`);
+				console.log(request.message);
+				if (request.message) {
+					consoleLog(`saving scripts from JSON editor...`);
+					saveScripts(request.message);
+				}
+				break;
+
+			default:
+				consoleLog(`Listener couldn't process request type: ${request.type}`);
+				break;
+		}
+	})();
+
+	// Keep the messaging channel open for potential sendResponse
+	return true; 
 });
 
 /*********************************************************************************************/
@@ -286,7 +336,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  */
 function runScriptByName(scriptName, options) {
 	// Get the script object by name:
-	const script = currentScripts.find((s) => {
+	const script = userScripts.find((s) => {
 		return s.scriptName.toLowerCase() === scriptName.toLowerCase();
 	});
 
@@ -298,26 +348,26 @@ function runScriptByName(scriptName, options) {
 			`Starting script: ${scriptName} (${script.scriptFriendlyName})`
 		);
 
-		currentMoveNextWhen = "You are no longer busy";
+		storageCache.currentMoveNextWhen = "You are no longer busy";
 
-		target = options.target || "";
-		weaponItemName = options.weaponItemName || "";
-		shouldKill =
+		storageCache.target = options.target || "";
+		storageCache.weaponItemName = options.weaponItemName || "";
+		storageCache.shouldKill =
 			options.shouldKill !== null ? options.shouldKill : script.shouldKill;
-		shouldKillParse = script.shouldKillParse;
-		continueOnWalkIn =
+			storageCache.shouldKillParse = script.shouldKillParse;
+		storageCache.continueOnWalkIn =
 			options.continueOnWalkIn !== null
 				? options.continueOnWalkIn
 				: script.continueOnWalkIn;
-		addAttack = script.addAttack;
-		stance = script.stanceCommand;
-		currentScriptType = script.scriptType;
-		currentScriptName = script.scriptName;
-		currentScript = script;
-		scriptPaused = false;
+		storageCache.addAttack = script.addAttack;
+		storageCache.stance = script.stanceCommand;
+		storageCache.currentScriptType = script.scriptType;
+		storageCache.currentScriptName = script.scriptName;
+		storageCache.currentScript = script;
+		storageCache.scriptPaused = false;
 
 		script.commandList.forEach(function (command, index) {
-			commandList.push(command);
+			storageCache.commandList.push(command);
 		});
 
 		// Kick it off...
@@ -327,9 +377,10 @@ function runScriptByName(scriptName, options) {
 
 function runSimpleRepeat(command) {
 	killCurrentScript();
-	runRepeat = true;
-	repeatCommand = command;
+	storageCache.runRepeat = true;
+	storageCache.repeatCommand = command;
 
+	// TODO: Replace with alarm
 	setTimeout(function () {
 		sendCommand(command);
 	}, getCommandDelayInMs());
@@ -337,13 +388,14 @@ function runSimpleRepeat(command) {
 
 function runSimpleRepeatWithDelay(command) {
 	killCurrentScript();
-	runRepeatWithDelay = true;
-	repeatWithDelayCommand = command;
+	storageCache.runRepeatWithDelay = true;
+	storageCache.repeatWithDelayCommand = command;
 
+	// TODO: Replace with alarm
 	var intr = setInterval(function () {
-		if (!runRepeatWithDelay) clearInterval(intr);
+		if (!storageCache.runRepeatWithDelay) clearInterval(intr);
 
-		if (!scriptPaused && runRepeatWithDelay) sendCommand(command);
+		if (!storageCache.scriptPaused && storageCache.runRepeatWithDelay) sendCommand(command);
 	}, 1000);
 }
 
@@ -351,36 +403,36 @@ function runSimpleRepeatWithDelay(command) {
  * Kill it with fire.
  */
 function killCurrentScript() {
-	if (currentScriptName || lastCommandRan) {
+	if (storageCache.currentScriptName || storageCache.lastCommandRan) {
 		sendClientMessage(`Stopping script: ${getRunningCommand()}`);
 	}
 
-	target = "";
-	weaponItemName = "";
-	shouldKill = false;
-	shouldKillParse = "";
-	runRepeat = false;
-	repeatCommand = "";
-	runRepeatWithDelay = false;
-	repeatWithDelayCommand = "";
-	commandList = [];
-	addAttack = false;
-	stance = "";
-	commandOverride = "";
-	currentCmdIndex = 0;
-	currentMoveNextWhen = null;
-	moveNextNow = false;
-	currentScriptType = "";
-	currentScriptName = "";
-	currentscript = null;
-	scriptPaused = false;
+	storageCache.target = "";
+	storageCache.weaponItemName = "";
+	storageCache.shouldKill = false;
+	storageCache.shouldKillParse = "";
+	storageCache.runRepeat = false;
+	storageCache.repeatCommand = "";
+	storageCache.runRepeatWithDelay = false;
+	storageCache.repeatWithDelayCommand = "";
+	storageCache.commandList = [];
+	storageCache.addAttack = false;
+	storageCache.stance = "";
+	storageCache.commandOverride = "";
+	storageCache.currentCmdIndex = 0;
+	storageCache.currentMoveNextWhen = null;
+	storageCache.moveNextNow = false;
+	storageCache.currentScriptType = "";
+	storageCache.currentScriptName = "";
+	storageCache.currentscript = null;
+	storageCache.scriptPaused = false;
 }
 
 /**
  * Pause the current script
  */
 function pauseCurrentScript() {
-	scriptPaused = true;
+	storageCache.scriptPaused = true;
 	sendClientMessage(`Paused: ${getRunningCommand()}`);
 }
 
@@ -388,7 +440,7 @@ function pauseCurrentScript() {
  * Resume the current script
  */
 function resumeCurrentScript() {
-	scriptPaused = false;
+	storageCache.scriptPaused = false;
 	sendNextCommand();
 	sendClientMessage(`Resumed: ${getRunningCommand()}`);
 }
@@ -400,55 +452,55 @@ function combatScript(data) {
 	const matchFound = matchExpectedParse(data);
 
 	if (matchFound) {
-		if (currentCmdIndex === commandList.length - 1) {
-			if (addAttack) {
-				commandOverride = `att ${target}`;
+		if (storageCache.currentCmdIndex === storageCache.commandList.length - 1) {
+			if (storageCache.addAttack) {
+				storageCache.commandOverride = `att ${storageCache.target}`;
 			}
 			// Reset
-			currentCmdIndex = 0;
+			storageCache.currentCmdIndex = 0;
 		} else {
 			// Move the command list index forward...
-			currentCmdIndex++;
+			storageCache.currentCmdIndex++;
 		}
 
 		// If the parse has moveNextNow set to true, or if currentMoveNextWhen
 		// is null, send the next command now:
-		if (moveNextNow || !currentMoveNextWhen) {
+		if (storageCache.moveNextNow || !storageCache.currentMoveNextWhen) {
 			// Delay to avoid commands being sent too close together.
 			sendNextCommand(400);
 			return;
 		}
 	}
 
-	if (shouldKill) {
+	if (storageCache.shouldKill) {
 		// Override based on specific scenarios
 		// TODO: Move this into something more dynamic.
 		const runningAttack = currentScript.addAttack;
 		if (
 			data.indexOf("falls unconscious") >= 0 ||
-			(commandOverride.indexOf("att") === -1 &&
+			(storageCache.commandOverride.indexOf("att") === -1 &&
 				(data.indexOf("You hit") >= 0 || data.indexOf("You miss") >= 0))
 		) {
-			commandOverride = `kill ${target}`;
+			storageCache.commandOverride = `kill ${storageCache.target}`;
 		}
 
 		// Handle being stuck trying to kill something:
 		if (data.indexOf("must be unconscious first") >= 0) {
-			commandOverride = "";
+			storageCache.commandOverride = "";
 			sendNextCommand();
 		}
 
 		// Detect weapon-specific kill echo and wipe the override for next no longer busy.
 		if (
-			data.indexOf(shouldKillParse) >= 0 &&
-			commandOverride.indexOf("kill") >= 0
+			data.indexOf(storageCache.shouldKillParse) >= 0 &&
+			storageCache.commandOverride.indexOf("kill") >= 0
 		) {
-			commandOverride = "";
+			storageCache.commandOverride = "";
 		}
 	}
 
 	// Attempt to continue script after a critter/target walks in/arrives.
-	if (continueOnWalkIn) {
+	if (storageCache.continueOnWalkIn) {
 		if (
 			data.indexOf("walks in") >= 0 ||
 			data.indexOf(" in from a") >= 0 ||
@@ -463,9 +515,9 @@ function combatScript(data) {
 
 	// Main work for combat loop:
 	if (
-		currentMoveNextWhen &&
-		currentMoveNextWhen.length > 0 &&
-		data.indexOf(currentMoveNextWhen) >= 0
+		storageCache.currentMoveNextWhen &&
+		storageCache.currentMoveNextWhen.length > 0 &&
+		data.indexOf(storageCache.currentMoveNextWhen) >= 0
 	) {
 		sendNextCommand();
 	}
@@ -479,14 +531,15 @@ function combatScript(data) {
 function combatGlobals(data) {
 	// Handle addAttack commandOverride off-switch
 	if (
-		commandOverride.indexOf("att") >= 0 &&
+		storageCache.commandOverride.indexOf("att") >= 0 &&
 		(data.indexOf("You hit") >= 0 || data.indexOf("You miss") >= 0)
 	) {
-		commandOverride = "";
+		storageCache.commandOverride = "";
 	}
 
 	// Handle sweeped/knocked down after failed attack attempt:
 	if (data.indexOf("You must be standing") >= 0) {
+		// TODO: Replace with alarm
 		setTimeout(function () {
 			sendCommand("stand");
 		}, getCommandDelayInMs());
@@ -495,32 +548,32 @@ function combatGlobals(data) {
 	// Handle fumble or disarm:
 	if (data.indexOf("You fumble! You drop a") >= 0) {
 		// Just set override since fumble requires waiting for no longer busy anyway.
-		commandOverride = `take ${weaponItemName}`;
+		storageCache.commandOverride = `take ${storageCache.weaponItemName}`;
 	}
 	if (data.indexOf("You take a") >= 0) {
 		sendDelayedCommands([
-			`wield ${weaponItemName}`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			`wield ${storageCache.weaponItemName}`,
+			`${storageCache.commandList[storageCache.currentCmdIndex].command} ${storageCache.target}`,
 		]);
 	}
 	if (data.indexOf("You can't do that right now") >= 0) {
 		sendDelayedCommands([
-			`get ${weaponItemName}`,
-			`wield ${weaponItemName}`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			`get ${storageCache.weaponItemName}`,
+			`wield ${storageCache.weaponItemName}`,
+			`${storageCache.commandList[storageCache.currentCmdIndex].command} ${storageCache.target}`,
 		]);
 	}
 	if (data.indexOf("You must be carrying something to wield it") >= 0) {
 		sendDelayedCommands([
-			`get ${weaponItemName}`,
-			`wield ${weaponItemName}`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			`get ${storageCache.weaponItemName}`,
+			`wield ${storageCache.weaponItemName}`,
+			`${storageCache.commandList[storageCache.currentCmdIndex].command} ${storageCache.target}`,
 		]);
 	}
 	if (data.indexOf("You must be wielding your weapon in two hands") >= 0) {
 		sendDelayedCommands([
-			`wield ${weaponItemName}`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			`wield ${storageCache.weaponItemName}`,
+			`${storageCache.commandList[storageCache.currentCmdIndex].command} ${storageCache.target}`,
 		]);
 	}
 
@@ -530,24 +583,24 @@ function combatGlobals(data) {
 		|| data.indexOf("You are unable to do that,") >= 0) {
 		sendDelayedCommands([
 			`free`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			`${storageCache.commandList[storageCache.currentCmdIndex].command} ${storageCache.target}`,
 		]);
 	}
 
 	// Handle distance/approaching
 	if (data.indexOf("is not close enough") >= 0) {
 		sendDelayedCommands([
-			`engage ${target}`,
-			commandOverride
-				? commandOverride
-				: `${commandList[currentCmdIndex].command} ${target}`,
+			`engage ${storageCache.target}`,
+			storageCache.commandOverride
+				? storageCache.commandOverride
+				: `${storageCache.commandList[storageCache.currentCmdIndex].command} ${storageCache.target}`,
 		]);
 	}
 
 	// Handle stance when not auto:
 	if (data.indexOf("You are not in the correct stance") >= 0) {
-		if (stance) {
-			sendDelayedCommands([stance]);
+		if (storageCache.stance) {
+			sendDelayedCommands([storageCache.stance]);
 		}
 	}
 }
@@ -558,16 +611,16 @@ function combatGlobals(data) {
 function nonComScript(data) {
 	const matchFound = matchExpectedParse(data);
 	if (matchFound) {
-		if (currentCmdIndex === commandList.length - 1) {
+		if (storageCache.currentCmdIndex === storageCache.commandList.length - 1) {
 			// Reset
-			currentCmdIndex = 0;
+			storageCache.currentCmdIndex = 0;
 		} else {
 			// Move the command list index forward...
-			currentCmdIndex++;
+			storageCache.currentCmdIndex++;
 		}
 
 		// If the parse has moveNextNow set to true, or if  currentMoveNextWhen is null, send the next command now:
-		if (moveNextNow || !currentMoveNextWhen) {
+		if (storageCache.moveNextNow || !storageCache.currentMoveNextWhen) {
 			// Delay to avoid commands being sent too close together.
 			sendNextCommand(400);
 			return;
@@ -576,9 +629,9 @@ function nonComScript(data) {
 
 	// Main work for nonCom loop:
 	if (
-		currentMoveNextWhen &&
-		currentMoveNextWhen.length > 0 &&
-		data.indexOf(currentMoveNextWhen) >= 0
+		storageCache.currentMoveNextWhen &&
+		storageCache.currentMoveNextWhen.length > 0 &&
+		data.indexOf(storageCache.currentMoveNextWhen) >= 0
 	) {
 		sendNextCommand();
 	}
@@ -597,12 +650,13 @@ function sendNextCommand(additionalDelay) {
 
 	consoleLog("commandDelayInMs: " + commandDelayInMs);
 
+	// TODO: Replace with alarm
 	setTimeout(function () {
 		// Set override or use current command value:
 		let nextCommand;
 
-		if (commandOverride) {
-			nextCommand = commandOverride;
+		if (storageCache.commandOverride) {
+			nextCommand = storageCache.commandOverride;
 		} else {
 			nextCommand = getFormattedCommand();
 		}
@@ -610,8 +664,8 @@ function sendNextCommand(additionalDelay) {
 		sendCommand(nextCommand);
 
 		// Reset to a default here now to prevent it from sending back to back commands.
-		currentMoveNextWhen = "You are no longer busy";
-		moveNextNow = false;
+		storageCache.currentMoveNextWhen = "You are no longer busy";
+		storageCache.moveNextNow = false;
 	}, commandDelayInMs);
 }
 
@@ -621,8 +675,10 @@ function sendNextCommand(additionalDelay) {
 function shouldSendNextCommand() {
 	var sendCommand = true;
 
-	if (runRepeatWithDelay) sendCommand = false;
-
+	// Only rule, for now.
+	if (storageCache.runRepeatWithDelay) {
+		sendCommand = false;
+	} 
 	return sendCommand;
 }
 
@@ -633,12 +689,13 @@ function sendDelayedCommands(commands) {
 	if (commands && commands.length > 0) {
 		const offsetMs = 1000;
 		commands.forEach(function (command, index) {
+			// TODO: Replace with alarm
 			setTimeout(function () {
 				sendCommand(command);
 			}, offsetMs * (index + 2));
 		});
 		// This may cause bugs... but for now.
-		commandOverride = "";
+		storageCache.commandOverride = "";
 	}
 }
 
@@ -647,16 +704,18 @@ function sendDelayedCommands(commands) {
  * values from script variables. This will likely become more robust over time.
  */
 function getFormattedCommand() {
-	if (commandList.length <= 0 || commandList[currentCmdIndex] === undefined)
-		return "";
+	if (storageCache.commandList.length <= 0 || 
+		storageCache.commandList[storageCache.currentCmdIndex] === undefined) {
+			return "";
+		}
 
-	let command = commandList[currentCmdIndex].command;
+	let command = storageCache.commandList[storageCache.currentCmdIndex].command;
 	let targetRequired = true;
 
 	// If there is a value present for targetRequired, and it is false, then don't add a target.
 	if (
-		commandList[currentCmdIndex].targetRequired !== undefined &&
-		commandList[currentCmdIndex].targetRequired === "false"
+		storageCache.commandList[storageCache.currentCmdIndex].targetRequired !== undefined &&
+		storageCache.commandList[storageCache.currentCmdIndex].targetRequired === "false"
 	) {
 		targetRequired = false;
 	}
@@ -664,10 +723,10 @@ function getFormattedCommand() {
 	// Check if the command has moved <target> to be replaced:
 	if (command.indexOf("<target>") >= 0) {
 		// Check for target replacement:
-		command = command.replace("<target>", target, "g");
+		command = command.replace("<target>", storageCache.target, "g");
 	} else if (targetRequired) {
 		// Tack target onto the end by default:
-		command += " " + target;
+		command += " " + storageCache.target;
 	}
 
 	return command;
@@ -679,13 +738,13 @@ function getFormattedCommand() {
  * currentMoveNextWhen (identifies the trigger to run the next command).
  */
 function matchExpectedParse(data) {
-	if (commandList.length < 1) {
+	if (storageCache.commandList.length < 1) {
 		consoleLog("CommandList is empty... stop running?");
 		return false;
 	}
 
 	let matchFound = false;
-	const parse = commandList[currentCmdIndex].parse;
+	const parse = storageCache.commandList[storageCache.currentCmdIndex].parse;
 
 	// If the expected parse check is an array, check each:
 	if (Array.isArray(parse)) {
@@ -693,10 +752,10 @@ function matchExpectedParse(data) {
 			if (matchOutcome(data, parse[i].outcome)) {
 				matchFound = true;
 				if (parse[i].moveNextNow) {
-					moveNextNow = true;
+					storageCache.moveNextNow = true;
 				}
 				// Set value to detect for moving onto the next command:
-				currentMoveNextWhen = parse[i].moveNextWhen;
+				storageCache.currentMoveNextWhen = parse[i].moveNextWhen;
 				break;
 			}
 		}
@@ -704,10 +763,10 @@ function matchExpectedParse(data) {
 		if (matchOutcome(data, parse.outcome)) {
 			matchFound = true;
 			if (parse.moveNextNow) {
-				moveNextNow = true;
+				storageCache.moveNextNow = true;
 			}
 			// Set value to detect for moving onto the next command:
-			currentMoveNextWhen = parse.moveNextWhen;
+			storageCache.currentMoveNextWhen = parse.moveNextWhen;
 		}
 	}
 
@@ -755,10 +814,13 @@ function dedent(callSite, ...args) {
 		});
 	}
 
-	if (typeof callSite === "string") return format(callSite);
+	if (typeof callSite === "string") {
+		return format(callSite);
+	}
 
-	if (typeof callSite === "function")
+	if (typeof callSite === "function") {
 		return (...args) => format(callSite(...args));
+	}
 
 	let output = callSite
 		.slice(0, args.length + 1)
@@ -809,7 +871,7 @@ function slashCommand(command) {
 			);
 			break;
 		case "/scripts":
-			const scripts = currentScripts
+			const scripts = userScripts
 				.map((s) => s.scriptName)
 				.toString()
 				.replace(/,/g, "\r\n");
@@ -825,7 +887,7 @@ function slashCommand(command) {
 			openEditScripts();
 			break;
 		case "/current":
-			sendClientMessage(`The current script is: ${currentScriptName}`);
+			sendClientMessage(`The current script is: ${storageCache.currentScriptName}`);
 			break;
 		case "/start":
 			// Remove empty param option if found
@@ -852,7 +914,7 @@ function slashCommand(command) {
 				continueOnWalkIn = stringToBoolean(commandParams[5]);
 			}
 
-			const script = currentScripts.find((s) => {
+			const script = userScripts.find((s) => {
 				return s.scriptName.toLowerCase() === scriptName.toLowerCase();
 			});
 
@@ -866,7 +928,7 @@ function slashCommand(command) {
 				shouldKill: shouldKill,
 				continueOnWalkIn: continueOnWalkIn,
 			});
-			lastCommandRan = command;
+			storageCache.lastCommandRan = command;
 			break;
 		case "/stop":
 			killCurrentScript();
@@ -879,9 +941,9 @@ function slashCommand(command) {
 			}
 
 			const repeatCmd = repeatParams[1].trim();
-			scriptPaused = false;
+			storageCache.scriptPaused = false;
 			runSimpleRepeatWithDelay(repeatCmd);
-			lastCommandRan = command;
+			storageCache.lastCommandRan = command;
 			sendClientMessage(`Starting to repeat the command: ${repeatCmd}`);
 			break;
 		case "/repeatnlb":
@@ -894,9 +956,9 @@ function slashCommand(command) {
 			}
 
 			const repeatNlbCmd = repeatNlbParams[1].trim();
-			scriptPaused = false;
+			storageCache.scriptPaused = false;
 			runSimpleRepeat(repeatNlbCmd);
-			lastCommandRan = command;
+			storageCache.lastCommandRan = command;
 			sendClientMessage(`Starting to repeat the command: ${repeatNlbCmd}`);
 			break;
 		case "/pause":
@@ -913,10 +975,10 @@ function slashCommand(command) {
 function getRunningCommand() {
 	let runningCmd = "";
 
-	if (currentScriptName) {
-		runningCmd = `Script - ${currentScriptName}`;
+	if (storageCache.currentScriptName) {
+		runningCmd = `Script - ${storageCache.currentScriptName}`;
 	} else {
-		runningCmd = lastCommandRan;
+		runningCmd = storageCache.lastCommandRan;
 	}
 
 	return runningCmd;

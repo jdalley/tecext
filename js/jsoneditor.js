@@ -25,21 +25,29 @@ chrome.runtime.sendMessage({ type: "popup-get-scripts" }, function (response) {
 /**
  *   This script handles the logic driving the Edit Scripts page:
  */
-document.addEventListener("DOMContentLoaded", function () {
-	// Save changes to the script by calling the background save function:
-	document.getElementById("saveScript").addEventListener("click", function (e) {
-		const scriptsJson = editor.get();
-		if (scriptsJson) {
-			chrome.runtime.sendMessage({ 
-				type: "editor-set-scripts",
-				message: scriptsJson
-			});
-		}
-		close();
-	});
 
-	// Close window:
-	document.getElementById("cancel").addEventListener("click", function (e) {
-		close();
-	});
+// Save changes to the script by calling the background save function:
+document.getElementById("saveScript").addEventListener("click", function (e) {
+	const scriptsJson = editor.get();
+	if (scriptsJson) {
+		chrome.runtime.sendMessage({ 
+			type: "editor-set-scripts",
+			message: scriptsJson
+		});
+
+		let editMessage = document.getElementById("editMessage");
+		editMessage.innerHTML = "Script saved.";
+		editMessage.className = "hidden";
+
+		setTimeout(function() {
+			editMessage.innerHTML = "";
+			editMessage.className = "";
+		}, 5000)
+	}
 });
+
+// Close window:
+document.getElementById("close").addEventListener("click", function (e) {
+	close();
+});
+
