@@ -3,7 +3,7 @@
 	"name": "TEC Extender",
 	"short_name": "tecext",
 	"description": "Extensions and goodies for The Eternal City",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"action": {
 		"default_icon": "images/icon32.png"
 	},
@@ -35,12 +35,9 @@
 		}
 	],
 	"permissions": [
-		"contextMenus",
-		"debugger",
 		"background",
 		"tabs",
-		"storage",
-		"activeTab"
+		"storage"
 	],
 	"host_permissions": [
 		"*://*.eternalcitygame.com/*"

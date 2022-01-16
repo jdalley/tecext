@@ -42,9 +42,6 @@ let currentScriptName = null;
 let currentScriptType = null;
 let currentScripts = null;
 let currentScript = null;
-function getCurrentScripts() {
-	return currentScripts;
-}
 
 /*********************************************************************************************/
 /* Extension setup and Chrome things */
@@ -70,6 +67,7 @@ function openPopupWindow(tab) {
  * Load scripts from scriptCollection or local storage:
  */
 function loadScripts() {
+	consoleLog(`loadScripts was executed`);
 	chrome.storage.local.get("userScripts", function (data) {
 		if (data && data["userScripts"]) {
 			currentScripts = data["userScripts"];
@@ -79,9 +77,7 @@ function loadScripts() {
 				.then((out) => {
 					if (out) {
 						currentScripts = out;
-						chrome.storage.local.set({ userScripts: out }, function () {
-							return false;
-						});
+						chrome.storage.local.set({ userScripts: out });
 					}
 				});
 		}
@@ -96,9 +92,7 @@ function loadScripts() {
 function saveScripts(scripts) {
 	if (scripts) {
 		currentScripts = scripts;
-		chrome.storage.local.set({ userScripts: scripts }, function () {
-			return false;
-		});
+		chrome.storage.local.set({ userScripts: scripts });
 
 		// Send message to popup that currentScripts have been updated:
 		chrome.runtime.sendMessage({
@@ -263,7 +257,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 		// Send the current scripts to the popup
 		case "popup-get-scripts": 
-			sendResponse(getCurrentScripts());
+			sendResponse(currentScripts);
 			break;
 
 		// Save changes to scripts from the JSON editor
