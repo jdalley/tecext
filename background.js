@@ -13,7 +13,7 @@ const targetTabTitle = "The Eternal City - Orchil (Beta) - Skotos";
 const targetTabUrl = "http://client.eternalcitygame.com/tec/tec.htm";
 
 // Collection of properties that make up the state of the extension
-const storageCache = {
+let storageCache = {
 	// Simple repeat
 	runRepeat: false,
 	repeatCommand: null,
@@ -40,41 +40,26 @@ const storageCache = {
 	currentScriptName : null,
 	currentScriptType : null,
 	currentScript : null,
+
 };
 
 // Store scripts separately from the cache due to potential size
 let userScripts = null;
 
-let initStorageCache = getStorageCache().then(data => {
-	consoleLog(`assigning storageCache...`);
-	// Copy local storage data into storageCache
-	Object.assign(storageCache, data);
-
-	// Load once per service worker init
-	if (!userScripts) {
-		consoleLog(`loading userScripts...`);
-		loadUserScripts();
-	}
-});
-
-function getStorageCache() {
-	consoleLog(`getting storageCache from storage...`);
+async function getStorageCache() {
 	return new Promise((resolve, reject) => {
-		// Asynchronously fetch all data from storage.local. 
-		// Set it with a default value if it doesn't exist.
-		chrome.storage.local.get({ storageCache: storageCache }, (data) => {
-			// Pass any observed errors down the promise chain.
-			if (chrome.runtime.lastError) {
-				return reject(chrome.runtime.lastError);
+		chrome.storage.local.get({ 'storageCache' : storageCache }, function (data) {
+			if (!data || !data['storageCache']) {
+				reject();
+			} else {
+				resolve(data['storageCache']);
 			}
-			// Pass the data retrieved from storage down the promise chain.
-			resolve(data);
 		});
   });
 }
 
 function loadUserScripts() {
-	chrome.storage.local.get(['userScripts'], function(data) {
+	chrome.storage.local.get('userScripts', function(data) {
 		if (data && data["userScripts"]) {
 			userScripts = data["userScripts"];
 		} else {
@@ -134,11 +119,16 @@ function saveScripts(scripts) {
 
 // Open popout window when the main extension icon is clicked:
 chrome.action.onClicked.addListener(async function (tab) {
+	consoleLog(`[popup] getting storage cache...`);
 	// Ensure cache has data to continue
-	await initStorageCache;
+	storageCache = await getStorageCache();
+	// Load once per service worker init
+	if (!userScripts) {
+		consoleLog(`[popup] loading userScripts...`);
+		loadUserScripts();
+	}
 	openPopupWindow(tab);
 });
-
 
 /*********************************************************************************************/
 /** Communication with content scripts to send/receive messages to/from the game **/
@@ -234,9 +224,17 @@ function openEditScripts() {
  */
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	(async () => {
+		consoleLog(`getting storageCache...`)
 		// Ensure cache has data to continue
-		await initStorageCache;
+		storageCache = await getStorageCache();
 
+		// Load once per service worker init
+		if (!userScripts) {
+			consoleLog(`loading userScripts...`);
+			loadUserScripts();
+		}
+	
+		consoleLog(`entering request.type: ${request.type}`);
 		switch (request.type) {
 			// Message received from content.js (ultimately from injected.js)
 			case "tec-receive-message":
@@ -424,7 +422,7 @@ function killCurrentScript() {
 	storageCache.moveNextNow = false;
 	storageCache.currentScriptType = "";
 	storageCache.currentScriptName = "";
-	storageCache.currentscript = null;
+	storageCache.currentScript = null;
 	storageCache.scriptPaused = false;
 }
 
@@ -459,10 +457,12 @@ function combatScript(data) {
 			// Reset
 			storageCache.currentCmdIndex = 0;
 		} else {
+			
 			// Move the command list index forward...
 			storageCache.currentCmdIndex++;
 		}
 
+		
 		// If the parse has moveNextNow set to true, or if currentMoveNextWhen
 		// is null, send the next command now:
 		if (storageCache.moveNextNow || !storageCache.currentMoveNextWhen) {
@@ -475,7 +475,7 @@ function combatScript(data) {
 	if (storageCache.shouldKill) {
 		// Override based on specific scenarios
 		// TODO: Move this into something more dynamic.
-		const runningAttack = currentScript.addAttack;
+		const runningAttack = storageCache.currentScript.addAttack;
 		if (
 			data.indexOf("falls unconscious") >= 0 ||
 			(storageCache.commandOverride.indexOf("att") === -1 &&
@@ -769,7 +769,6 @@ function matchExpectedParse(data) {
 			storageCache.currentMoveNextWhen = parse.moveNextWhen;
 		}
 	}
-
 	return matchFound;
 }
 
