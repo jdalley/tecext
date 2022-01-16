@@ -14,7 +14,7 @@
 		"128": "images/logo128.png"
 	},
 	"background": {
-		"service_worker": "js/background.js"
+		"service_worker": "background.js"
 	},
 	"content_scripts": [
 		{
