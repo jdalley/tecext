@@ -1,10 +1,10 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "TEC Extender",
 	"short_name": "tecext",
 	"description": "Extensions and goodies for The Eternal City",
-	"version": "1.0.1",
-	"browser_action": {
+	"version": "2.0.0",
+	"action": {
 		"default_icon": "images/icon32.png"
 	},
 	"icons": {
@@ -14,21 +14,36 @@
 		"128": "images/logo128.png"
 	},
 	"background": {
-		"scripts": ["js/background.js"],
-		"persistent": true
+		"service_worker": "background.js"
 	},
 	"content_scripts": [
 		{
-			"matches": ["*://*.eternalcitygame.com/*"],
+			"matches": ["*://client.eternalcitygame.com/*"],
 			"js": ["js/content.js"],
 			"run_at": "document_end"
 		}
 	],
-	"web_accessible_resources": ["js/content.js", "js/injected.js"],
+	"web_accessible_resources": [
+		{
+			"matches": [
+				"*://client.eternalcitygame.com/*"
+			],
+			"resources": [
+				"js/content.js",
+				"js/injected.js"
+			]
+		}
+	],
 	"permissions": [
 		"background",
 		"tabs",
 		"storage"
 	],
-	"content_security_policy": "script-src 'self'; object-src 'self';"
+	"host_permissions": [
+		"*://client.eternalcitygame.com/*"
+	],
+	"content_security_policy": {
+		"script-src": "self",
+		"object-src": "self"
+	}
 }

@@ -36,3 +36,17 @@
 	top: 0;
 	bottom: 0;
 }
+
+.hidden {
+	visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 5s, opacity 5s linear;
+}
+
+#editMessage {
+	display: flex;
+	align-items: center;
+	margin-left: 10px;
+	color: red;
+}
+
