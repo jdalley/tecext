@@ -354,6 +354,11 @@ function combatGlobals(data) {
 		}, getCommandDelayInMs());
 	}
 
+	// Handle continuing after being stunned:
+	if (data.indexOf("You are no longer stunned") >= 0) {
+		sendNextCommand();
+	}
+
 	// Handle fumble or disarm:
 	if (data.indexOf("You fumble! You drop a") >= 0) {
 		// Just set override since fumble requires waiting for no longer busy anyway.
