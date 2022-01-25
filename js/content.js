@@ -367,27 +367,27 @@ function combatGlobals(data) {
 	if (data.indexOf("You take a") >= 0) {
 		sendDelayedCommands([
 			`wield ${weaponItemName}`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			getFormattedCommand(),
 		]);
 	}
 	if (data.indexOf("You can't do that right now") >= 0) {
 		sendDelayedCommands([
 			`get ${weaponItemName}`,
 			`wield ${weaponItemName}`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			getFormattedCommand(),
 		]);
 	}
 	if (data.indexOf("You must be carrying something to wield it") >= 0) {
 		sendDelayedCommands([
 			`get ${weaponItemName}`,
 			`wield ${weaponItemName}`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			getFormattedCommand(),
 		]);
 	}
 	if (data.indexOf("You must be wielding your weapon in two hands") >= 0) {
 		sendDelayedCommands([
 			`wield ${weaponItemName}`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			getFormattedCommand(),
 		]);
 	}
 
@@ -397,7 +397,7 @@ function combatGlobals(data) {
 		|| data.indexOf("You are unable to do that,") >= 0) {
 		sendDelayedCommands([
 			`free`,
-			`${commandList[currentCmdIndex].command} ${target}`,
+			getFormattedCommand(),
 		]);
 	}
 
@@ -407,7 +407,7 @@ function combatGlobals(data) {
 			`engage ${target}`,
 			commandOverride
 				? commandOverride
-				: `${commandList[currentCmdIndex].command} ${target}`,
+				: getFormattedCommand(),
 		]);
 	}
 
@@ -611,15 +611,7 @@ function sendNextCommand(additionalDelay) {
 
 	setTimeout(function () {
 		// Set override or use current command value:
-		let nextCommand;
-
-		if (commandOverride) {
-			nextCommand = commandOverride;
-		} else {
-			nextCommand = getFormattedCommand();
-		}
-
-		sendCommand(nextCommand);
+		sendCommand(getFormattedCommand());
 
 		// Reset to a default here now to prevent it from sending back to back commands
 		currentMoveNextWhen = "You are no longer busy";
@@ -667,24 +659,32 @@ function getFormattedCommand() {
 			return "";
 		}
 
-	let command = commandList[currentCmdIndex].command;
-	let targetRequired = true;
-
-	// If there is a value present for targetRequired, and it is false, then don't add a target.
-	if (
-		commandList[currentCmdIndex].targetRequired !== undefined &&
-		commandList[currentCmdIndex].targetRequired === "false"
-	) {
-		targetRequired = false;
+	let command = '';
+	
+	// If we have a temporary command override, apply it.
+	if (commandOverride) {
+		command = commandOverride;
 	}
+	else {
+		command = commandList[currentCmdIndex].command;
+		let targetRequired = true;
 
-	// Check if the command has moved <target> to be replaced:
-	if (command.indexOf("<target>") >= 0) {
-		// Check for target replacement:
-		command = command.replace("<target>", target, "g");
-	} else if (targetRequired) {
-		// Tack target onto the end by default:
-		command += " " + target;
+		// If there is a value present for targetRequired, and it is false, then don't add a target.
+		if (
+			commandList[currentCmdIndex].targetRequired !== undefined &&
+			commandList[currentCmdIndex].targetRequired === "false"
+		) {
+			targetRequired = false;
+		}
+
+		// Check if the command has moved <target> to be replaced:
+		if (command.indexOf("<target>") >= 0) {
+			// Check for target replacement:
+			command = command.replace("<target>", target, "g");
+		} else if (targetRequired) {
+			// Tack target onto the end by default:
+			command += " " + target;
+		}
 	}
 
 	return command;

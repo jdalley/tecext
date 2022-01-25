@@ -574,6 +574,25 @@
 		"addAttack": false,
 		"commandList": [
 			{
+				"command": "punch",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You punch at"
+				}
+			}
+		],
+		"continueOnWalkIn": true,
+		"scriptFriendlyName": "Brawling Punch",
+		"scriptName": "brawlPunch",
+		"scriptType": "combat",
+		"shouldKill": true,
+		"shouldKillParse": "with your bare hands",
+		"stanceCommand": ""
+	},
+	{
+		"addAttack": false,
+		"commandList": [
+			{
 				"command": "sbash",
 				"parse": {
 					"moveNextWhen": "You are no longer busy",
@@ -1497,6 +1516,119 @@
 		"addAttack": false,
 		"commandList": [
 			{
+				"command": "sstab",
+				"parse": [
+					{
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "Stepping forward aggressively, you clear"
+					},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You lead with your"
+					}
+				]
+			},
+			{
+				"command": "pslash",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "Sliding your front leg back"
+				}
+			},
+			{
+				"command": "upslash",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You twist your wrists"
+				}
+			},
+			{
+				"command": "slash",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You slash horizontally"
+				}
+			},
+			{
+				"command": "smash",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "you swing the butt"
+				}
+			},
+			{
+				"command": "jab",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You jab at"
+				}
+			}
+		],
+		"scriptFriendlyName": "Spear Main Hunting Rotation",
+		"scriptName": "spearHunt",
+		"scriptType": "combat",
+		"shouldKill": true,
+		"shouldKillParse": "You thrust your",
+		"continueOnWalkIn": true,
+		"stanceCommand": ""
+	},
+	{
+		"addAttack": false,
+		"commandList": [
+			{
+				"command": "sstab <target> high",
+				"parse": [
+					{
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "Stepping forward aggressively, you clear"
+					},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You lead with your"
+					}
+				]
+			},
+			{
+				"command": "pslash <target> high",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "Sliding your front leg back"
+				}
+			},
+			{
+				"command": "upslash <target> high",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You twist your wrists"
+				}
+			},
+			{
+				"command": "slash <target> high",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "You slash horizontally"
+				}
+			},
+			{
+				"command": "smash <target> high",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "you swing the butt"
+				}
+			}
+		],
+		"scriptFriendlyName": "Spear Main Hunting Rotation - Aim High",
+		"scriptName": "spearHuntHigh",
+		"scriptType": "combat",
+		"shouldKill": true,
+		"shouldKillParse": "You thrust your",
+		"continueOnWalkIn": true,
+		"stanceCommand": ""
+	},
+	{
+		"addAttack": false,
+		"commandList": [
+			{
 				"command": "stab",
 				"parse": {
 					"moveNextWhen": "You are no longer busy",
@@ -1535,7 +1667,7 @@
 		"scriptFriendlyName": "Spear Short Range",
 		"scriptName": "spearShort",
 		"scriptType": "combat",
-		"shouldKill": false,
+		"shouldKill": true,
 		"shouldKillParse": "You thrust your",
 		"continueOnWalkIn": true,
 		"stanceCommand": ""
