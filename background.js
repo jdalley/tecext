@@ -28,6 +28,7 @@ const getUserScripts = async () => {
 		chrome.storage.local.get('userScripts', function(data) {
 			if (data && data["userScripts"]) {
 				userScripts = data["userScripts"];
+				resolve(userScripts);
 			} else {
 				// No userScripts found or saved yet, load the default scripts
 				fetch("/scripts/scriptCollection.json")
@@ -36,52 +37,53 @@ const getUserScripts = async () => {
 						if (out) {
 							userScripts = out;
 							chrome.storage.local.set({ userScripts: out });
+							resolve(userScripts);
 						}
 					});
 			}
-			resolve(userScripts);
 		});
 	});
 };
+
+const handleMessages = async (request, sender, sendResponse) => {
+	switch (request.type) {
+		case "background-get-user-scripts":
+			let userScripts = await getUserScripts();
+			sendResponse(userScripts);
+			break;
+
+		case "background-save-user-scripts":
+			if (request.message) {
+				chrome.storage.local.set({ userScripts: request.message });
+				// Send message to popup that userScripts have been updated:
+				chrome.runtime.sendMessage({
+					msg: "reload-scripts-select",
+				});
+			}
+			break;
+
+		case "background-open-edit-scripts":
+			chrome.windows.create(
+				{
+					url: "edit-scripts.html",
+					type: "popup",
+					height: 1000,
+					width: 900,
+				},
+				function (window) {}
+			);
+			break;
+
+		default:
+			console.log(`request.type not found: ${request.type}`);
+	}
+}
 
 /**
  * Handle messages from other scripts
  */
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
-	(async () => {
-		switch (request.type) {
-			case "background-get-user-scripts":
-				let userScripts = await getUserScripts();
-				sendResponse(userScripts);
-				break;
-
-			case "background-save-user-scripts":
-				if (request.message) {
-					chrome.storage.local.set({ userScripts: request.message });
-					// Send message to popup that userScripts have been updated:
-					chrome.runtime.sendMessage({
-						msg: "reload-scripts-select",
-					});
-				}
-				break;
-
-			case "background-open-edit-scripts":
-				chrome.windows.create(
-					{
-						url: "edit-scripts.html",
-						type: "popup",
-						height: 1000,
-						width: 900,
-					},
-					function (window) {}
-				);
-				break;
-
-			default:
-				console.log(`request.type not found: ${request.type}`);
-		}
-	})();
-
+	handleMessages(request, sender, sendResponse);
 	// Keep the messaging channel open for sending responses
 	return true;
 });
