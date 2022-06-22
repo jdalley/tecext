@@ -10,7 +10,7 @@
 			url: chrome.runtime.getURL("popup.html"),
 			type: "popup",
 			height: 435,
-			width: 399,
+			width: 750,
 		},
 		function (win) {
 			// Do something with the new window?
@@ -45,6 +45,23 @@ const getUserScripts = async () => {
 	});
 };
 
+const getConfig = async () => {
+	return new Promise((resolve, reject) => {
+		let extConfig = {};
+		chrome.storage.local.get('config', function(data) {
+			if (data && data["config"]) {
+				extConfig = data["config"];
+				resolve(extConfig);
+			}
+			else {
+				// No config found or saved yet, load default
+				extConfig.enableComms = true;
+				resolve(extConfig);
+			}
+		})
+	});
+}
+
 const handleMessages = async (request, sender, sendResponse) => {
 	switch (request.type) {
 		case "background-get-user-scripts":
@@ -60,6 +77,21 @@ const handleMessages = async (request, sender, sendResponse) => {
 					msg: "reload-scripts-select",
 				});
 			}
+			break;
+
+		case "background-save-configuration":
+			if (request.message) {
+				chrome.storage.local.set({ config: request.message });
+				// Send message to popup that config has been updated:
+				chrome.runtime.sendMessage({
+					msg: "config-saved-success"
+				})
+			}
+			break;
+
+		case "background-get-configuration":
+			let extConfig = await getConfig();
+			sendResponse(extConfig);
 			break;
 
 		case "background-open-edit-scripts":

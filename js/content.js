@@ -34,14 +34,37 @@ let	currentScript  =  null;
 // Store scripts separately from the cache due to potential size
 let userScripts = null;
 
-// Load user scripts from local storage via the background service worker
-function loadUserScripts() {
-	consoleLog(`loading userScripts...`);
-	// Load scripts from background:
+// Configuration used to set options for the extension, controlled in the popup.
+let extConfig = null;
+
+// Load data from background service worker (local storage): user scripts and config 
+function loadExtData() {	
+	// Load scripts:
 	chrome.runtime.sendMessage({ type: "background-get-user-scripts" }, function (response) {
 		// response will be an array of script objects
 		userScripts = response;
 	});
+
+	// Load config:
+	chrome.runtime.sendMessage({ type: "background-get-configuration" }, function (response) {
+		// response will be an object with properties
+		extConfig = response;
+
+		applyConfiguration(extConfig);
+	});
+}
+
+/**
+ *  Send the configuration to the injected script to apply it to the client page. 
+ */
+function applyConfiguration(config) {
+	document.dispatchEvent(
+		new CustomEvent("extensionApplyConfig", {
+			detail: {
+				data: config
+			},
+		})
+	);
 }
 
 /**
@@ -53,6 +76,18 @@ function saveScripts(scripts) {
 	chrome.runtime.sendMessage({
 		type: "background-save-user-scripts",
 		message: scripts
+	});
+}
+
+/**
+ * Save configuration here and in local storage via the background service worker
+ */
+function saveConfiguration(config) {
+	extConfig = config;
+	applyConfiguration(extConfig);
+	chrome.runtime.sendMessage({
+		type: "background-save-configuration",
+		message: config
 	});
 }
 
@@ -70,7 +105,7 @@ function saveScripts(scripts) {
 /**
  * Load scripts once from the root 
  */
-loadUserScripts();
+loadExtData();
 
 
 /*********************************************************************************************/
@@ -170,6 +205,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		// Return userScripts to the popup
 		case "popup-get-scripts": 
 			sendResponse(userScripts);
+			break;
+
+		case "popup-save-configuration":
+			saveConfiguration(request.message);
+			break;
+
+		case "popup-get-configuration":
+			sendResponse(extConfig);
 			break;
 
 		// Return userScripts to the JSON editor

@@ -32,6 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	});
 
+	document.getElementById("saveConfig").addEventListener("click", function(e) {
+		const config = {};
+		config.enableComms = document.getElementById("enableComms").checked;
+
+		saveConfiguration(config);
+	})
+
 	// Simple command repeat, checks for no longer busy
 	document.getElementById("sendRepeat").addEventListener("click", function (e) {
 		const repeatCommand = document.getElementById("repeatInput").value;
@@ -104,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			);
 		});
 
-	// Listener to update the script select; expected to trigger from Edit Scripts window:
+	// Listener to handle requests from the background script:
 	chrome.runtime.onMessage.addListener(function (
 		request,
 		sender,
@@ -113,11 +120,32 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (request.msg === "reload-scripts-select") {
 			loadScriptSelect();
 		}
+		if (request.msg === "config-saved-success") {
+			setConfigMessage("Configuration updated successfully.");
+		}
 	});
 
 	// Initial scripts load:
 	loadScriptSelect();
+
+	// Initial config load:
+	getConfiguration();
 });
+
+// Set the configMessage div with a given message, which will fade after 5 seconds.
+function setConfigMessage(msg) {
+	if (msg) {
+		const configMessage = document.getElementById("configMessage");
+
+		configMessage.innerHTML = msg;
+		configMessage.className = "hide-5";
+
+		setTimeout(function() {
+			configMessage.innerHTML = "";
+			configMessage.className = "";
+		}, 5000)
+	}
+}
 
 /**
  *  Load combat script choices from background page:
@@ -141,6 +169,30 @@ function loadScriptSelect() {
 					});
 				}
 			});
+	});
+}
+
+function getConfiguration() {
+	chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
+		chrome.tabs.sendMessage(tabs[0].id, {	type: "popup-get-configuration"	},
+			function (response) {
+				// Response will be a config object
+				if (response) {
+					document.getElementById("enableComms").checked = response.enableComms;
+				}
+			});
+	});
+}
+
+/**
+ * Save Configuration
+ */
+function saveConfiguration(config) {
+	chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
+		chrome.tabs.sendMessage(tabs[0].id, { 
+				type: "popup-save-configuration",
+				message: config
+			})
 	});
 }
 
