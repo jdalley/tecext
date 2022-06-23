@@ -31,40 +31,47 @@ function doSendOverride(msg) {
 // Take communication messages and add them to the comms element.
 function pullCommunication(msg) {
 	let shouldOutput = false;
+	let outputMessage = '';
+	let timestamp = new Date().toLocaleTimeString();
 
+	// TODO: Remove me, I'm a 'debugger'
 	console.log(msg);
 
+	// Example: <Someone thinks aloud: This is a thought.>
+	// https://regex101.com/r/gII4uI/1
+	let thoughtMatch = msg.match(/<(\w.+) (?:thinks|think) aloud: (.*)>/);
+	if (thoughtMatch && thoughtMatch.length >= 1) {
+		outputMessage = `<div style="color: #ff69b4;">[${timestamp}] ${thoughtMatch[0]}</div>`;
+		shouldOutput = true;
+	}
+
+	// Example: <6:42 pm OOC> Someone says, "This is an OOC message."
+	// https://regex101.com/r/FS2p0A/1
+	//let oocMatch = msg.match(/<.+(?:OOC>) (\w+)(.+)/);
+	let oocMatch = msg.match(/<.+(?:OOC&gt;) (\w+)(.+)/);
+	if (oocMatch && oocMatch.length >= 1) {
+		outputMessage = `<div style="color: #65cd00;">[${timestamp}] ${oocMatch[0]}</div>`;
+		shouldOutput = true;
+	}
+
 	/*
-		Notes on parsing:
-		Thoughts:
-			- 'thinks aloud' may need to be captured from '<' to '>' to avoid taking on more text.
-		OOC: 
-			- 'OOC>' should be enough, but like thoughts we might need to capture from '<' to '>' like Thoughts.
-		Speech:
-			- The presence of '"' and not !'OOC>' (as OOC also uses double quotes) might be enough to grab speech text.
+		Dig into whether or not this color is actually parseable:
+			</font><font color="#FF69B4">&lt;Ciaran thinks aloud: This is your divine punishment for encouraging Chompers.&gt;</font>
 	*/
-	
-	if (msg.indexOf('say to') >= 0
-	    || msg.indexOf(' says') >= 0
-	    || msg.indexOf(' ask') >= 0
-	    || msg.indexOf(' exclaim') >= 0
-	    || msg.indexOf(' wink') >= 0) {
-	    msg = `<div style="color: #00cde1;">${msg}</div>`;
+	// Example: Someone say to SomeoneElse, "This is a speech message."
+	// https://regex101.com/r/7NXKrH/1
+	//let speechMatch = msg.match(/(.+)(?:, \")(.+\")/);
+	let speechMatch = msg.match(/(.+)(?:, &quot;)(.+&quot;)/);
+	if (msg.indexOf('OOC>') == -1 
+		&& speechMatch
+		&& speechMatch.length >= 1) {
+
+	    outputMessage = `<div style="color: #00cde1;">[${timestamp}] ${speechMatch[0]}</div>`;
 			shouldOutput = true;
 	}
 
-	if (msg.indexOf('thinks aloud') >= 0) {
-		msg = `<div style="color: #ff69b4;">${msg}</div>`;
-		shouldOutput = true;
-	}
-
-	if (msg.indexOf('OOC>')  >= 0) {
-		msg = `<div style="color: #65cd00;">${msg}</div>`;
-		shouldOutput = true;
-	}
-
 	if (shouldOutput) {
-		outputComms(msg);
+		outputComms(outputMessage);
 	}
 }
 
