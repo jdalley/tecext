@@ -4,6 +4,9 @@
  * that injected it; which will pipe back to the background script for the extension.
  */
 
+// Contains config received from local storage.
+let injectedConfig = {};
+
 // Send intercepted data to the content script:
 function doReceiveOverride(msg) {
 	document.dispatchEvent(
@@ -30,7 +33,9 @@ function doSendOverride(msg) {
 
 // Take communication messages and add them to the comms element.
 function pullCommunication(msg) {
-	let shouldOutput = false;
+	// Whether to send this message to Orchil's doReceive method.
+	let sendToOutput = true;
+	let shouldSendToComms = false;
 	let outputMessage = '';
 	let timestamp = new Date().toLocaleTimeString();
 
@@ -40,18 +45,30 @@ function pullCommunication(msg) {
 	// Example: <Someone thinks aloud: This is a thought.>
 	// https://regex101.com/r/gII4uI/1
 	let thoughtMatch = msg.match(/<(\w.+) (?:thinks|think) aloud: (.*)>/);
-	if (thoughtMatch && thoughtMatch.length >= 1) {
-		outputMessage = `<div style="color: #ff69b4;">[${timestamp}] ${thoughtMatch[0]}</div>`;
-		shouldOutput = true;
+	if (injectedConfig.includeThoughts
+		&& thoughtMatch 
+		&& thoughtMatch.length >= 1) {
+		outputMessage = `<div>[${timestamp}] ${thoughtMatch[0]}</div>`;
+		shouldSendToComms = true;
+
+		if (injectedConfig.removeThoughtsFromMain) {
+			sendToOutput = false;
+		}
 	}
 
 	// Example: <6:42 pm OOC> Someone says, "This is an OOC message."
 	// https://regex101.com/r/FS2p0A/1
 	//let oocMatch = msg.match(/<.+(?:OOC>) (\w+)(.+)/);
 	let oocMatch = msg.match(/<.+(?:OOC&gt;) (\w+)(.+)/);
-	if (oocMatch && oocMatch.length >= 1) {
-		outputMessage = `<div style="color: #65cd00;">[${timestamp}] ${oocMatch[0]}</div>`;
-		shouldOutput = true;
+	if (injectedConfig.includeOOC
+		&& oocMatch
+		&& oocMatch.length >= 1) {
+		outputMessage = `<div>[${timestamp}] ${oocMatch[0]}</div>`;
+		shouldSendToComms = true;
+
+		if (injectedConfig.removeOOCFromMain) {
+			sendToOutput = false;
+		}
 	}
 
 	/*
@@ -62,17 +79,24 @@ function pullCommunication(msg) {
 	// https://regex101.com/r/7NXKrH/1
 	//let speechMatch = msg.match(/(.+)(?:, \")(.+\")/);
 	let speechMatch = msg.match(/(.+)(?:, &quot;)(.+&quot;)/);
-	if (msg.indexOf('OOC>') == -1 
+	if (injectedConfig.includeSpeech
+		&& msg.indexOf('OOC>') == -1 
 		&& speechMatch
 		&& speechMatch.length >= 1) {
 
-	    outputMessage = `<div style="color: #00cde1;">[${timestamp}] ${speechMatch[0]}</div>`;
-			shouldOutput = true;
+	    outputMessage = `<div>[${timestamp}] ${speechMatch[0]}</div>`;
+			shouldSendToComms = true;
+
+			if (injectedConfig.removeSpeechFromMain) {
+				sendToOutput = false;
+			}
 	}
 
-	if (shouldOutput) {
+	if (shouldSendToComms) {
 		outputComms(outputMessage);
 	}
+
+	return sendToOutput;
 }
 
 // Write communication-oriented messages to the comms window:
@@ -91,19 +115,25 @@ function outputComms(msg) {
 	}
 }
 
-/**
- * Create the Comms element with a given configuration.
- */
-function createCommsElement(config) {
-	if (!config) {
-		console.log("createCommsElement called with null/empty config.");
-		return false;
+// Apply visual adjustments to page elements with injected configuration.
+function applyConfigUpdate() {
+	const comms = document.getElementById('comms');
+	if (!comms){
+		createCommsElement();
 	}
+	else if (comms) {
+		updateCommsElement();
+	}
+}
 
+/**
+ * Create the Comms element with current configuration.
+ */
+function createCommsElement() {
 	setTimeout(function () {
 		const outputArea = document.getElementById("output");
 		if (outputArea) {
-			let display = config.enableComms ? "inherit" : "none";
+			let display = injectedConfig.enableComms ? "inherit" : "none";
 
 			// Insert UI elements above the macro area.
 			document.getElementById("output").insertAdjacentHTML(
@@ -114,7 +144,7 @@ function createCommsElement(config) {
 							display: ${display};
 							position: sticky;
 							top: 0;
-							height: 150px;
+							height: ${injectedConfig.commsBoxHeight}px;
 							border:3px gray inset;
 							border-bottom-width: 5px;
 							overflow:auto; 
@@ -132,14 +162,11 @@ function createCommsElement(config) {
 	}, 1000);
 }
 
-// Update the Comms element with a given configuration.
-function updateCommsElement(config) {
-	if (!config) {
-		return false;
-	}
-	
+// Update the Comms element with current configuration.
+function updateCommsElement() {
 	const comms = document.getElementById('comms');
-	comms.style.display = config.enableComms ? "inherit" : "none";
+	comms.style.display = injectedConfig.enableComms ? "inherit" : "none";
+	comms.style.height = `${injectedConfig.commsBoxHeight}px`;
 }
 
 /*********************************************************************************************/
@@ -151,10 +178,13 @@ if (typeof doReceive !== "undefined") {
 	doReceive = function (msg) {
 		doReceiveOverride(msg);
 
-		// Pull out communication for the comms window:
-		pullCommunication(msg);
+		// Pull out communication for the comms window, and determine if this message
+		// should be sent to the main output window or not.
+		const sendToOutput = pullCommunication(msg);
 
-		origDoReceive.apply(this, arguments);
+		if (sendToOutput) {
+			origDoReceive.apply(this, arguments);
+		}
 		return;
 	};
 }
@@ -186,13 +216,8 @@ document.addEventListener("tecSendMessage", function (e) {
 document.addEventListener("extensionApplyConfig", function (e) {
 	const config = e.detail.data;
 	if (config) {
-		const comms = document.getElementById('comms');
-		if (!comms){
-			createCommsElement(config);
-		}
-		else if (comms) {
-			updateCommsElement(config);
-		}
+		injectedConfig = config;
+		applyConfigUpdate();
 	}
 });
 

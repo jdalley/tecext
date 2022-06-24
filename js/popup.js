@@ -35,6 +35,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("saveConfig").addEventListener("click", function(e) {
 		const config = {};
 		config.enableComms = document.getElementById("enableComms").checked;
+		config.includeThoughts = document.getElementById("includeThoughts").checked;
+		config.includeOOC = document.getElementById("includeOOC").checked;
+		config.includeSpeech = document.getElementById("includeSpeech").checked;
+		config.removeThoughtsFromMain = document.getElementById("removeThoughtsFromMain").checked;
+		config.removeOOCFromMain = document.getElementById("removeOOCFromMain").checked;
+		config.removeSpeechFromMain = document.getElementById("removeSpeechFromMain").checked;
+		config.commsBoxHeight = document.getElementById("commsBoxHeight").value;
 
 		saveConfiguration(config);
 	})
@@ -121,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			loadScriptSelect();
 		}
 		if (request.msg === "config-saved-success") {
-			setConfigMessage("Configuration updated successfully.");
+			setConfigMessage("Configuration updated!");
 		}
 	});
 
@@ -178,7 +185,15 @@ function getConfiguration() {
 			function (response) {
 				// Response will be a config object
 				if (response) {
+					// Apply configurations to inputs
 					document.getElementById("enableComms").checked = response.enableComms;
+					document.getElementById("includeThoughts").checked = response.includeThoughts;
+					document.getElementById("includeOOC").checked = response.includeOOC;
+					document.getElementById("includeSpeech").checked = response.includeSpeech;
+					document.getElementById("removeThoughtsFromMain").checked = response.removeThoughtsFromMain;
+					document.getElementById("removeOOCFromMain").checked = response.removeOOCFromMain;
+					document.getElementById("removeSpeechFromMain").checked = response.removeSpeechFromMain;
+					document.getElementById("commsBoxHeight").value = response.commsBoxHeight;
 				}
 			});
 	});

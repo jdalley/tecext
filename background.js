@@ -56,6 +56,13 @@ const getConfig = async () => {
 			else {
 				// No config found or saved yet, load default
 				extConfig.enableComms = true;
+				extConfig.includeThoughts = true;
+				extConfig.includeOOC = true;
+				extConfig.includeSpeech = true;
+				extConfig.removeThoughtsFromMain = false;
+				extConfig.removeOOCFromMain = false;
+				extConfig.removeSpeechFromMain = false;
+				extConfig.commsBoxHeight = '150'; // pixels
 				resolve(extConfig);
 			}
 		})

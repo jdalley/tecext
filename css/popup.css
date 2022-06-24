@@ -9,28 +9,24 @@ body {
 	margin: 15px 15px 5px 15px
 }
 
-.popup-container input[type="text"] {
-	width: 239px;
-	padding-left: 3px;
-	margin-right: 5px;
-}
-
-.popup-container select {
-	height: 30px;
-	width: 239px;
-	margin-right: 5px;
-}
-
 .popup-container button {
 	min-width: 105px;
 }
 
 .popup-container div {
-	padding-bottom: 5px;
+	padding-bottom: 6px;
 }
 
 .left-col {
 	flex: 1;
+	margin-right: 15px;
+}
+.left-col .nav {
+	--bs-nav-link-padding-y: 0.2rem;
+}
+
+.tab-content {
+	padding-top: 8px;
 }
 
 .right-col {
@@ -44,7 +40,7 @@ body {
 }
 
 #configMessage {
-	padding: 0;
+	padding-left: 10px;
 	margin: 0;
 	color: green;
 }

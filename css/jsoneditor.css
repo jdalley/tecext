@@ -29,6 +29,10 @@
 	flex: 0 1 40px;
 	margin-top: 10px;
 }
+.edit-container .row.footer button {
+	width: 105px;
+}
+
 .edit-container #jsonEditor {
 	position: absolute;
 	right: 0;
@@ -46,7 +50,7 @@
 #editMessage {
 	display: flex;
 	align-items: center;
-	margin-left: 10px;
-	color: red;
+	width: 150px;
+	color: green;
 }
 

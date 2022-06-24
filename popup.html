@@ -2,8 +2,9 @@
 <html>
 	<head>
 		<title>TEC Extender</title>
-		<link rel="stylesheet" href="css/bootstrap.4.1.1.min.css" />
+		<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/popup.css" />
+		<script src="js/bootstrap/bootstrap.min.js"></script>
 		<script src="js/popup.js"></script>
 	</head>
 
@@ -11,13 +12,117 @@
 		<main role="main">
 			<div class="popup-container">
 				<div class="left-col">
-					<div>
-						<strong>Configuration</strong>
-						<div id="configMessage"></div>
-					</div>
-					<div>
-						<input id="enableComms" name="enableComms" type="checkbox" />
-						<label for="enableComms">Enable communications box</label>
+					<ul class="nav nav-tabs" id="configTabs">
+						<li class="nav-item">
+							<button
+								class="nav-link active"
+								id="commsTab"
+								data-bs-toggle="tab"
+								data-bs-target="#commsTabPane"
+								type="button"
+								aria-controls="commsTabPane"
+								aria-selected="true"
+							>
+								Comms
+							</button>
+						</li>
+					</ul>
+					<div class="tab-content" id="configTabsContent">
+						<div
+							class="tab-pane fade show active"
+							id="commsTabPane"
+							aria-labelledby="commsTab"
+							tabindex="0"
+						>
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									id="enableComms"
+									name="enableComms"
+									type="checkbox"
+								/>
+								<label class="form-check-label" for="enableComms"
+									>Enable communications box</label
+								>
+							</div>
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									id="includeThoughts"
+									name="includeThoughts"
+									type="checkbox"
+								/>
+								<label class="form-check-label" for="includeThoughts"
+									>Include thoughts</label
+								>
+							</div>
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									id="includeOOC"
+									name="includeOOC"
+									type="checkbox"
+								/>
+								<label class="form-check-label" for="includeOOC"
+									>Include OOC</label
+								>
+							</div>
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									id="includeSpeech"
+									name="includeSpeech"
+									type="checkbox"
+								/>
+								<label class="form-check-label" for="includeSpeech"
+									>Include speech</label
+								>
+							</div>
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									id="removeThoughtsFromMain"
+									name="removeThoughtsFromMain"
+									type="checkbox"
+								/>
+								<label class="form-check-label" for="removeThoughtsFromMain"
+									>Remove thoughts from main</label
+								>
+							</div>
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									id="removeOOCFromMain"
+									name="removeOOCFromMain"
+									type="checkbox"
+								/>
+								<label class="form-check-label" for="removeOOCFromMain"
+									>Remove OOC from main</label
+								>
+							</div>
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									id="removeSpeechFromMain"
+									name="removeSpeechFromMain"
+									type="checkbox"
+								/>
+								<label class="form-check-label" for="removeSpeechFromMain"
+									>Remove speech from main</label
+								>
+							</div>
+							<div class="input-group">
+								<span class="input-group-text" for="commsBoxHeight"
+									>Box height (px):</span
+								>
+								<input
+									class="form-control"
+									id="commsBoxHeight"
+									name="commsBoxHeight"
+									type="text"
+								/>
+							</div>
+						</div>
 					</div>
 					<div>
 						<button
@@ -28,11 +133,14 @@
 						>
 							Save Config
 						</button>
+						<span id="configMessage"></span>
 					</div>
+					
 				</div>
 				<div class="right-col">
-					<div>
+					<div class="input-group">
 						<input
+							class="form-control"
 							id="commandInput"
 							name="commandInput"
 							type="text"
@@ -47,8 +155,9 @@
 							Send
 						</button>
 					</div>
-					<div>
+					<div class="input-group">
 						<input
+							class="form-control"
 							id="repeatInput"
 							name="repeatInput"
 							type="text"
@@ -67,8 +176,12 @@
 					<div>
 						<label for="scriptSelect">Choose a script to run:</label>
 					</div>
-					<div>
-						<select id="scriptSelect" name="scriptSelect"></select>
+					<div class="input-group">
+						<select
+							class="form-select"
+							id="scriptSelect"
+							name="scriptSelect"
+						></select>
 						<button
 							type="button"
 							id="editScripts"
@@ -78,16 +191,18 @@
 							Edit Scripts
 						</button>
 					</div>
-					<div>
+					<div class="input-group">
 						<input
+							class="form-control"
 							id="weaponItemName"
 							name="weaponItemName"
 							type="text"
 							placeholder="Weapon/item name..."
 						/>
 					</div>
-					<div>
+					<div class="input-group">
 						<input
+							class="form-control"
 							id="targetInput"
 							name="targetInput"
 							type="text"
@@ -97,18 +212,27 @@
 							Run Script
 						</button>
 					</div>
-					<div>
-						<input type="checkbox" id="shouldKill" name="shouldKill" checked />
-						<label for="shouldKill">Use 'kill' command on KO?</label>
-					</div>
-					<div>
+					<div class="form-check mt-1">
 						<input
+							class="form-check-input"
+							type="checkbox"
+							id="shouldKill"
+							name="shouldKill"
+							checked
+						/>
+						<label class="form-check-label" for="shouldKill"
+							>Use 'kill' command on KO?</label
+						>
+					</div>
+					<div class="form-check">
+						<input
+							class="form-check-input"
 							type="checkbox"
 							id="continueOnWalkIn"
 							name="continueOnWalkIn"
 							checked
 						/>
-						<label for="continueOnWalkIn"
+						<label class="form-check-label" for="continueOnWalkIn"
 							>Continue script on 'walks in/arrives'?</label
 						>
 					</div>
