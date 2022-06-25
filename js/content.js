@@ -5,31 +5,32 @@
 /* Initialization and Chrome setup */
 
 // Simple repeat
-let runRepeat =  false;
-let	repeatCommand =  null;
+let runRepeat = false;
+let repeatCommand = null;
 // Repeat constantly with a delay
-let	runRepeatWithDelay =  false;
-let	repeatWithDelayCommand  =  null;
+let runRepeatWithDelay = false;
+let repeatWithDelayCommand = null;
 // General
-let	target  =  null;
-let	commandList  =  [];
-let	currentCmdIndex  =  0;
-let	currentMoveNextWhen  =  null;
-let	moveNextNow  =  false;
-let	commandOverride  =  null;
-let	lastCommandRan  =  null;
+let target = null;
+let commandList = [];
+let currentCmdIndex = 0;
+let currentMoveNextWhen = null;
+let moveNextNow = false;
+let commandOverride = null;
+let lastCommandRan = null;
 // Combat
-let	shouldKill  =  false;
-let	shouldKillParse  =  null;
-let	continueOnWalkIn  =  false;
-let	weaponItemName  =  null;
-let	addAttack  =  false;
-let	stance =  null;
+let shouldKill = false;
+let shouldKillParse = null;
+let continueOnWalkIn = false;
+let weaponItemName = null;
+let shieldItemName = null;
+let addAttack = false;
+let stance = null;
 // Scripts
-let	scriptPaused  =  false;
-let	currentScriptName  =  null;
-let	currentScriptType  =  null;
-let	currentScript  =  null;
+let scriptPaused = false;
+let currentScriptName = null;
+let currentScriptType = null;
+let currentScript = null;
 
 // Store scripts separately from the cache due to potential size
 let userScripts = null;
@@ -37,31 +38,37 @@ let userScripts = null;
 // Configuration used to set options for the extension, controlled in the popup.
 let extConfig = null;
 
-// Load data from background service worker (local storage): user scripts and config 
-function loadExtData() {	
+// Load data from background service worker (local storage): user scripts and config
+function loadExtData() {
 	// Load scripts:
-	chrome.runtime.sendMessage({ type: "background-get-user-scripts" }, function (response) {
-		// response will be an array of script objects
-		userScripts = response;
-	});
+	chrome.runtime.sendMessage(
+		{ type: "background-get-user-scripts" },
+		function (response) {
+			// response will be an array of script objects
+			userScripts = response;
+		}
+	);
 
 	// Load config:
-	chrome.runtime.sendMessage({ type: "background-get-configuration" }, function (response) {
-		// response will be an object with properties
-		extConfig = response;
+	chrome.runtime.sendMessage(
+		{ type: "background-get-configuration" },
+		function (response) {
+			// response will be an object with properties
+			extConfig = response;
 
-		applyConfiguration(extConfig);
-	});
+			applyConfiguration(extConfig);
+		}
+	);
 }
 
 /**
- *  Send the configuration to the injected script to apply it to the client page. 
+ *  Send the configuration to the injected script to apply it to the client page.
  */
 function applyConfiguration(config) {
 	document.dispatchEvent(
 		new CustomEvent("extensionApplyConfig", {
 			detail: {
-				data: config
+				data: config,
 			},
 		})
 	);
@@ -75,7 +82,7 @@ function saveScripts(scripts) {
 	userScripts = scripts;
 	chrome.runtime.sendMessage({
 		type: "background-save-user-scripts",
-		message: scripts
+		message: scripts,
 	});
 }
 
@@ -87,26 +94,25 @@ function saveConfiguration(config) {
 	applyConfiguration(extConfig);
 	chrome.runtime.sendMessage({
 		type: "background-save-configuration",
-		message: config
+		message: config,
 	});
 }
 
 /**
  * Inject the script used to work directly with the contents of the page; hooking into
  * relevant events, variables, and data from web sockets.
- */ 
- const script = document.createElement("script");
- script.src = chrome.runtime.getURL("js/injected.js");
- (document.head || document.documentElement).appendChild(script);
- script.onload = function () {
-	 script.remove();
- };
+ */
+const script = document.createElement("script");
+script.src = chrome.runtime.getURL("js/injected.js");
+(document.head || document.documentElement).appendChild(script);
+script.onload = function () {
+	script.remove();
+};
 
 /**
- * Load scripts once from the root 
+ * Load scripts once from the root
  */
 loadExtData();
-
 
 /*********************************************************************************************/
 /** Communication with other scripts **/
@@ -154,7 +160,7 @@ function sendCommand(msg) {
 	document.dispatchEvent(
 		new CustomEvent("tecSendMessage", {
 			detail: {
-				timestamp:  new Date().toISOString(),
+				timestamp: new Date().toISOString(),
 				data: msg,
 			},
 		})
@@ -181,17 +187,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			break;
 
 		// Start script by name with options from popup
-		case "popup-run-script": 
+		case "popup-run-script":
 			if (request.message.scriptName) {
 				runScriptByName(request.message.scriptName, request.message);
 			}
 			break;
-		
+
 		// Kill script from popup
 		case "popup-kill-script":
 			killCurrentScript();
 			break;
-		
+
 		// Pause script from popup
 		case "popup-pause-script":
 			pauseCurrentScript();
@@ -203,7 +209,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			break;
 
 		// Return userScripts to the popup
-		case "popup-get-scripts": 
+		case "popup-get-scripts":
 			sendResponse(userScripts);
 			break;
 
@@ -216,7 +222,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			break;
 
 		// Return userScripts to the JSON editor
-		case "editor-get-scripts": 
+		case "editor-get-scripts":
 			sendResponse(userScripts);
 			break;
 
@@ -239,7 +245,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  * @param {string} msg
  */
 function sendClientMessage(msg) {
-
 	// Add message to output
 	const output = document.getElementById("output");
 	const div = document.createElement("div");
@@ -256,11 +261,10 @@ function sendClientMessage(msg) {
 
 /**
  * Open the edit scripts popup
- */ 
+ */
 function openEditScripts() {
 	chrome.runtime.sendMessage({ type: "background-open-edit-scripts" });
 }
-
 
 /*********************************************************************************************/
 /** Parsing and Scripting: setting up and executing defined scripts **/
@@ -294,7 +298,6 @@ function parseMessage(data) {
 	}
 }
 
-
 /**
  * Used to parse and act on incoming game message data for combat scripts
  * @param {string} data
@@ -310,11 +313,10 @@ function combatScript(data) {
 			// Reset
 			currentCmdIndex = 0;
 		} else {
-			
 			// Move the command list index forward...
 			currentCmdIndex++;
 		}
-		
+
 		// If the parse has moveNextNow set to true, or if currentMoveNextWhen
 		// is null, send the next command now:
 		if (moveNextNow || !currentMoveNextWhen) {
@@ -376,6 +378,47 @@ function combatScript(data) {
 }
 
 /**
+ * Attempt to handle scenarios where you're unable to hit something due to range.
+ * Often you're approached by multiple enemies at once in these cases, and you 
+ * can't kill something easily with a script in this scenario. Therefore, we
+ * want to try and optimistically pick the next target to try and hit that's 
+ * close ranged. Additionally, we need to handle resetting the target as things
+ * die.
+ * @param {string} data 
+ */
+function combatHandleOutOfRange(data) {
+
+	/*
+		Here is what we get back in a single `block` from the server when we use the
+		command `ac <target>`, ie: `ac man|rat`:
+
+		</pre><pre><font size=+1><b>Checking the approach status of &quot;man|rat&quot;</b></font></font>
+		<hr>
+		1: a dirt-caked man with milky-white eyes and greasy hair(unconscious)
+		2: a gaunt rat with milky-white eyes (engaging) 
+		3: a filthy man with milky-white eyes and pale skin (engaging) 
+		<hr>
+		</pre>
+
+		Regex psuedo:
+		- Starts with a number and a :, ends with (engaging). Capture the group between the two.
+		- After capture, use the first one found (first (engaging));
+
+		Steps:
+		0. Move any other out of range related code into this function to handle it centrally.
+		1. When you get the message: `You'll have to retreat first`, it's time to switch targets.
+		2. Run the `ac ${target}` command, and parse the output to find the first (highest number)
+		target on the list that is (engaging). 
+		3. Add a new variable to track ${targetOverride}, and add support in the main attack loop
+		targeting code.
+		4. Determine when to reset ${targetOverride} (set it to ''); likely when you get the message
+		`There aren't that many there.` or `You can't`.
+		5. Add support in command parsing to handle having a number before a target, ie: `2 man|rat`.
+	*/
+	
+} 
+
+/**
  * Collection of parses to handle various scenarios that come up during combat.
  * These scenarios require special commands or responses.
  * TODO: These checks should probably be moved into a configurable area.
@@ -405,52 +448,68 @@ function combatGlobals(data) {
 	// Handle fumble or disarm:
 	if (data.indexOf("You fumble! You drop a") >= 0) {
 		// Just set override since fumble requires waiting for no longer busy anyway.
-		commandOverride = `take ${weaponItemName}`;
+		if (data.indexOf(weaponItemName) >= 0) {
+			commandOverride = `take ${weaponItemName}`;
+		}
+		else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
+			commandOverride = `take ${shieldItemName}`;
+		}
 	}
 	if (data.indexOf("You take a") >= 0) {
-		sendDelayedCommands([
-			`wield ${weaponItemName}`,
-			getFormattedCommand(),
-		]);
+		let cmds = [];
+		if (data.indexOf(weaponItemName) >= 0) {
+			cmds.push(`wield ${weaponItemName}`)
+		}
+		else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
+			cmds.push(`wield ${shieldItemName}`);
+		}
+		cmds.push(getFormattedCommand());
+		sendDelayedCommands(cmds);
 	}
 	if (data.indexOf("You can't do that right now") >= 0) {
-		sendDelayedCommands([
-			`get ${weaponItemName}`,
-			`wield ${weaponItemName}`,
-			getFormattedCommand(),
-		]);
+		let cmds = [`get ${weaponItemName}`, `wield ${weaponItemName}`];
+		if (shieldItemName) {
+			cmds.push(`get ${shieldItemName}`);
+			cmds.push(`wield ${shieldItemName}`);
+		}
+		cmds.push(getFormattedCommand());
+		sendDelayedCommands(cmds);
 	}
 	if (data.indexOf("You must be carrying something to wield it") >= 0) {
-		sendDelayedCommands([
-			`get ${weaponItemName}`,
-			`wield ${weaponItemName}`,
-			getFormattedCommand(),
-		]);
+		let cmds = [`get ${weaponItemName}`, `wield ${weaponItemName}`];
+		if (shieldItemName) {
+			cmds.push(`get ${shieldItemName}`);
+			cmds.push(`wield ${shieldItemName}`);
+		}
+		cmds.push(getFormattedCommand());
+		sendDelayedCommands(cmds);
 	}
 	if (data.indexOf("You must be wielding your weapon in two hands") >= 0) {
+		sendDelayedCommands([`wield ${weaponItemName}`, getFormattedCommand()]);
+	}
+
+	if (data.indexOf("You must be wielding a shield to") >= 0) {
 		sendDelayedCommands([
-			`wield ${weaponItemName}`,
+			`get ${shieldItemName}`,
+			`wield ${shieldItemName}`,
 			getFormattedCommand(),
 		]);
 	}
 
 	// Handle entagled weapon
-	if (data.indexOf("You cannot attack with an entangled weapon") >= 0 
-		|| data.indexOf("You cannot use that action while grappling") >= 0
-		|| data.indexOf("You are unable to do that,") >= 0) {
-		sendDelayedCommands([
-			`free`,
-			getFormattedCommand(),
-		]);
+	if (
+		data.indexOf("You cannot attack with an entangled weapon") >= 0 ||
+		data.indexOf("You cannot use that action while grappling") >= 0 ||
+		data.indexOf("You are unable to do that,") >= 0
+	) {
+		sendDelayedCommands([`free`, getFormattedCommand()]);
 	}
 
 	// Handle distance/approaching
 	if (data.indexOf("is not close enough") >= 0) {
 		sendDelayedCommands([
 			`engage ${target}`,
-			commandOverride
-				? commandOverride
-				: getFormattedCommand(),
+			commandOverride ? commandOverride : getFormattedCommand(),
 		]);
 	}
 
@@ -518,9 +577,10 @@ function runScriptByName(scriptName, options) {
 
 		target = options.target || "";
 		weaponItemName = options.weaponItemName || "";
+		shieldItemName = options.shieldItemName || "";
 		shouldKill =
 			options.shouldKill !== null ? options.shouldKill : script.shouldKill;
-			shouldKillParse = script.shouldKillParse;
+		shouldKillParse = script.shouldKillParse;
 		continueOnWalkIn =
 			options.continueOnWalkIn !== null
 				? options.continueOnWalkIn
@@ -575,10 +635,10 @@ function runSimpleRepeatWithDelay(command) {
 	var intr = setInterval(function () {
 		if (!runRepeatWithDelay) {
 			clearInterval(intr);
-		} 
+		}
 		if (!scriptPaused && runRepeatWithDelay) {
 			sendCommand(command);
-		} 
+		}
 	}, 1000);
 }
 
@@ -592,6 +652,7 @@ function killCurrentScript() {
 
 	target = "";
 	weaponItemName = "";
+	shieldItemName = "";
 	shouldKill = false;
 	shouldKillParse = "";
 	runRepeat = false;
@@ -629,12 +690,11 @@ function resumeCurrentScript() {
 	// pass a command as it's active and variables are already set.
 	if (runRepeat) {
 		runSimpleRepeat();
-	}
-	else {
+	} else {
 		// Regular script, send the command.
 		sendNextCommand();
 	}
-	
+
 	sendClientMessage(`Resumed: ${getRunningCommand()}`);
 }
 
@@ -671,7 +731,7 @@ function shouldSendNextCommand() {
 	// Only rule, for now.
 	if (runRepeatWithDelay) {
 		sendCommand = false;
-	} 
+	}
 	return sendCommand;
 }
 
@@ -697,18 +757,16 @@ function sendDelayedCommands(commands) {
  * values from script variables. This will likely become more robust over time.
  */
 function getFormattedCommand() {
-	if (commandList.length <= 0 || 
-		commandList[currentCmdIndex] === undefined) {
-			return "";
-		}
+	if (commandList.length <= 0 || commandList[currentCmdIndex] === undefined) {
+		return "";
+	}
 
-	let command = '';
-	
+	let command = "";
+
 	// If we have a temporary command override, apply it.
 	if (commandOverride) {
 		command = commandOverride;
-	}
-	else {
+	} else {
 		command = commandList[currentCmdIndex].command;
 		let targetRequired = true;
 
@@ -777,9 +835,9 @@ function matchExpectedParse(data) {
 /**
  * Check if a given set of data contains any of the expected outcome.
  * Handles splitting outcome by a pipe delimiter to check all values separately.
- * @param {string} data 
- * @param {string} outcome 
- * @returns 
+ * @param {string} data
+ * @param {string} outcome
+ * @returns
  */
 function matchOutcome(data, outcome) {
 	// Support a pipe delimeter for outcome strings.
@@ -804,7 +862,7 @@ const delay = (function () {
 /**
  * Get a somewhat random delay in miliseconds
  * @param {number} additionalDelay This amount will be added onto the random delay
- * @returns 
+ * @returns
  */
 function getCommandDelayInMs(additionalDelay) {
 	// Between 900 and 1100 miliseconds
@@ -818,10 +876,10 @@ function getCommandDelayInMs(additionalDelay) {
 }
 
 /**
- * Remove indent from template strings, borrowed from: 
+ * Remove indent from template strings, borrowed from:
  * https://gist.github.com/zenparsing/5dffde82d9acef19e43c
- * @param {string} callSite 
- * @param  {...any} args 
+ * @param {string} callSite
+ * @param  {...any} args
  * @returns String without indentation
  */
 function dedent(callSite, ...args) {
@@ -878,16 +936,19 @@ function slashCommand(command) {
 		case "/help":
 			sendClientMessage(
 				dedent(`
-					Here are the available commands:
-					/scripts |> List of currently defined scripts
-					/editscripts |> Open the edit scripts window
-					/current |> Display the currently running script
-					/start [scriptName] [target] [weaponItemName] *[shouldKill] *[continueOnWalkIn] |> Start a script by name; * = optional (defaults to true)
-					/stop |> Stop the currently running script
-					/repeat [command] |> Repeats a given command with a random delay inbetween each attempt
-					/repeatnlb [command] |> Repeats a given command, expects 'No longer busy' inbetween
-					/pause |> Pause the current script
-					/resume |> Resume the current script
+					Command notes:
+					- [] denotes a command argument
+					- *[] denotes a boolean argument that's optional (default is true) 
+					Available commands:
+					- List of currently defined scripts: /scripts
+					- Open the edit scripts window: /editscripts 
+					- Display the currently running script: /current
+					- Start a script by name: /start [scriptName] [target] [weaponItemName] [shieldItemName] *[shouldKill] *[continueOnWalkIn]
+					- Stop the currently running script: /stop
+					- Repeat a command with a delay: /repeat [command]
+					- Repeat a command after 'No longer busy': /repeatnlb [command]
+					- Pause the current script: /pause 
+					- Resume the current script: /resume
 					`)
 			);
 			break;
@@ -925,14 +986,15 @@ function slashCommand(command) {
 			const scriptName = commandParams[1];
 			const target = commandParams[2];
 			const weaponItemName = commandParams[3];
+			const shieldItemName = commandParams[4];
 			let shouldKill = null;
 			let continueOnWalkIn = null;
 
 			if (commandParams.length >= 5) {
-				shouldKill = stringToBoolean(commandParams[4]);
+				shouldKill = stringToBoolean(commandParams[5]);
 			}
 			if (commandParams.length >= 6) {
-				continueOnWalkIn = stringToBoolean(commandParams[5]);
+				continueOnWalkIn = stringToBoolean(commandParams[6]);
 			}
 
 			const script = userScripts.find((s) => {
@@ -946,6 +1008,7 @@ function slashCommand(command) {
 			runScriptByName(scriptName, {
 				target: target,
 				weaponItemName: weaponItemName,
+				shieldItemName: shieldItemName,
 				shouldKill: shouldKill,
 				continueOnWalkIn: continueOnWalkIn,
 			});

@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		const scriptName = document.getElementById("scriptSelect").value;
 		const target = document.getElementById("targetInput").value;
 		const weaponItemName = document.getElementById("weaponItemName").value;
+		const shieldItemName = document.getElementById("shieldItemName").value;
 		const shouldKill = document.getElementById("shouldKill").checked;
 		const continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
 
@@ -76,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					scriptName: scriptName,
 					target: target,
 					weaponItemName: weaponItemName,
+					shieldItemName: shieldItemName,
 					shouldKill: shouldKill,
 					continueOnWalkIn: continueOnWalkIn,
 				}

@@ -40,7 +40,9 @@ function pullCommunication(msg) {
 	let timestamp = new Date().toLocaleTimeString();
 
 	// TODO: Remove me, I'm a 'debugger'
+	console.log(`-----block-begin-----`);
 	console.log(msg);
+	console.log(`-----block-end-----`);
 
 	// Example: <Someone thinks aloud: This is a thought.>
 	// https://regex101.com/r/gII4uI/1
