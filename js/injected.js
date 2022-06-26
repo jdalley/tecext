@@ -46,7 +46,7 @@ function pullCommunication(msg) {
 
 	// Example: <Someone thinks aloud: This is a thought.>
 	// https://regex101.com/r/gII4uI/1
-	let thoughtMatch = msg.match(/<(\w.+) (?:thinks|think) aloud: (.*)>/);
+	let thoughtMatch = msg.match(/(?:<|&lt;)(\w.+) (?:thinks|think) aloud: (.*)(?:>|&gt;)/);
 	if (injectedConfig.includeThoughts
 		&& thoughtMatch 
 		&& thoughtMatch.length >= 1) {
