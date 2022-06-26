@@ -212,7 +212,7 @@
 				]
 			}
 		],
-		"scriptFriendlyName": "Archery Core Rotation",
+		"scriptFriendlyName": "Archery Core - Auto Load",
 		"scriptName": "archCore",
 		"scriptType": "combat",
 		"shouldKill": true,
@@ -333,8 +333,8 @@
 				]
 			}
 		],
-		"scriptFriendlyName": "Archery Target - Laying",
-		"scriptName": "archTargLay",
+		"scriptFriendlyName": "Archery Target - Manual Load",
+		"scriptName": "archTargManual",
 		"scriptType": "combat",
 		"shouldKill": true,
 		"shouldKillParse": "you twist sharply",
