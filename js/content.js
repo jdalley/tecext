@@ -407,7 +407,7 @@ function combatHandleOutOfRange(data) {
 		Steps:
 		0. Move any other out of range related code into this function to handle it centrally.
 		1. When you get the message: `You'll have to retreat first`, it's time to switch targets.
-		2. Run the `ac ${target}` command, and parse the output to find the first (highest number)
+		2. Run the `ac ${target}` command, and parse the output to find the first (lowest number)
 		target on the list that is (engaging). 
 		3. Add a new variable to track ${targetOverride}, and add support in the main attack loop
 		targeting code.
@@ -446,7 +446,7 @@ function combatGlobals(data) {
 	}
 
 	// Handle fumble or disarm:
-	if (data.indexOf("You fumble! You drop a") >= 0) {
+	if (data.indexOf("You fumble! You drop a" || data.indexOf("You fumble, dropping")) >= 0) {
 		// Just set override since fumble requires waiting for no longer busy anyway.
 		if (data.indexOf(weaponItemName) >= 0) {
 			commandOverride = `take ${weaponItemName}`;
