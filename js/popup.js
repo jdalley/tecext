@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	document.getElementById("saveConfig").addEventListener("click", function(e) {
 		const config = {};
+		// Comms config
 		config.enableComms = document.getElementById("enableComms").checked;
 		config.includeThoughts = document.getElementById("includeThoughts").checked;
 		config.includeOOC = document.getElementById("includeOOC").checked;
@@ -42,6 +43,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		config.removeOOCFromMain = document.getElementById("removeOOCFromMain").checked;
 		config.removeSpeechFromMain = document.getElementById("removeSpeechFromMain").checked;
 		config.commsBoxHeight = document.getElementById("commsBoxHeight").value;
+		// Combat config
+		config.shouldKill = document.getElementById("shouldKill").checked;
+		config.continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
+		config.useMeleeAdvance = document.getElementById("useMeleeAdvance").checked;
 
 		saveConfiguration(config);
 	})
@@ -196,6 +201,9 @@ function getConfiguration() {
 					document.getElementById("removeOOCFromMain").checked = response.removeOOCFromMain;
 					document.getElementById("removeSpeechFromMain").checked = response.removeSpeechFromMain;
 					document.getElementById("commsBoxHeight").value = response.commsBoxHeight;
+					document.getElementById("shouldKill").checked = response.shouldKill;
+					document.getElementById("continueOnWalkIn").checked = response.continueOnWalkIn;
+					document.getElementById("useMeleeAdvance").checked = response.useMeleeAdvance;
 				}
 			});
 	});

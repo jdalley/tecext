@@ -507,11 +507,25 @@ function combatGlobals(data) {
 
 	// Handle distance/approaching
 	if (data.indexOf("is not close enough") >= 0) {
+		let engageCommand = extConfig.useMeleeAdvance ? `advance` : `engage`
 		sendDelayedCommands([
-			`engage ${target}`,
+			`${engageCommand} ${target}`,
 			commandOverride ? commandOverride : getFormattedCommand(),
 		]);
 	}
+	// Handle failing to Melee Advance if it's toggled on
+	if (extConfig.useMeleeAdvance && data.indexOf("but can't get close") >= 0) {
+		commandOverride = `advance ${target}`;
+	}
+	// Handle the scenario where you're trying to attack/kill something that has
+	// been pushed back/retreated if melee advance is toggled on in config.
+	if (extConfig.useMeleeAdvance && data.indexOf("You'll have to retreat first") >= 0) {
+		sendDelayedCommands([
+			`advance ${target}`,
+			commandOverride ? commandOverride : getFormattedCommand(),
+		]);
+	}
+	
 
 	// Handle stance when not auto:
 	if (data.indexOf("You are not in the correct stance") >= 0) {
