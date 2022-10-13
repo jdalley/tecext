@@ -435,8 +435,9 @@ function combatGlobals(data) {
 
 	// Handle sweeped/knocked down after failed attack attempt:
 	if (data.indexOf("You must be standing") >= 0) {
+		let standCommand = extConfig.useBackwardsRiseToStand ? `brise` : `stand`;
 		setTimeout(function () {
-			sendCommand("stand");
+			sendCommand(standCommand);
 		}, getCommandDelayInMs());
 	}
 

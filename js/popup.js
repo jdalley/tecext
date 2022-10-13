@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Combat config
 		config.shouldKill = document.getElementById("shouldKill").checked;
 		config.continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
+		config.useBackwardsRiseToStand = document.getElementById("useBackwardsRiseToStand").checked;
 		config.useMeleeAdvance = document.getElementById("useMeleeAdvance").checked;
 
 		saveConfiguration(config);
@@ -203,6 +204,7 @@ function getConfiguration() {
 					document.getElementById("commsBoxHeight").value = response.commsBoxHeight;
 					document.getElementById("shouldKill").checked = response.shouldKill;
 					document.getElementById("continueOnWalkIn").checked = response.continueOnWalkIn;
+					document.getElementById("useBackwardsRiseToStand").checked = response.useBackwardsRiseToStand;
 					document.getElementById("useMeleeAdvance").checked = response.useMeleeAdvance;
 				}
 			});
