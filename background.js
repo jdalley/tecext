@@ -63,6 +63,12 @@ const getConfig = async () => {
 				extConfig.removeOOCFromMain = false;
 				extConfig.removeSpeechFromMain = false;
 				extConfig.commsBoxHeight = '150'; // pixels
+				extConfig.shouldKill = true;
+				extConfig.continueOnWalkIn = true;
+				extConfig.useBackwardsRiseToStand = false;
+				extConfig.useMeleeAdvance = false;
+				extConfig.commandDelayMin = 900; // miliseconds
+				extConfig.commandDelayMax = 1100; // miliseconds
 				resolve(extConfig);
 			}
 		})

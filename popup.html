@@ -39,6 +39,19 @@
 								Combat
 							</button>
 						</li>
+						<li class="nav-item">
+							<button
+								class="nav-link"
+								id="generalTab"
+								data-bs-toggle="tab"
+								data-bs-target="#generalTabPane"
+								type="button"
+								aria-controls="generalTabPane"
+								aria-selected="true"
+							>
+								General
+							</button>
+						</li>
 					</ul>
 					<div class="tab-content" id="configTabsContent">
 						<div
@@ -191,6 +204,28 @@
 								>
 							</div>
 						</div>
+						<div
+							class="tab-pane fade"
+							id="generalTabPane"
+							aria-labelledby="generalTabPane"
+							tabindex="0"
+						>
+							<div class="input-group">
+								<span class="input-group-text">Cmd Delay Range (ms):</span>
+								<input
+									class="form-control"
+									id="commandDelayMin"
+									name="commandDelayMin"
+									type="text"
+								/>
+								<input
+									class="form-control"
+									id="commandDelayMax"
+									name="commandDelayMax"
+									type="text"
+								/>
+							</div>
+						</div>
 					</div>
 					<div>
 						<button
@@ -203,7 +238,6 @@
 						</button>
 						<span id="configMessage"></span>
 					</div>
-					
 				</div>
 				<div class="right-col">
 					<div class="input-group">

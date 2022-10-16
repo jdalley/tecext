@@ -48,6 +48,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		config.continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
 		config.useBackwardsRiseToStand = document.getElementById("useBackwardsRiseToStand").checked;
 		config.useMeleeAdvance = document.getElementById("useMeleeAdvance").checked;
+		// General Config
+		config.commandDelayMin = document.getElementById("commandDelayMin").value;
+		config.commandDelayMax = document.getElementById("commandDelayMax").value;
 
 		saveConfiguration(config);
 	})
@@ -206,6 +209,8 @@ function getConfiguration() {
 					document.getElementById("continueOnWalkIn").checked = response.continueOnWalkIn;
 					document.getElementById("useBackwardsRiseToStand").checked = response.useBackwardsRiseToStand;
 					document.getElementById("useMeleeAdvance").checked = response.useMeleeAdvance;
+					document.getElementById("commandDelayMin").value = response.commandDelayMin ?? 900; 
+					document.getElementById("commandDelayMax").value = response.commandDelayMax ?? 1100;
 				}
 			});
 	});

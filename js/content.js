@@ -5,32 +5,34 @@
 /* Initialization and Chrome setup */
 
 // Simple repeat
-let runRepeat = false;
 let repeatCommand = null;
+let runRepeat = false;
 // Repeat constantly with a delay
-let runRepeatWithDelay = false;
 let repeatWithDelayCommand = null;
+let runRepeatWithDelay = false;
 // General
-let target = null;
-let commandList = [];
 let currentCmdIndex = 0;
 let currentMoveNextWhen = null;
-let moveNextNow = false;
+let commandList = [];
 let commandOverride = null;
+let defaultCommandDelayMin = 900;
+let defaultCommandDelayMax = 1100;
 let lastCommandRan = null;
+let moveNextNow = false;
+let target = null;
 // Combat
+let addAttack = false;
+let continueOnWalkIn = false;
+let shieldItemName = null;
 let shouldKill = false;
 let shouldKillParse = null;
-let continueOnWalkIn = false;
-let weaponItemName = null;
-let shieldItemName = null;
-let addAttack = false;
 let stance = null;
+let weaponItemName = null;
 // Scripts
-let scriptPaused = false;
+let currentScript = null;
 let currentScriptName = null;
 let currentScriptType = null;
-let currentScript = null;
+let scriptPaused = false;
 
 // Store scripts separately from the cache due to potential size
 let userScripts = null;
@@ -379,15 +381,14 @@ function combatScript(data) {
 
 /**
  * Attempt to handle scenarios where you're unable to hit something due to range.
- * Often you're approached by multiple enemies at once in these cases, and you 
+ * Often you're approached by multiple enemies at once in these cases, and you
  * can't kill something easily with a script in this scenario. Therefore, we
- * want to try and optimistically pick the next target to try and hit that's 
+ * want to try and optimistically pick the next target to try and hit that's
  * close ranged. Additionally, we need to handle resetting the target as things
  * die.
- * @param {string} data 
+ * @param {string} data
  */
 function combatHandleOutOfRange(data) {
-
 	/*
 		Here is what we get back in a single `block` from the server when we use the
 		command `ac <target>`, ie: `ac man|rat`:
@@ -415,8 +416,7 @@ function combatHandleOutOfRange(data) {
 		`There aren't that many there.` or `You can't`.
 		5. Add support in command parsing to handle having a number before a target, ie: `2 man|rat`.
 	*/
-	
-} 
+}
 
 /**
  * Collection of parses to handle various scenarios that come up during combat.
@@ -447,21 +447,23 @@ function combatGlobals(data) {
 	}
 
 	// Handle fumble or disarm:
-	if (data.indexOf("You fumble! You drop a" || data.indexOf("You fumble, dropping")) >= 0) {
+	if (
+		data.indexOf(
+			"You fumble! You drop a" || data.indexOf("You fumble, dropping")
+		) >= 0
+	) {
 		// Just set override since fumble requires waiting for no longer busy anyway.
 		if (data.indexOf(weaponItemName) >= 0) {
 			commandOverride = `take ${weaponItemName}`;
-		}
-		else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
+		} else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
 			commandOverride = `take ${shieldItemName}`;
 		}
 	}
 	if (data.indexOf("You take a") >= 0) {
 		let cmds = [];
 		if (data.indexOf(weaponItemName) >= 0) {
-			cmds.push(`wield ${weaponItemName}`)
-		}
-		else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
+			cmds.push(`wield ${weaponItemName}`);
+		} else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
 			cmds.push(`wield ${shieldItemName}`);
 		}
 		cmds.push(getFormattedCommand());
@@ -508,7 +510,7 @@ function combatGlobals(data) {
 
 	// Handle distance/approaching
 	if (data.indexOf("is not close enough") >= 0) {
-		let engageCommand = extConfig.useMeleeAdvance ? `advance` : `engage`
+		let engageCommand = extConfig.useMeleeAdvance ? `advance` : `engage`;
 		sendDelayedCommands([
 			`${engageCommand} ${target}`,
 			commandOverride ? commandOverride : getFormattedCommand(),
@@ -520,13 +522,15 @@ function combatGlobals(data) {
 	}
 	// Handle the scenario where you're trying to attack/kill something that has
 	// been pushed back/retreated if melee advance is toggled on in config.
-	if (extConfig.useMeleeAdvance && data.indexOf("You'll have to retreat first") >= 0) {
+	if (
+		extConfig.useMeleeAdvance &&
+		data.indexOf("You'll have to retreat first") >= 0
+	) {
 		sendDelayedCommands([
 			`advance ${target}`,
 			commandOverride ? commandOverride : getFormattedCommand(),
 		]);
 	}
-	
 
 	// Handle stance when not auto:
 	if (data.indexOf("You are not in the correct stance") >= 0) {
@@ -880,8 +884,23 @@ const delay = (function () {
  * @returns
  */
 function getCommandDelayInMs(additionalDelay) {
-	// Between 900 and 1100 miliseconds
-	let commandDelay = Math.floor(Math.random() * 200) + 900;
+	let min = isPositiveNumeric(extConfig.commandDelayMin)
+		? Number(extConfig.commandDelayMin)
+		: defaultCommandDelayMin;
+	let max = isPositiveNumeric(extConfig.commandDelayMax)
+		? Number(extConfig.commandDelayMax)
+		: defaultCommandDelayMax;
+	let diff = max - min;
+
+	// Fallback for an incorrectly defined range in config
+	if (diff <= 0) {
+		min = defaultCommandDelayMin;
+		max = defaultCommandDelayMax;
+		diff = max - min;
+	}
+
+	// Between configured min/max or defaults
+	let commandDelay = Math.floor(Math.random() * diff) + min;
 
 	if (additionalDelay) {
 		commandDelay += additionalDelay;
@@ -937,6 +956,15 @@ function stringToBoolean(string) {
 		default:
 			return Boolean(string);
 	}
+}
+
+/**
+ * Tests whether a variable is a positive number.
+ * @param {*} value
+ * @returns Boolean indicating paramter is a positive number.
+ */
+function isPositiveNumeric(value) {
+	return /^\d+$/.test(value);
 }
 
 /**
