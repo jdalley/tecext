@@ -22,6 +22,7 @@ let moveNextNow = false;
 let target = null;
 // Combat
 let addAttack = false;
+let advancingToKill = false;
 let continueOnWalkIn = false;
 let shieldItemName = null;
 let shouldKill = false;
@@ -329,9 +330,7 @@ function combatScript(data) {
 	}
 
 	if (shouldKill) {
-		// Override based on specific scenarios
-		// TODO: Move this into something more dynamic.
-		const runningAttack = currentScript.addAttack;
+		// Override based on specific scenarios.
 		if (
 			data.indexOf("falls unconscious") >= 0 ||
 			(commandOverride.indexOf("att") === -1 &&
@@ -340,10 +339,20 @@ function combatScript(data) {
 			commandOverride = `kill ${target}`;
 		}
 
-		// Handle being stuck trying to kill something:
+		// Handle being stuck trying to kill something.
 		if (data.indexOf("must be unconscious first") >= 0) {
 			commandOverride = "";
 			sendNextCommand();
+		}
+
+		// Handle resetting commandOverride after an `advance` attempt failure.
+		if (extConfig.useMeleeAdvance && data.indexOf("You advance toward") >= 0) {
+			if (advancingToKill) {
+				commandOverride = `kill ${target}`;
+				advancingToKill = false;
+			} else {
+				commandOverride = "";
+			}
 		}
 
 		// Detect weapon-specific kill echo and wipe the override for next no longer busy.
@@ -511,14 +520,23 @@ function combatGlobals(data) {
 	// Handle distance/approaching
 	if (data.indexOf("is not close enough") >= 0) {
 		let engageCommand = extConfig.useMeleeAdvance ? `advance` : `engage`;
-		sendDelayedCommands([
-			`${engageCommand} ${target}`,
-			commandOverride ? commandOverride : getFormattedCommand(),
-		]);
+		// Not using sendDelayedCommands here as it wipes out `commandOverride`,
+		// and can interfere with `kill` attempts.
+		setTimeout(function () {
+			sendCommand(`${engageCommand} ${target}`);
+		}, getCommandDelayInMs());
 	}
 	// Handle failing to Melee Advance if it's toggled on
 	if (extConfig.useMeleeAdvance && data.indexOf("but can't get close") >= 0) {
+		if (commandOverride.indexOf("kill") >= 0) {
+			advancingToKill = true;
+		}
+		// Next No Longer Busy will advance the target
 		commandOverride = `advance ${target}`;
+	}
+	// Handle being stuck trying to engage an already approached target
+	if (data.indexOf("You are already engaging") >= 0) {
+		sendNextCommand();
 	}
 	// Handle the scenario where you're trying to attack/kill something that has
 	// been pushed back/retreated if melee advance is toggled on in config.
@@ -526,10 +544,11 @@ function combatGlobals(data) {
 		extConfig.useMeleeAdvance &&
 		data.indexOf("You'll have to retreat first") >= 0
 	) {
-		sendDelayedCommands([
-			`advance ${target}`,
-			commandOverride ? commandOverride : getFormattedCommand(),
-		]);
+		// Not using sendDelayedCommands here as it wipes out `commandOverride`,
+		// and can interfere with `kill` attempts.
+		setTimeout(function () {
+			sendCommand(`advance ${target}`);
+		}, getCommandDelayInMs());
 	}
 
 	// Handle stance when not auto:
