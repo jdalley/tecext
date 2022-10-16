@@ -431,6 +431,8 @@ function combatHandleOutOfRange(data) {
  * Collection of parses to handle various scenarios that come up during combat.
  * These scenarios require special commands or responses.
  * TODO: These checks should probably be moved into a configurable area.
+ * TODO: Rethink your life as these script parse -> reactions are getting
+ * out of hand.
  * @param {string} data
  */
 function combatGlobals(data) {
@@ -520,6 +522,12 @@ function combatGlobals(data) {
 	// Handle distance/approaching
 	if (data.indexOf("is not close enough") >= 0) {
 		let engageCommand = extConfig.useMeleeAdvance ? `advance` : `engage`;
+
+		if (extConfig.useMeleeAdvance && commandOverride.indexOf("kill") >= 0) {
+			// In combatScript, this is used to reset commandOverride to `kill` when
+			// Melee Advance is done successfully.
+			advancingToKill = true;
+		}
 		// Not using sendDelayedCommands here as it wipes out `commandOverride`,
 		// and can interfere with `kill` attempts.
 		setTimeout(function () {
@@ -529,6 +537,8 @@ function combatGlobals(data) {
 	// Handle failing to Melee Advance if it's toggled on
 	if (extConfig.useMeleeAdvance && data.indexOf("but can't get close") >= 0) {
 		if (commandOverride.indexOf("kill") >= 0) {
+			// In combatScript, this is used to reset commandOverride to `kill` when
+			// Melee Advance is done successfully.
 			advancingToKill = true;
 		}
 		// Next No Longer Busy will advance the target
