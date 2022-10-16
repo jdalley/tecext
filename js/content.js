@@ -369,7 +369,8 @@ function combatScript(data) {
 		if (
 			data.indexOf("walks in") >= 0 ||
 			data.indexOf(" in from a") >= 0 ||
-			data.indexOf(" arrives.") >= 0
+			data.indexOf(" arrives.") >= 0 ||
+			data.indexOf(" charges in!") >= 0
 		) {
 			sendNextCommand(400);
 		}
