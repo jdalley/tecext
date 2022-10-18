@@ -1678,7 +1678,7 @@
 			],
 			"continueOnWalkIn": true,
 			"scriptFriendlyName": "Spear Hunting - Aim High + WeaponStrike",
-			"scriptName": "spearHuntAimW",
+			"scriptName": "spearHuntHighW",
 			"scriptType": "combat",
 			"shouldKill": true,
 			"shouldKillParse": "You thrust your",
