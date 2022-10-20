@@ -371,7 +371,9 @@ function combatScript(data) {
 			data.indexOf(" in from a") >= 0 ||
 			data.indexOf(" arrives.") >= 0 ||
 			data.indexOf(" charges in") >= 0 ||
-			data.indexOf(" charge in") >= 0
+			data.indexOf(" charge in") >= 0 ||
+			data.indexOf(" rushes in") >= 0 ||
+			data.indexOf(" rush in") >= 0
 		) {
 			sendNextCommand(400);
 		}
@@ -534,6 +536,13 @@ function combatGlobals(data) {
 		// and can interfere with `kill` attempts.
 		setTimeout(function () {
 			sendCommand(`${engageCommand} ${target}`);
+
+			if (engageCommand.indexOf("engage") >= 0) {
+				setTimeout(function () {
+					// Next attack as 'You attempt to engage <target>' doesn't have a round time.
+					sendCommand(commandOverride ? commandOverride : getFormattedCommand());
+				}, getCommandDelayInMs());
+			}
 		}, getCommandDelayInMs());
 	}
 	// Handle failing to Melee Advance if it's toggled on
