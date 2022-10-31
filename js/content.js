@@ -373,7 +373,8 @@ function combatScript(data) {
 			data.indexOf(" charges in") >= 0 ||
 			data.indexOf(" charge in") >= 0 ||
 			data.indexOf(" rushes in") >= 0 ||
-			data.indexOf(" rush in") >= 0
+			data.indexOf(" rush in") >= 0 ||
+			data.indexOf(" lopes in") >= 0
 		) {
 			sendNextCommand(400);
 		}
@@ -518,7 +519,8 @@ function combatGlobals(data) {
 	if (
 		data.indexOf("You cannot attack with an entangled weapon") >= 0 ||
 		data.indexOf("You cannot use that action while grappling") >= 0 ||
-		data.indexOf("You are unable to do that,") >= 0
+		data.indexOf("You are unable to do that,") >= 0 ||
+		data.indexOf("You must be free of entanglements") >= 0
 	) {
 		sendDelayedCommands([`free`, getFormattedCommand()]);
 	}
