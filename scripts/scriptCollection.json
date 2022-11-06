@@ -1084,6 +1084,13 @@
 									"moveNextWhen": "You are no longer busy",
 									"outcome": "You extend your sword arm wide and thrust"
 							}
+					},
+					{
+						"command": "strike",
+						"parse": {
+								"moveNextWhen": "You are no longer busy",
+								"outcome": "You lift the blade of your"
+						}
 					}
 			],
 			"continueOnWalkIn": true,
@@ -2322,7 +2329,7 @@
 			"scriptFriendlyName": "Sword Ludus",
 			"scriptName": "swordLudus",
 			"scriptType": "combat",
-			"shouldKill": true,
+			"shouldKill": false,
 			"shouldKillParse": "You slit",
 			"stanceCommand": ""
 	},
