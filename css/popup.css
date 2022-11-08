@@ -4,6 +4,15 @@ body {
 	overflow: hidden;
 }
 
+.dark-mode {
+	background: #060b0e;
+  color: #c7c7c7;
+}
+.dark-mode input[type="text"] {
+	background: #060b0e;
+  color: #c7c7c7;
+}
+
 .popup-container {
 	display: flex;
 	margin: 15px 15px 5px 15px

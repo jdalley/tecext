@@ -1,71 +1,87 @@
-
 /*********************************************************************************************/
 /* Extension popup logic: event wireup and UI logic. */
 
 const popupTabUrl = "*://client.eternalcitygame.com/*";
+const config = {};
 
 // Wait to grab Ids for adding event listeners
 document.addEventListener("DOMContentLoaded", function () {
 	// Plain message input:
-	document.getElementById("sendCommand").addEventListener("click", function (e) {
-		const command = document.getElementById("commandInput").value;
-		if (command) {
-			chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-				chrome.tabs.sendMessage(tabs[0].id, { 
+	document
+		.getElementById("sendCommand")
+		.addEventListener("click", function (e) {
+			const command = document.getElementById("commandInput").value;
+			if (command) {
+				chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
+					chrome.tabs.sendMessage(tabs[0].id, {
 						type: "popup-send-command",
-						message: command
-					})
-			});
-		}
-	});
-	document.getElementById("commandInput").addEventListener("keydown", function (e) {
-		console.log(`e.key: ${e.key}`);
-		if (e.key == "Enter" && this.value) {
-			let msg = this.value;
-			chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-				chrome.tabs.sendMessage(tabs[0].id, { 
+						message: command,
+					});
+				});
+			}
+		});
+	document
+		.getElementById("commandInput")
+		.addEventListener("keydown", function (e) {
+			console.log(`e.key: ${e.key}`);
+			if (e.key == "Enter" && this.value) {
+				let msg = this.value;
+				chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
+					chrome.tabs.sendMessage(tabs[0].id, {
 						type: "popup-send-command",
-						message: msg
-					})
-			});
-			this.value = "";
-		}
-	});
+						message: msg,
+					});
+				});
+				this.value = "";
+			}
+		});
 
-	document.getElementById("saveConfig").addEventListener("click", function(e) {
-		const config = {};
+	document.getElementById("saveConfig").addEventListener("click", function (e) {
 		// Comms config
 		config.enableComms = document.getElementById("enableComms").checked;
 		config.includeThoughts = document.getElementById("includeThoughts").checked;
 		config.includeOOC = document.getElementById("includeOOC").checked;
 		config.includeSpeech = document.getElementById("includeSpeech").checked;
-		config.removeThoughtsFromMain = document.getElementById("removeThoughtsFromMain").checked;
-		config.removeOOCFromMain = document.getElementById("removeOOCFromMain").checked;
-		config.removeSpeechFromMain = document.getElementById("removeSpeechFromMain").checked;
+		config.removeThoughtsFromMain = document.getElementById(
+			"removeThoughtsFromMain"
+		).checked;
+		config.removeOOCFromMain =
+			document.getElementById("removeOOCFromMain").checked;
+		config.removeSpeechFromMain = document.getElementById(
+			"removeSpeechFromMain"
+		).checked;
 		config.commsBoxHeight = document.getElementById("commsBoxHeight").value;
 		config.commsMuteList = document.getElementById("commsMuteList").value;
-		config.commsMuteListArray = config.commsMuteList.split(",").map(item => item.trim());
+		config.commsMuteListArray = config.commsMuteList
+			.split(",")
+			.map((item) => item.trim());
 		// Combat config
 		config.shouldKill = document.getElementById("shouldKill").checked;
-		config.continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
-		config.useBackwardsRiseToStand = document.getElementById("useBackwardsRiseToStand").checked;
+		config.continueOnWalkIn =
+			document.getElementById("continueOnWalkIn").checked;
+		config.useBackwardsRiseToStand = document.getElementById(
+			"useBackwardsRiseToStand"
+		).checked;
 		config.useMeleeAdvance = document.getElementById("useMeleeAdvance").checked;
 		// General Config
 		config.commandDelayMin = document.getElementById("commandDelayMin").value;
 		config.commandDelayMax = document.getElementById("commandDelayMax").value;
+		config.darkModeEnabled = document.getElementById("darkModeEnabled").checked;
 
 		saveConfiguration(config);
-	})
+
+		updatePopupLayout();
+	});
 
 	// Simple command repeat, checks for no longer busy
 	document.getElementById("sendRepeat").addEventListener("click", function (e) {
 		const repeatCommand = document.getElementById("repeatInput").value;
 		if (repeatCommand) {
 			chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-				chrome.tabs.sendMessage(tabs[0].id, { 
-						type: "popup-send-repeat",
-						message: repeatCommand
-					})
+				chrome.tabs.sendMessage(tabs[0].id, {
+					type: "popup-send-repeat",
+					message: repeatCommand,
+				});
 			});
 		}
 	});
@@ -77,12 +93,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		const weaponItemName = document.getElementById("weaponItemName").value;
 		const shieldItemName = document.getElementById("shieldItemName").value;
 		const shouldKill = document.getElementById("shouldKill").checked;
-		const continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
+		const continueOnWalkIn =
+			document.getElementById("continueOnWalkIn").checked;
 
 		// This will become data driven later, via json/local storage with defaults
 		// TODO: Move options into its own JSON config, load it like scripts are loaded
 		chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-			chrome.tabs.sendMessage(tabs[0].id, { 
+			chrome.tabs.sendMessage(tabs[0].id, {
 				type: "popup-run-script",
 				message: {
 					scriptName: scriptName,
@@ -91,34 +108,39 @@ document.addEventListener("DOMContentLoaded", function () {
 					shieldItemName: shieldItemName,
 					shouldKill: shouldKill,
 					continueOnWalkIn: continueOnWalkIn,
-				}
-				})
+				},
+			});
 		});
 	});
 
 	document.getElementById("stopScript").addEventListener("click", function (e) {
 		// Kill the current script
 		chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-			chrome.tabs.sendMessage(tabs[0].id, { type: "popup-kill-script" })
+			chrome.tabs.sendMessage(tabs[0].id, { type: "popup-kill-script" });
 		});
 	});
 
-	document.getElementById("pauseScript").addEventListener("click", function (e) {
-		// Pause the current script.
-		chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-			chrome.tabs.sendMessage(tabs[0].id, { type: "popup-pause-script" })
+	document
+		.getElementById("pauseScript")
+		.addEventListener("click", function (e) {
+			// Pause the current script.
+			chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
+				chrome.tabs.sendMessage(tabs[0].id, { type: "popup-pause-script" });
+			});
 		});
-	});
 
-	document.getElementById("resumeScript").addEventListener("click", function (e) {
-		// Resume the current script.
-		chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-			chrome.tabs.sendMessage(tabs[0].id, { type: "popup-resume-script" })
+	document
+		.getElementById("resumeScript")
+		.addEventListener("click", function (e) {
+			// Resume the current script.
+			chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
+				chrome.tabs.sendMessage(tabs[0].id, { type: "popup-resume-script" });
+			});
 		});
-	});
 
 	// Edit script modal
-	document.getElementById("editScripts")
+	document
+		.getElementById("editScripts")
 		.addEventListener("click", function (e) {
 			chrome.windows.create(
 				{
@@ -150,6 +172,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Initial config load:
 	getConfiguration();
+
+	// Update visual elements of popup based on config:
+	updatePopupLayout();
 });
 
 // Set the configMessage div with a given message, which will fade after 5 seconds.
@@ -160,10 +185,10 @@ function setConfigMessage(msg) {
 		configMessage.innerHTML = msg;
 		configMessage.className = "hide-5";
 
-		setTimeout(function() {
+		setTimeout(function () {
 			configMessage.innerHTML = "";
 			configMessage.className = "";
-		}, 5000)
+		}, 5000);
 	}
 }
 
@@ -177,7 +202,9 @@ function loadScriptSelect() {
 
 	// Load scripts:
 	chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-		chrome.tabs.sendMessage(tabs[0].id, {	type: "popup-get-scripts"	},
+		chrome.tabs.sendMessage(
+			tabs[0].id,
+			{ type: "popup-get-scripts" },
 			function (response) {
 				// Response will be an array of script objects
 				if (response) {
@@ -188,34 +215,75 @@ function loadScriptSelect() {
 						select.appendChild(opt);
 					});
 				}
-			});
+			}
+		);
 	});
 }
 
 function getConfiguration() {
 	chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-		chrome.tabs.sendMessage(tabs[0].id, {	type: "popup-get-configuration"	},
+		chrome.tabs.sendMessage(
+			tabs[0].id,
+			{ type: "popup-get-configuration" },
 			function (response) {
 				// Response will be a config object
 				if (response) {
+					// Hydrate local config for usage throughout the life of the popup window
+					// Comms config
+					config.enableComms = response.enableComms;
+					config.includeThoughts = response.includeThoughts;
+					config.includeOOC = response.includeOOC;
+					config.includeSpeech = response.includeSpeech;
+					config.removeThoughtsFromMain = response.removeThoughtsFromMain;
+					config.removeOOCFromMain = response.removeOOCFromMain;
+					config.removeSpeechFromMain = response.removeSpeechFromMain;
+					config.commsBoxHeight = response.commsBoxHeight;
+					config.commsMuteList = response.commsMuteList;
+					// Combat config
+					config.shouldKill = response.shouldKill;
+					config.continueOnWalkIn = response.continueOnWalkIn;
+					config.useBackwardsRiseToStand = response.useBackwardsRiseToStand;
+					config.useMeleeAdvance = response.useMeleeAdvance;
+					// General Config
+					config.commandDelayMin = response.commandDelayMin;
+					config.commandDelayMax = response.commandDelayMax;
+					config.darkModeEnabled = response.darkModeEnabled;
+
 					// Apply configurations to inputs
-					document.getElementById("enableComms").checked = response.enableComms;
-					document.getElementById("includeThoughts").checked = response.includeThoughts;
-					document.getElementById("includeOOC").checked = response.includeOOC;
-					document.getElementById("includeSpeech").checked = response.includeSpeech;
-					document.getElementById("removeThoughtsFromMain").checked = response.removeThoughtsFromMain;
-					document.getElementById("removeOOCFromMain").checked = response.removeOOCFromMain;
-					document.getElementById("removeSpeechFromMain").checked = response.removeSpeechFromMain;
-					document.getElementById("commsBoxHeight").value = response.commsBoxHeight;
-					document.getElementById("commsMuteList").value = response.commsMuteList ?? null;
-					document.getElementById("shouldKill").checked = response.shouldKill;
-					document.getElementById("continueOnWalkIn").checked = response.continueOnWalkIn;
-					document.getElementById("useBackwardsRiseToStand").checked = response.useBackwardsRiseToStand;
-					document.getElementById("useMeleeAdvance").checked = response.useMeleeAdvance;
-					document.getElementById("commandDelayMin").value = response.commandDelayMin ?? 900; 
-					document.getElementById("commandDelayMax").value = response.commandDelayMax ?? 1100;
+					document.getElementById("enableComms").checked = config.enableComms;
+					document.getElementById("includeThoughts").checked =
+						config.includeThoughts;
+					document.getElementById("includeOOC").checked = config.includeOOC;
+					document.getElementById("includeSpeech").checked =
+						config.includeSpeech;
+					document.getElementById("removeThoughtsFromMain").checked =
+						config.removeThoughtsFromMain;
+					document.getElementById("removeOOCFromMain").checked =
+						config.removeOOCFromMain;
+					document.getElementById("removeSpeechFromMain").checked =
+						config.removeSpeechFromMain;
+					document.getElementById("commsBoxHeight").value =
+						config.commsBoxHeight;
+					document.getElementById("commsMuteList").value =
+						config.commsMuteList ?? null;
+					document.getElementById("shouldKill").checked = config.shouldKill;
+					document.getElementById("continueOnWalkIn").checked =
+						config.continueOnWalkIn;
+					document.getElementById("useBackwardsRiseToStand").checked =
+						config.useBackwardsRiseToStand;
+					document.getElementById("useMeleeAdvance").checked =
+						config.useMeleeAdvance;
+					document.getElementById("commandDelayMin").value =
+						config.commandDelayMin ?? 900;
+					document.getElementById("commandDelayMax").value =
+						config.commandDelayMax ?? 1100;
+					document.getElementById("darkModeEnabled").checked =
+						config.darkModeEnabled ?? false;
+
+					updatePopupLayout();
 				}
-			});
+			}
+		);
 	});
 }
 
@@ -224,10 +292,10 @@ function getConfiguration() {
  */
 function saveConfiguration(config) {
 	chrome.tabs.query({ url: popupTabUrl }, function (tabs) {
-		chrome.tabs.sendMessage(tabs[0].id, { 
-				type: "popup-save-configuration",
-				message: config
-			})
+		chrome.tabs.sendMessage(tabs[0].id, {
+			type: "popup-save-configuration",
+			message: config,
+		});
 	});
 }
 
@@ -236,4 +304,19 @@ function resizeMe() {
 	height = document.getElementsByClassName("popup-container")[0].offsetHeight;
 	width = document.getElementsByClassName("popup-container")[0].offsetWidth;
 	self.resizeTo(width, height + 50);
+}
+
+// Update visual elements of the popup via configuration
+function updatePopupLayout() {
+	const body = document.getElementsByTagName("body")[0];
+
+	if (config.darkModeEnabled) {
+		if (!body.classList.contains("dark-mode")) {
+			body.classList.add("dark-mode");
+		}
+	} else {
+		if (body.classList.contains("dark-mode")) {
+			body.classList.remove("dark-mode");
+		}
+	}
 }

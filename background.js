@@ -71,6 +71,7 @@ const getConfig = async () => {
 				extConfig.useMeleeAdvance = false;
 				extConfig.commandDelayMin = 900; // miliseconds
 				extConfig.commandDelayMax = 1100; // miliseconds
+				extConfig.darkModeEnabled = false;
 				resolve(extConfig);
 			}
 		})

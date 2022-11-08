@@ -2635,6 +2635,53 @@
 			"stanceCommand": "wgrip"
 	},
 	{
+			"addAttack": false,
+			"commandList": [
+					{
+							"command": "scourge",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "You bring your"
+							}
+					},
+					{
+							"command": "strike",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "With a fluid"
+							}
+					},
+					{
+							"command": "fsnap",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "You swing your"
+							}
+					},
+					{
+							"command": "flick",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "Flicking your"
+							}
+					},
+					{
+							"command": "psnap",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "You curl"
+							}
+					}
+			],
+			"continueOnWalkIn": true,
+			"scriptFriendlyName": "Whip - Core",
+			"scriptName": "whipCore",
+			"scriptType": "combat",
+			"shouldKill": true,
+			"shouldKillParse": "",
+			"stanceCommand": ""
+	},
+	{
 			"addAttack": true,
 			"commandList": [
 					{
@@ -2646,8 +2693,8 @@
 					}
 			],
 			"continueOnWalkIn": true,
-			"scriptFriendlyName": "Whip Short",
-			"scriptName": "whipShort",
+			"scriptFriendlyName": "Whip - Strike Only",
+			"scriptName": "whipStrike",
 			"scriptType": "combat",
 			"shouldKill": false,
 			"shouldKillParse": "",
