@@ -1055,7 +1055,7 @@
 			"scriptType": "nonCom"
 	},
 	{
-			"addAttack": true,
+			"addAttack": false,
 			"commandList": [
 					{
 							"command": "slash",
@@ -1086,18 +1086,32 @@
 							}
 					},
 					{
-						"command": "strike",
-						"parse": {
-								"moveNextWhen": "You are no longer busy",
-								"outcome": "You lift the blade of your"
-						}
+							"command": "strike",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "You lift the blade of your"
+							}
+					},
+					{
+							"command": "cstrike",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "Sweeping the blade of your"
+							}
+					},
+					{
+							"command": "sustab",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "You take a step forward"
+							}
 					}
 			],
 			"continueOnWalkIn": true,
-			"scriptFriendlyName": "Falcata Basic",
-			"scriptName": "falcBasic",
+			"scriptFriendlyName": "Falcata - Core",
+			"scriptName": "falcCore",
 			"scriptType": "combat",
-			"shouldKill": true,
+			"shouldKill": false,
 			"shouldKillParse": "You slit",
 			"stanceCommand": "striker"
 	},

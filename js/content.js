@@ -17,6 +17,7 @@ let commandList = [];
 let commandOverride = null;
 let defaultCommandDelayMin = 900;
 let defaultCommandDelayMax = 1100;
+let delayNextCommandBy = 0;
 let lastCommandRan = null;
 let moveNextNow = false;
 let target = null;
@@ -308,7 +309,6 @@ function parseMessage(data) {
  */
 function combatScript(data) {
 	const matchFound = matchExpectedParse(data);
-
 	if (matchFound) {
 		if (currentCmdIndex === commandList.length - 1) {
 			if (addAttack) {
@@ -645,7 +645,7 @@ function runScriptByName(scriptName, options) {
 		});
 
 		// Kick it off...
-		sendCommand(getFormattedCommand());
+		sendNextCommand()
 	}
 }
 
@@ -757,7 +757,13 @@ function sendNextCommand(additionalDelay) {
 		return;
 	}
 
-	const commandDelayInMs = getCommandDelayInMs(additionalDelay);
+	let commandDelayInMs = getCommandDelayInMs(additionalDelay);
+	// Handle delaying this command given the previous command's delayBeforeNext value, if present. 
+	if (delayNextCommandBy > 0) {
+		commandDelayInMs = delayNextCommandBy;
+		// Reset the delay
+		delayNextCommandBy = 0;
+	}
 
 	consoleLog("commandDelayInMs: " + commandDelayInMs);
 
@@ -768,6 +774,11 @@ function sendNextCommand(additionalDelay) {
 		// Reset to a default here now to prevent it from sending back to back commands
 		currentMoveNextWhen = "You are no longer busy";
 		moveNextNow = false;
+
+		// This numeric value, if it's configured for the current command in the commandList, 
+		// is intended to delay the script from moving onto the next command for a given
+		// number of milliseconds.
+		delayNextCommandBy = commandList[currentCmdIndex].delayBeforeNext ?? 0;
 	}, commandDelayInMs);
 }
 

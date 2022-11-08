@@ -9,7 +9,7 @@
 		{
 			url: chrome.runtime.getURL("popup.html"),
 			type: "popup",
-			height: 435,
+			height: 475,
 			width: 750,
 		},
 		function (win) {
@@ -55,14 +55,16 @@ const getConfig = async () => {
 			}
 			else {
 				// No config found or saved yet, load default
-				extConfig.enableComms = true;
+				extConfig.enableComms = false;
 				extConfig.includeThoughts = true;
 				extConfig.includeOOC = true;
-				extConfig.includeSpeech = true;
+				extConfig.includeSpeech = false;
 				extConfig.removeThoughtsFromMain = false;
 				extConfig.removeOOCFromMain = false;
 				extConfig.removeSpeechFromMain = false;
 				extConfig.commsBoxHeight = '150'; // pixels
+				extConfig.commsMuteList = '';
+				extConfig.commsMuteListArray = [];
 				extConfig.shouldKill = true;
 				extConfig.continueOnWalkIn = true;
 				extConfig.useBackwardsRiseToStand = false;

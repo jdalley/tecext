@@ -43,6 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		config.removeOOCFromMain = document.getElementById("removeOOCFromMain").checked;
 		config.removeSpeechFromMain = document.getElementById("removeSpeechFromMain").checked;
 		config.commsBoxHeight = document.getElementById("commsBoxHeight").value;
+		config.commsMuteList = document.getElementById("commsMuteList").value;
+		config.commsMuteListArray = config.commsMuteList.split(",").map(item => item.trim());
 		// Combat config
 		config.shouldKill = document.getElementById("shouldKill").checked;
 		config.continueOnWalkIn = document.getElementById("continueOnWalkIn").checked;
@@ -205,6 +207,7 @@ function getConfiguration() {
 					document.getElementById("removeOOCFromMain").checked = response.removeOOCFromMain;
 					document.getElementById("removeSpeechFromMain").checked = response.removeSpeechFromMain;
 					document.getElementById("commsBoxHeight").value = response.commsBoxHeight;
+					document.getElementById("commsMuteList").value = response.commsMuteList ?? null;
 					document.getElementById("shouldKill").checked = response.shouldKill;
 					document.getElementById("continueOnWalkIn").checked = response.continueOnWalkIn;
 					document.getElementById("useBackwardsRiseToStand").checked = response.useBackwardsRiseToStand;

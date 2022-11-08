@@ -68,7 +68,7 @@
 									type="checkbox"
 								/>
 								<label class="form-check-label" for="enableComms"
-									>Enable communications box</label
+									>Enable communications window</label
 								>
 							</div>
 							<div class="form-check">
@@ -139,13 +139,25 @@
 							</div>
 							<div class="input-group">
 								<span class="input-group-text" for="commsBoxHeight"
-									>Box height (px):</span
+									>Window Height (px):</span
 								>
 								<input
 									class="form-control"
 									id="commsBoxHeight"
 									name="commsBoxHeight"
 									type="text"
+								/>
+							</div>
+							<div class="input-group">
+								<span class="input-group-text" for="commsMuteList"
+									>Mute List:</span
+								>
+								<input
+									class="form-control"
+									id="commsMuteList"
+									name="commsMuteList"
+									type="text"
+									placeholder="CharA,CharB..."
 								/>
 							</div>
 						</div>
@@ -227,7 +239,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div class="pos-bottom mb-2">
 						<button
 							type="button"
 							id="saveConfig"
@@ -294,34 +306,45 @@
 						</button>
 					</div>
 					<div class="input-group">
+						<span class="input-group-text" for="weaponItemName">
+							Weapon/Item:
+						</span>
 						<input
 							class="form-control"
 							id="weaponItemName"
 							name="weaponItemName"
 							type="text"
-							placeholder="Weapon/item name..."
+							placeholder="ie: gladius"
 						/>
+					</div>
+					<div class="input-group">
+						<span class="input-group-text" for="shieldItemName">
+							Shield:
+						</span>
 						<input
 							class="form-control"
 							id="shieldItemName"
 							name="shieldItemName"
 							type="text"
-							placeholder="Shield item name..."
+							placeholder="ie: towering"
 						/>
-					</div>
+						</div>
 					<div class="input-group">
+						<span class="input-group-text" for="targetInput">
+							Target:
+						</span>
 						<input
 							class="form-control"
 							id="targetInput"
 							name="targetInput"
 							type="text"
-							placeholder="Target name..."
+							placeholder="ie: thug|brute"
 						/>
 						<button type="button" id="runScript" class="btn btn-success">
 							Run Script
 						</button>
 					</div>
-					<div class="mt-5">
+					<div class="pos-bottom mb-2">
 						<button
 							type="button"
 							id="pauseScript"

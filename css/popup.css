@@ -39,8 +39,14 @@ body {
   transition: visibility 0s 5s, opacity 5s linear;
 }
 
+.pos-bottom {
+	position: absolute;
+	bottom: 0px;
+}
+
 #configMessage {
 	padding-left: 10px;
 	margin: 0;
 	color: green;
 }
+

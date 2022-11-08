@@ -36,62 +36,87 @@ function pullCommunication(msg) {
 	// Whether to send this message to Orchil's doReceive method.
 	let sendToOutput = true;
 	let shouldSendToComms = false;
-	let outputMessage = '';
+	let outputMessage = "";
 	let timestamp = new Date().toLocaleTimeString();
+	let muteThought = false;
+	let muteOOC = false;
+	let thoughtMuteMatch = null;
+	let oocMuteMatch = null;
 
-	// TODO: Remove me, I'm a 'debugger'
-	// console.log(`-----block-begin-----`);
-	// console.log(msg);
-	// console.log(`-----block-end-----`);
+	// Match Thoughts and OOC comments with names from the Mute List, and flag to remove them.
+	if (
+		injectedConfig.commsMuteList !== undefined &&
+		injectedConfig.commsMuteList
+	) {
+		injectedConfig.commsMuteListArray.map(function (mute) {
+			let thoughtMuteReg = new RegExp(
+				`(?:<|&lt;)(\\w.+${mute}) (?:thinks|think) aloud: (.*)(?:>|&gt;)`
+			);
+			let oocMuteReg = new RegExp(`<.+(?:OOC&gt;) (${mute} )(.+)`);
 
-	// Example: <Someone thinks aloud: This is a thought.>
-	// https://regex101.com/r/gII4uI/1
-	let thoughtMatch = msg.match(/(?:<|&lt;)(\w.+) (?:thinks|think) aloud: (.*)(?:>|&gt;)/);
-	if (injectedConfig.includeThoughts
-		&& thoughtMatch 
-		&& thoughtMatch.length >= 1) {
-		outputMessage = `<div>[${timestamp}] ${thoughtMatch[0]}</div>`;
-		shouldSendToComms = true;
+			thoughtMuteMatch = msg.match(thoughtMuteReg);
+			oocMuteMatch = msg.match(oocMuteReg);
 
-		if (injectedConfig.removeThoughtsFromMain) {
+			if (thoughtMuteMatch && thoughtMuteMatch.length >= 1) {
+				muteThought = true;
+			}
+			if (oocMuteMatch && oocMuteMatch.length >= 1) {
+				muteOOC = true;
+			}
+		});
+	}
+
+	if (muteThought) {
+		sendToOutput = false;
+		consoleLog(`[${timestamp}] Thought Muted: ${thoughtMuteMatch[0]}`);
+	} else {
+		// Example: <Someone thinks aloud: This is a thought.>
+		// https://regex101.com/r/gII4uI/3
+		let thoughtMatch = msg.match(
+			/(?:<|&lt;)(\w.+) (?:thinks|think) aloud: (.*)(?:>|&gt;)/
+		);
+		let thoughtMatchFound = thoughtMatch && thoughtMatch.length >= 1;
+		if (injectedConfig.includeThoughts && thoughtMatchFound) {
+			outputMessage = `<div>[${timestamp}] ${thoughtMatch[0]}</div>`;
+			shouldSendToComms = true;
+		}
+		if (injectedConfig.removeThoughtsFromMain && thoughtMatchFound) {
 			sendToOutput = false;
 		}
 	}
 
-	// Example: <6:42 pm OOC> Someone says, "This is an OOC message."
-	// https://regex101.com/r/FS2p0A/1
-	//let oocMatch = msg.match(/<.+(?:OOC>) (\w+)(.+)/);
-	let oocMatch = msg.match(/<.+(?:OOC&gt;) (\w+)(.+)/);
-	if (injectedConfig.includeOOC
-		&& oocMatch
-		&& oocMatch.length >= 1) {
-		outputMessage = `<div>[${timestamp}] ${oocMatch[0]}</div>`;
-		shouldSendToComms = true;
-
-		if (injectedConfig.removeOOCFromMain) {
+	if (muteOOC) {
+		sendToOutput = false;
+		consoleLog(`[${timestamp}] OOC Muted: ${oocMuteMatch[0]}`);
+	} else {
+		// Example: <6:42 pm OOC> Someone says, "This is an OOC message."
+		// https://regex101.com/r/FS2p0A/1
+		let oocMatch = msg.match(/<.+(?:OOC&gt;) (\w+)(.+)/);
+		let oocMatchFound = oocMatch && oocMatch.length >= 1;
+		if (injectedConfig.includeOOC && oocMatchFound) {
+			outputMessage = `<div>[${timestamp}] ${oocMatch[0]}</div>`;
+			shouldSendToComms = true;
+		}
+		if (injectedConfig.removeOOCFromMain && oocMatchFound) {
 			sendToOutput = false;
 		}
 	}
 
-	/*
-		Dig into whether or not this color is actually parseable:
-			</font><font color="#FF69B4">&lt;Ciaran thinks aloud: This is your divine punishment for encouraging Chompers.&gt;</font>
-	*/
 	// Example: Someone say to SomeoneElse, "This is a speech message."
 	// https://regex101.com/r/7NXKrH/1
-	//let speechMatch = msg.match(/(.+)(?:, \")(.+\")/);
 	let speechMatch = msg.match(/(.+)(?:, &quot;)(.+&quot;)/);
-	if (injectedConfig.includeSpeech
-		&& msg.indexOf('OOC>') == -1 
-		&& speechMatch
-		&& speechMatch.length >= 1) {
+	if (
+		injectedConfig.includeSpeech &&
+		msg.indexOf("OOC>") == -1 &&
+		speechMatch &&
+		speechMatch.length >= 1
+	) {
+		outputMessage = `<div>[${timestamp}] ${speechMatch[0]}</div>`;
+		shouldSendToComms = true;
 
-	    outputMessage = `<div>[${timestamp}] ${speechMatch[0]}</div>`;
-			shouldSendToComms = true;
-
-			if (injectedConfig.removeSpeechFromMain) {
-				sendToOutput = false;
-			}
+		if (injectedConfig.removeSpeechFromMain) {
+			sendToOutput = false;
+		}
 	}
 
 	if (shouldSendToComms) {
@@ -103,7 +128,7 @@ function pullCommunication(msg) {
 
 // Write communication-oriented messages to the comms window:
 function outputComms(msg) {
-	let comms = document.getElementById('comms');
+	let comms = document.getElementById("comms");
 	if (comms) {
 		comms.insertAdjacentHTML(
 			"beforeend",
@@ -119,11 +144,10 @@ function outputComms(msg) {
 
 // Apply visual adjustments to page elements with injected configuration.
 function applyConfigUpdate() {
-	const comms = document.getElementById('comms');
-	if (!comms){
+	const comms = document.getElementById("comms");
+	if (!comms) {
 		createCommsElement();
-	}
-	else if (comms) {
+	} else if (comms) {
 		updateCommsElement();
 	}
 }
@@ -166,7 +190,7 @@ function createCommsElement() {
 
 // Update the Comms element with current configuration.
 function updateCommsElement() {
-	const comms = document.getElementById('comms');
+	const comms = document.getElementById("comms");
 	comms.style.display = injectedConfig.enableComms ? "inherit" : "none";
 	comms.style.height = `${injectedConfig.commsBoxHeight}px`;
 }
@@ -276,3 +300,15 @@ setTimeout(function () {
 setTimeout(function () {
 	window.removeEventListener("mouseup", fixFocus);
 }, 2500);
+
+/**
+ * Send a coloured message to the console (yellow background, dark red text)
+ * @param {string} message The message to send to the console
+ * @param {boolean} shouldColor Should output be coloured? Defaults to true
+ */
+ function consoleLog(message, shouldColor = true) {
+	console.log(
+		`%c${message}`,
+		shouldColor ? "color: black; background: lavender;" : ""
+	);
+}
