@@ -1,4 +1,13 @@
 /* Edit Scripts */
+.dark-mode {
+	background: #060b0e;
+  color: #c7c7c7;
+}
+.dark-mode textarea {
+	background: #060b0e;
+  color: #c7c7c7 !important;
+}
+
 .edit-main {
 	height: 100vh;
 	padding: 10px;
@@ -17,6 +26,9 @@
 }
 .edit-container .row.header {
 	flex: 0 1 auto;
+}
+.edit-container .row.header p {
+	padding: 0;
 }
 .edit-container .row.content {
 	display: flex;
@@ -39,6 +51,7 @@
 	left: 0;
 	top: 0;
 	bottom: 0;
+	padding: 0;
 }
 
 .hidden {

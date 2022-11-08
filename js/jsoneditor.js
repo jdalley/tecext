@@ -52,4 +52,33 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("close").addEventListener("click", function (e) {
 		close();
 	});
+
+	getConfiguration();
 });
+
+// Pull configuration from local storage to use in setting extra properties of the window.
+function getConfiguration() {
+	chrome.tabs.query({ url: editorTabUrl }, function (tabs) {
+		chrome.tabs.sendMessage(
+			tabs[0].id,
+			{ type: "popup-get-configuration" },
+			function (response) {
+				// Response will be a config object
+				if (response) {
+					
+					const body = document.getElementsByTagName("body")[0];
+
+					if (response.darkModeEnabled) {
+						if (!body.classList.contains("dark-mode")) {
+							body.classList.add("dark-mode");
+						}
+					} else {
+						if (body.classList.contains("dark-mode")) {
+							body.classList.remove("dark-mode");
+						}
+					}
+				}
+			}
+		);
+	});
+}
