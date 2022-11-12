@@ -563,9 +563,9 @@ function combatGlobals(data) {
 	// Handle being stuck in berserk/defensive after stance-affecting maneuvers:
 	if (
 		data.indexOf("You are already in a berserk stance") >= 0 ||
-		data.indexOf("You are already in a defensive stance	") >= 0
+		data.indexOf("You are already in a defensive stance") >= 0
 	) {
-		commandOverride = "normal";
+		sendDelayedCommands(["normal"]);
 	}
 }
 
