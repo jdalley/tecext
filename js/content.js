@@ -378,7 +378,8 @@ function combatScript(data) {
 			data.indexOf(" charge in") >= 0 ||
 			data.indexOf(" rushes in") >= 0 ||
 			data.indexOf(" rush in") >= 0 ||
-			data.indexOf(" lopes in") >= 0
+			data.indexOf(" lopes in") >= 0 ||
+			data.indexOf(" and onto your boat") >= 0
 		) {
 			sendNextCommand(400);
 		}

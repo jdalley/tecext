@@ -1959,6 +1959,89 @@
 			"addAttack": false,
 			"commandList": [
 					{
+							"command": "pslash <target> neck",
+							"parse": [
+									{
+											"moveNextWhen": "You are no longer busy",
+											"outcome": "Sliding your front leg back"
+									},
+									{
+											"moveNextWhen": "You are no longer busy",
+											"outcome": "You start to fumble"
+									}
+							]
+					},
+					{
+							"command": "sstab <target> neck",
+							"parse": [
+									{
+											"moveNextWhen": "You are no longer busy",
+											"outcome": "Stepping forward aggressively, you clear"
+									},
+									{
+											"moveNextWhen": "You are no longer busy",
+											"outcome": "You lead with your"
+									},
+									{
+											"moveNextWhen": "You are no longer busy",
+											"outcome": "You start to fumble"
+									}
+							]
+					},
+					{
+							"command": "upslash <target> neck",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "You twist your wrists"
+							}
+					},
+					{
+							"command": "slash <target> neck",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "You slash horizontally"
+							}
+					},
+					{
+							"command": "smash <target> neck",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "you swing the butt"
+							}
+					},
+					{
+							"command": "thrust <target> neck",
+							"parse": {
+									"moveNextWhen": "You are no longer busy",
+									"outcome": "Lifting it in one hand, you"
+							}
+					},
+					{
+							"command": "strike <target> high",
+							"parse": [
+									{
+											"moveNextNow": true,
+											"outcome": "is not wielding anything"
+									},
+									{
+											"moveNextWhen": "You are no longer busy",
+											"outcome": "With a quick snapping motion, you"
+									}
+							]
+					}
+			],
+			"continueOnWalkIn": true,
+			"scriptFriendlyName": "Spear Hunting - Aim Neck+ WeaponStrike",
+			"scriptName": "spearHuntNeckW",
+			"scriptType": "combat",
+			"shouldKill": true,
+			"shouldKillParse": "You thrust your",
+			"stanceCommand": ""
+	},
+	{
+			"addAttack": false,
+			"commandList": [
+					{
 							"command": "pslash",
 							"parse": [
 									{
