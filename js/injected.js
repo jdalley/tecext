@@ -43,6 +43,8 @@ function pullCommunication(msg) {
 	let thoughtMuteMatch = null;
 	let oocMuteMatch = null;
 
+	consoleLog(msg, false);
+
 	// Match Thoughts and OOC comments with names from the Mute List, and flag to remove them.
 	if (
 		injectedConfig.commsMuteList !== undefined &&
