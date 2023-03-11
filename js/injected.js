@@ -43,8 +43,6 @@ function pullCommunication(msg) {
 	let thoughtMuteMatch = null;
 	let oocMuteMatch = null;
 
-	consoleLog(msg, false);
-
 	// Match Thoughts and OOC comments with names from the Mute List, and flag to remove them.
 	if (
 		injectedConfig.commsMuteList !== undefined &&
@@ -122,8 +120,8 @@ function pullCommunication(msg) {
 	}
 
 	// Attempt to match Cadaeo usage for inclusion in the comms output.
-	// https://regex101.com/r/5Va2co/1
-	let cadaeMatch = msg.match(/(You send the thought|You feel.+think,)(?: [\"\'])(.+[\"\'])(.+.)/);
+	// https://regex101.com/r/5Va2co/2
+	let cadaeMatch = msg.match(/(?:<|&lt;)(\w.+)(You send the thought|You feel.+think,)(?: [\"\'])(.+[\"\'])(.*)(?:>|&gt;)/);
 	if (cadaeMatch &&
 		cadaeMatch.length >= 1
 	)	{
@@ -215,6 +213,9 @@ if (typeof doReceive !== "undefined") {
 	const origDoReceive = doReceive;
 	doReceive = function (msg) {
 		doReceiveOverride(msg);
+
+		// Log what's received from the server to the console for debugging:
+		consoleLog(msg);
 
 		// Pull out communication for the comms window, and determine if this message
 		// should be sent to the main output window or not.
@@ -314,7 +315,7 @@ setTimeout(function () {
 }, 2500);
 
 /**
- * Send a coloured message to the console (yellow background, dark red text)
+ * Send a coloured message to the console (lavender background, black text)
  * @param {string} message The message to send to the console
  * @param {boolean} shouldColor Should output be coloured? Defaults to true
  */
