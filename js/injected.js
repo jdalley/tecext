@@ -119,6 +119,16 @@ function pullCommunication(msg) {
 		}
 	}
 
+	// Attempt to match Cadaeo usage for inclusion in the comms output.
+	// https://regex101.com/r/5Va2co/1
+	let cadaeMatch = msg.match(/(You send the thought|You feel.+think,)(?: [\"\'])(.+[\"\'])(.+.)/);
+	if (cadaeMatch &&
+		cadaeMatch.length >= 1
+	)	{
+		outputMessage = `<div>[${timestamp}] ${cadaeMatch[0]}</div>`;
+		shouldSendToComms = true;
+	}
+
 	if (shouldSendToComms) {
 		outputComms(outputMessage);
 	}
