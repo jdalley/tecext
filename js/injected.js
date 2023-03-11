@@ -119,13 +119,21 @@ function pullCommunication(msg) {
 		}
 	}
 
-	// Attempt to match Cadaeo usage for inclusion in the comms output.
-	// https://regex101.com/r/5Va2co/2
-	let cadaeMatch = msg.match(/(?:<|&lt;)(\w.+)(You send the thought|You feel.+think,)(?: [\"\'])(.+[\"\'])(.*)(?:>|&gt;)/);
-	if (cadaeMatch &&
-		cadaeMatch.length >= 1
+	// Attempt to match Cadae usage for inclusion in the comms output.
+	// https://regex101.com/r/5Va2co/3
+	let cadaeIncomingMatch = msg.match(/(?:<|&lt;)(\w.+)(You feel.+think,)(?: [\"\'])(.+[\"\'])(.*)(?:>|&gt;)/);
+	if (cadaeIncomingMatch &&
+		cadaeIncomingMatch.length >= 1
 	)	{
-		outputMessage = `<div>[${timestamp}] ${cadaeMatch[0]}</div>`;
+		outputMessage = `<div>[${timestamp}] ${cadaeIncomingMatch[0]}</div>`;
+		shouldSendToComms = true;
+	}
+	// https://regex101.com/r/WsyzOX/1
+	let cadaeOutgoingMatch = msg.match(/(You send the thought )(.+[\"\'])(.+.)/);
+	if (cadaeOutgoingMatch &&
+		cadaeOutgoingMatch.length >= 1
+	)	{
+		outputMessage = `<div>[${timestamp}] ${cadaeOutgoingMatch[0]}</div>`;
 		shouldSendToComms = true;
 	}
 
