@@ -244,8 +244,8 @@ Note that all of the syntax/features mentioned below are also available for Comb
                 // things to look for into one command, this works similarly. Adding | between
                 // outcomes is a replacement for having multiple parses in some cases. In this
                 // specific case I'm using a mix of `moveNextWhen` and `moveNextNow`, so I still
-                // need multiple parses, but if I only needed one of them, I could use this 
-                // feature to shorten my script to one parse!
+                // need multiple parses, but otherwise I could use this feature to shorten my 
+								// script to one parse!
                 "outcome": "You very nimbly palm|You barely manage to palm|You nearly drop a|You manage to palm"
             },
             {
