@@ -174,7 +174,7 @@ The Non-Combat script type shares most of the commands/syntax and interpretation
 
 These scripts are more simplistic and generic, and don't have all the automatic scenario handling that combat scripts have.
 
-Note that all of the comments and features mentioned below are also available for Combat scripts, I'm just separating the explanations as the Combat example is very busy.
+Note that all of the syntax/features mentioned below are also available for Combat scripts, I'm just separating the explanations as the Combat example is very busy.
 
 ```jsonc
 {
