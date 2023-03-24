@@ -245,7 +245,7 @@ Note that all of the syntax/features mentioned below are also available for Comb
                 // outcomes is a replacement for having multiple parses in some cases. In this
                 // specific case I'm using a mix of `moveNextWhen` and `moveNextNow`, so I still
                 // need multiple parses, but otherwise I could use this feature to shorten my 
-								// script to one parse!
+                // script to one parse!
                 "outcome": "You very nimbly palm|You barely manage to palm|You nearly drop a|You manage to palm"
             },
             {
