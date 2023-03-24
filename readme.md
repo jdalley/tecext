@@ -86,7 +86,7 @@ Combat scripts have special handling logic, which has automatic handling for cer
 * handles moving you into a normal stance if told you're in berserk/defensive
   * this may happen if trying to do a stance-changing attack and failing 
 
-```json
+```jsonc
 {
   // Adds the innate `attack` command to your rotation, useful if you don't know many 
   // attacks yet.
@@ -176,7 +176,7 @@ These scripts are more simplistic and generic, and don't have all the automatic 
 
 Note that all of the comments and features mentioned below are also available for Combat scripts, I'm just separating the explanations as the Combat example is very busy.
 
-```json
+```jsonc
 {
   "commandList": [
     {
@@ -211,7 +211,7 @@ Note that all of the comments and features mentioned below are also available fo
 },
 ```
 
-```json
+```jsonc
 {
   "commandList": [
     {
@@ -232,7 +232,7 @@ Note that all of the comments and features mentioned below are also available fo
 },
 ```
 
-```json
+```jsonc
 {
   "commandList": [
     {
@@ -268,7 +268,7 @@ Note that all of the comments and features mentioned below are also available fo
 },
 ```
 
-```json
+```jsonc
 {
   "commandList": [
     {
