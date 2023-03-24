@@ -81,7 +81,7 @@ Combat scripts have special handling logic, which has automatic handling for cer
   * will use melee advance instead if turned on in settings
 * continuing the script if you get stunned
 * being knocked down; stands you up using either `stand` or `brise`
-* correctly wielding weapons when told "You must be wielding..."
+* correctly wielding weapons when told `You must be wielding...`
 * if melee advance is turned on, uses it when told `You'll have to retreat first`
 * handles moving you into a normal stance if told you're in berserk/defensive
   * this may happen if trying to do a stance-changing attack and failing 
