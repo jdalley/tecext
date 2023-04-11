@@ -467,7 +467,8 @@ function combatGlobals(data) {
 	}
 	if (
 		data.indexOf("You must be carrying something to wield it") >= 0 ||
-		data.indexOf("You need to be wielding") >= 0
+		data.indexOf("You need to be wielding") >= 0 ||
+		data.indexOf("You are not wielding") >= 0
 	) {
 		let cmds = [`get ${weaponItemName}`, `wield ${weaponItemName}`];
 		if (shieldItemName) {
