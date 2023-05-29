@@ -1,0 +1,69 @@
+[
+	{
+		"addAttack": false,
+		"commandList": [
+			{
+				"command": "load bow with arrow",
+				"parse": [
+					{
+						"moveNextNow": true,
+						"outcome": "is already loaded"
+					},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You nock a"
+					}
+				],
+				"targetRequired": false
+			},
+			{
+				"command": "shoot",
+				"parse": [
+					{
+						"moveNextNow": true,
+						"outcome": "isn't loaded"
+					},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You fire a"
+					}
+				]
+			},
+			{
+				"command": "load bow with arrow",
+				"parse": [
+					{
+						"moveNextNow": true,
+						"outcome": "is already loaded"
+					},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You nock a"
+					}
+				],
+				"targetRequired": false
+			},
+			{
+				"command": "footshot",
+				"parse": [
+					{
+						"moveNextNow": true,
+						"outcome": "isn't loaded"
+					},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You fire a"
+					}
+				]
+			}
+		],
+		"continueOnWalkIn": true,
+		"scriptFriendlyName": "Archery Train - Manual Load",
+		"scriptName": "archTrainMan",
+		"scriptType": "combat",
+		"shouldKill": true,
+		"shouldKillParse": "you twist sharply",
+		"stanceCommand": "",
+		"weaponItemName": ""
+	}
+]
