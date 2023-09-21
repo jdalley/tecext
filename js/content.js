@@ -1022,7 +1022,13 @@ function isPositiveNumeric(value) {
  * @param {string} command The incoming command to act upon.
  */
 function slashCommand(command) {
-	const commandParams = command.split(/\s+/);
+	// Get commands by separating on spaces, ignoring spaces within quotes.
+	let commandParams = command.match(/"([^"]+)"|[^" ]+/g);
+	// Replace quotes in resulting strings
+	for (let i = 0, l = commandParams.length; i < l; i++) {
+	  commandParams[i] = commandParams[i].replace(/^"|"$/g, '');
+	}
+	
 	const commandName = commandParams[0];
 
 	switch (commandName) {
