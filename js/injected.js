@@ -103,15 +103,19 @@ function pullCommunication(msg) {
 	}
 
 	// Example: Someone say to SomeoneElse, "This is a speech message."
-	// https://regex101.com/r/7NXKrH/1
-	let speechMatch = msg.match(/(.+)(?:, &quot;)(.+&quot;)/);
+	// https://regex101.com/r/wBJAIK/2
+	//let speechMatch = msg.match(/(.+)(?:, \"|&quot;)(.*)(\"|&quot;)/);
+	let speechMatch = msg.match(/(.+)(?:, (\"|&quot;))(.*)(\"|&quot;|<\/font>)/);
 	if (
 		injectedConfig.includeSpeech &&
 		msg.indexOf("OOC>") == -1 &&
 		speechMatch &&
 		speechMatch.length >= 1
 	) {
-		outputMessage = `<div>[${timestamp}] ${speechMatch[0]}</div>`;
+		// Remove leading </font> so it renders right when sent to the comms window.
+		let speechMatchTrimmed = speechMatch[0].replace(/^(<\/font>)/, "");
+		outputMessage = `<div>[${timestamp}] ${speechMatchTrimmed}</div>`;
+
 		shouldSendToComms = true;
 
 		if (injectedConfig.removeSpeechFromMain) {
@@ -121,18 +125,16 @@ function pullCommunication(msg) {
 
 	// Attempt to match Cadae usage for inclusion in the comms output.
 	// https://regex101.com/r/5Va2co/3
-	let cadaeIncomingMatch = msg.match(/(?:<|&lt;)(\w.+)(You feel.+think,)(?: [\"\'])(.+[\"\'])(.*)(?:>|&gt;)/);
-	if (cadaeIncomingMatch &&
-		cadaeIncomingMatch.length >= 1
-	)	{
+	let cadaeIncomingMatch = msg.match(
+		/(?:<|&lt;)(\w.+)(You feel.+think,)(?: [\"\'])(.+[\"\'])(.*)(?:>|&gt;)/
+	);
+	if (cadaeIncomingMatch && cadaeIncomingMatch.length >= 1) {
 		outputMessage = `<div>[${timestamp}] ${cadaeIncomingMatch[0]}</div>`;
 		shouldSendToComms = true;
 	}
 	// https://regex101.com/r/WsyzOX/1
 	let cadaeOutgoingMatch = msg.match(/(You send the thought )(.+[\"\'])(.+.)/);
-	if (cadaeOutgoingMatch &&
-		cadaeOutgoingMatch.length >= 1
-	)	{
+	if (cadaeOutgoingMatch && cadaeOutgoingMatch.length >= 1) {
 		outputMessage = `<div>[${timestamp}] ${cadaeOutgoingMatch[0]}</div>`;
 		shouldSendToComms = true;
 	}
@@ -227,11 +229,16 @@ if (typeof doReceive !== "undefined") {
 
 		// Pull out communication for the comms window, and determine if this message
 		// should be sent to the main output window or not.
-		const sendToOutput = pullCommunication(msg);
+		let sendToOutput = true;
+		let splitForComms = msg.split(/\r?\n|\r|\n/g);
+		splitForComms.forEach((line) => {
+			sendToOutput = pullCommunication(line);
+		});
 
 		if (sendToOutput) {
 			origDoReceive.apply(this, arguments);
 		}
+		
 		return;
 	};
 }
@@ -327,7 +334,7 @@ setTimeout(function () {
  * @param {string} message The message to send to the console
  * @param {boolean} shouldColor Should output be coloured? Defaults to true
  */
- function consoleLog(message, shouldColor = true) {
+function consoleLog(message, shouldColor = true) {
 	console.log(
 		`%c${message}`,
 		shouldColor ? "color: black; background: lavender;" : ""
