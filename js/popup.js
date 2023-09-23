@@ -63,6 +63,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			"useBackwardsRiseToStand"
 		).checked;
 		config.useMeleeAdvance = document.getElementById("useMeleeAdvance").checked;
+		config.useCustomApproach = document.getElementById("useCustomApproach").checked;
+		config.customApproachCommand = document.getElementById("customApproachCommand").value;
 		// General Config
 		config.commandDelayMin = document.getElementById("commandDelayMin").value;
 		config.commandDelayMax = document.getElementById("commandDelayMax").value;
@@ -244,6 +246,8 @@ function getConfiguration() {
 					config.continueOnWalkIn = response.continueOnWalkIn;
 					config.useBackwardsRiseToStand = response.useBackwardsRiseToStand;
 					config.useMeleeAdvance = response.useMeleeAdvance;
+					config.useCustomApproach = response.useCustomApproach;
+					config.customApproachCommand = response.customApproachCommand;
 					// General Config
 					config.commandDelayMin = response.commandDelayMin;
 					config.commandDelayMax = response.commandDelayMax;
@@ -273,6 +277,10 @@ function getConfiguration() {
 						config.useBackwardsRiseToStand;
 					document.getElementById("useMeleeAdvance").checked =
 						config.useMeleeAdvance;
+					document.getElementById("useCustomApproach").checked = 
+						config.useCustomApproach;
+					document.getElementById("customApproachCommand").value = 
+						config.customApproachCommand;
 					document.getElementById("commandDelayMin").value =
 						config.commandDelayMin ?? 900;
 					document.getElementById("commandDelayMax").value =

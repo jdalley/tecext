@@ -69,6 +69,8 @@ const getConfig = async () => {
 				extConfig.continueOnWalkIn = true;
 				extConfig.useBackwardsRiseToStand = false;
 				extConfig.useMeleeAdvance = false;
+				extConfig.useCustomApproach = false;
+				extConfig.customApproachCommand = '';
 				extConfig.commandDelayMin = 900; // miliseconds
 				extConfig.commandDelayMax = 1100; // miliseconds
 				extConfig.darkModeEnabled = false;

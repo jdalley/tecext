@@ -421,8 +421,10 @@ function combatGlobals(data) {
 	}
 
 	// Handle sweeped/knocked down after failed attack attempt:
-	if (data.indexOf("You must be standing") >= 0 ||
-			data.indexOf("You have disabled fighting while prone") >= 0) {
+	if (
+		data.indexOf("You must be standing") >= 0 ||
+		data.indexOf("You have disabled fighting while prone") >= 0
+	) {
 		let standCommand = extConfig.useBackwardsRiseToStand ? `brise` : `stand`;
 		setTimeout(function () {
 			sendCommand(standCommand);
@@ -504,11 +506,20 @@ function combatGlobals(data) {
 
 	// Handle distance/approaching
 	if (data.indexOf("is not close enough") >= 0) {
-		let engageCommand = extConfig.useMeleeAdvance ? `advance` : `engage`;
+		let engageCommand = `engage`;
+
+		if (extConfig.useMeleeAdvance) {
+			engageCommand = `advance`;
+		}
+		// If both useMeleeAdvance and useCustomApproach are enabled, use 
+		// custom approach.
+		if (extConfig.useCustomApproach) {
+			engageCommand = extConfig.customApproachCommand;
+		}
 
 		if (extConfig.useMeleeAdvance && commandOverride.indexOf("kill") >= 0) {
 			// In combatScript, this is used to reset commandOverride to `kill` when
-			// Melee Advance is done successfully.
+			// Melee Advance/Custom Approach is done successfully.
 			advancingToKill = true;
 		}
 		// Not using sendDelayedCommands here as it wipes out `commandOverride`,
@@ -649,7 +660,7 @@ function runScriptByName(scriptName, options) {
 		});
 
 		// Kick it off...
-		sendNextCommand()
+		sendNextCommand();
 	}
 }
 
@@ -762,7 +773,7 @@ function sendNextCommand(additionalDelay) {
 	}
 
 	let commandDelayInMs = getCommandDelayInMs(additionalDelay);
-	// Handle delaying this command given the previous command's delayBeforeNext value, if present. 
+	// Handle delaying this command given the previous command's delayBeforeNext value, if present.
 	if (delayNextCommandBy > 0) {
 		commandDelayInMs = delayNextCommandBy;
 		// Reset the delay
@@ -779,7 +790,7 @@ function sendNextCommand(additionalDelay) {
 		currentMoveNextWhen = "You are no longer busy";
 		moveNextNow = false;
 
-		// This numeric value, if it's configured for the current command in the commandList, 
+		// This numeric value, if it's configured for the current command in the commandList,
 		// is intended to delay the script from moving onto the next command for a given
 		// number of milliseconds.
 		delayNextCommandBy = commandList[currentCmdIndex].delayBeforeNext ?? 0;
@@ -1027,9 +1038,9 @@ function slashCommand(command) {
 	let commandParams = command.match(/"([^"]+)"|[^" ]+/g);
 	// Replace quotes in resulting strings
 	for (let i = 0, l = commandParams.length; i < l; i++) {
-	  commandParams[i] = commandParams[i].replace(/^"|"$/g, '');
+		commandParams[i] = commandParams[i].replace(/^"|"$/g, "");
 	}
-	
+
 	const commandName = commandParams[0];
 
 	switch (commandName) {
