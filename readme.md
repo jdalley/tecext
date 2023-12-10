@@ -1,6 +1,8 @@
 # TEC Extender
 
-Extensions and goodies for The Eternal City's Orchil client: http://client.eternalcitygame.com/tec/tec.htm
+Extensions and goodies for The Eternal City's Orchil client: http://client.eternalcitygame.com/tec/tec.htm. 
+
+If you're looking to check out the game, the best place to start is the wiki: http://eternal-city.wikidot.com/. Here you'll find links to the community Discord, and information on how to get started.
 
 ## Installation
 ### Walkthrough & Guide
