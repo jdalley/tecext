@@ -310,16 +310,7 @@ function parseMessage(data) {
 function combatScript(data) {
 	const matchFound = matchExpectedParse(data);
 	if (matchFound) {
-		if (currentCmdIndex === commandList.length - 1) {
-			if (addAttack) {
-				commandOverride = `att ${target}`;
-			}
-			// Reset
-			currentCmdIndex = 0;
-		} else {
-			// Move the command list index forward...
-			currentCmdIndex++;
-		}
+		moveCombatCmdIndex();
 
 		// If the parse has moveNextNow set to true, or if currentMoveNextWhen
 		// is null, send the next command now:
@@ -328,6 +319,14 @@ function combatScript(data) {
 			sendNextCommand(400);
 			return;
 		}
+	}
+
+	// Handle scenarios where we need to stop trying the current command and move to the next.
+	if (data.indexOf("You can't trip") >= 0) {
+		moveCombatCmdIndex();
+		// Delay to avoid commands being sent too close together.
+		sendNextCommand(850);
+		return;
 	}
 
 	if (shouldKill) {
@@ -400,6 +399,22 @@ function combatScript(data) {
 		data.indexOf(currentMoveNextWhen) >= 0
 	) {
 		sendNextCommand();
+	}
+}
+
+/**
+ * Move the currentCmdIndex forward or reset to the first index.
+ */
+function moveCombatCmdIndex() {
+	if (currentCmdIndex === commandList.length - 1) {
+		if (addAttack) {
+			commandOverride = `att ${target}`;
+		}
+		// Reset
+		currentCmdIndex = 0;
+	} else {
+		// Move the command list index forward...
+		currentCmdIndex++;
 	}
 }
 
