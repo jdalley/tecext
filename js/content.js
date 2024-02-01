@@ -526,7 +526,7 @@ function combatGlobals(data) {
 		if (extConfig.useMeleeAdvance) {
 			engageCommand = `advance`;
 		}
-		// If both useMeleeAdvance and useCustomApproach are enabled, use 
+		// If both useMeleeAdvance and useCustomApproach are enabled, use
 		// custom approach.
 		if (extConfig.useCustomApproach) {
 			engageCommand = extConfig.customApproachCommand;
@@ -562,11 +562,16 @@ function combatGlobals(data) {
 		// Next No Longer Busy will advance the target
 		commandOverride = `advance ${target}`;
 	}
-	// Handle being stuck trying to engage an already approached target
-	if (data.indexOf("You are already engaging") >= 0) {
+	// Handle being stuck trying to engage an already approached target, or having
+	// being too close to approach.
+	if (
+		data.indexOf("You are already engaging") >= 0 ||
+		data.indexOf("is too close.") >= 0
+	) {
 		commandOverride = "";
-		sendNextCommand();
+		sendNextCommand(850);
 	}
+
 	// Handle the scenario where you're trying to attack/kill something that has
 	// been pushed back/retreated.
 	if (data.indexOf("You'll have to retreat first") >= 0) {
