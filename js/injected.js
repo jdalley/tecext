@@ -227,15 +227,26 @@ if (typeof doReceive !== "undefined") {
 		// Log what's received from the server to the console for debugging:
 		consoleLog(msg);
 
-		// Pull out communication for the comms window, and determine if this message
-		// should be sent to the main output window or not.
-		let sendToOutput = true;
+		/* Pull out communication for the comms window, and determine if this message
+		 * should be sent to the main output window or not. 
+		 * 
+		 * An individual message from the server can contain multiple lines that
+		 * we need to check individually with regex in pullCommunication(). This 
+		 * can cause false positives when trying to remove matches comms messages.
+		 * 
+		 * A single message could report both true (blank line) and false (regex
+		 * matched comms message). To correctly avoid sending output to the main
+		 * window, we should collect the result from each line's comms matches, 
+		 * and if any false values are found, don't output the message to the 
+		 * main window.
+		 */
+		let sendToOutput = [true];
 		let splitForComms = msg.split(/\r?\n|\r|\n/g);
 		splitForComms.forEach((line) => {
-			sendToOutput = pullCommunication(line);
+			sendToOutput.push(pullCommunication(line));
 		});
 
-		if (sendToOutput) {
+		if (sendToOutput.every(v => v === true)) {
 			origDoReceive.apply(this, arguments);
 		}
 		
