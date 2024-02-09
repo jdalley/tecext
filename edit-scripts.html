@@ -1,17 +1,96 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8" />
 		<title>TEC Extender - Edit Scripts</title>
 		<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
 		<link rel="stylesheet" href="js/jsoneditor/jsoneditor.min.css" />
-		<link rel="stylesheet" href="css/jsoneditor.css" />
+		<link rel="stylesheet" href="css/jsoneditor.darktheme.css" />
+		<link rel="stylesheet" href="css/jsoneditor.custom.css" />
 		<script src="js/jsoneditor/jsoneditor.min.js"></script>
+		<script
+			src="js/jsoneditor/theme/chaos.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/dracula.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/github_dark.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/gruvbox.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/kr_theme.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/nord_dark.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/one_dark.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/pastel_on_dark.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/solarized_dark.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/solarized_light.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/tomorrow_night.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/twilight.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
+		<script
+			src="js/jsoneditor/theme/vibrant_ink.js"
+			type="text/javascript"
+			charset="utf-8"
+		></script>
 	</head>
 	<body>
 		<div class="edit-main">
 			<div class="edit-container">
 				<div class="row header">
-					<p>Edit your scripts below, and be sure to take <strong>regular backups</strong> of your scripts!</p>
+					<div>
+						<p>
+							Edit your scripts below, and be sure to take
+							<strong>regular backups</strong> of your scripts!
+						</p>
+					</div>
+					<div class="input-group">
+						<select
+							class="form-select form-select-sm"
+							id="themeSelect"
+							name="themeSelect"
+						></select>
+					</div>
 				</div>
 				<div class="row content">
 					<div id="jsonEditor" name="jsonEditor"></div>
@@ -25,12 +104,7 @@
 					>
 						Save Script
 					</button>
-					<button
-						type="button"
-						id="close"
-						name="close"
-						class="btn btn-danger"
-					>
+					<button type="button" id="close" name="close" class="btn btn-danger">
 						Close
 					</button>
 					<span id="editMessage"></span>

@@ -51,6 +51,14 @@ const getConfig = async () => {
 		chrome.storage.local.get('config', function(data) {
 			if (data && data["config"]) {
 				extConfig = data["config"];
+
+				/* Set defaults for non-original configuration options that are
+				 * not present in the current configuration state.
+				 */
+				if (!extConfig.aceTheme) {
+					extConfig.aceTheme = 'gruvbox';
+				}
+
 				resolve(extConfig);
 			}
 			else {
@@ -74,6 +82,7 @@ const getConfig = async () => {
 				extConfig.commandDelayMin = 900; // miliseconds
 				extConfig.commandDelayMax = 1100; // miliseconds
 				extConfig.darkModeEnabled = false;
+				extConfig.aceTheme = 'gruvbox';
 				resolve(extConfig);
 			}
 		})

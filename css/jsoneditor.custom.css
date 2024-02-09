@@ -3,9 +3,9 @@
 	background: #060b0e;
   color: #c7c7c7;
 }
-.dark-mode textarea {
-	background: #060b0e;
-  color: #c7c7c7 !important;
+
+.dark-mode .jsoneditor-preview {
+	color: #c7c7c7;
 }
 
 .edit-main {
@@ -23,13 +23,25 @@
 }
 .edit-container .row {
 	margin: 0;
+	--bs-gutter-x: 0;
 }
 .edit-container .row.header {
-	flex: 0 1 auto;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
 }
 .edit-container .row.header p {
 	padding: 0;
 }
+.edit-container .row.header div {
+	width: auto;
+}
+.edit-container .row.header select {
+	max-height: 2rem;
+	background-color: #e9ecef;
+}
+
 .edit-container .row.content {
 	display: flex;
 	flex-flow: column;
