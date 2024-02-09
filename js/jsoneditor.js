@@ -11,7 +11,11 @@ const options = {
 	mode: 'code',
 	modes: ['code', 'form', 'text', 'tree', 'view', 'preview'], // allowed modes
 	onModeChange: function (newMode, oldMode) {
-		console.log('Mode switched from', oldMode, 'to', newMode)
+		console.log('Mode switched from', oldMode, 'to', newMode);
+
+		if (extConfig.aceTheme && editor.aceEditor) {
+			setSelectedTheme(extConfig.aceTheme);
+		}
 	}
 };
 const editor = new JSONEditor(container, options);
@@ -90,12 +94,14 @@ document.addEventListener("DOMContentLoaded", function () {
 	themeSelect.addEventListener("change", function(event) {
 		if (event) {
 			const theme = event.target.value;
-			editor.aceEditor.setTheme(`ace/theme/${theme}`);
+			if (editor.aceEditor) {
+				editor.aceEditor.setTheme(`ace/theme/${theme}`);
 			
-			if (extConfig) {
-				// Save the selected theme to the extension's configuration.
-				extConfig.aceTheme = theme;
-				saveConfiguration(extConfig);
+				if (extConfig) {
+					// Save the selected theme to the extension's configuration.
+					extConfig.aceTheme = theme;
+					saveConfiguration(extConfig);
+				}
 			}
 		}
 	});
@@ -120,6 +126,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	getConfiguration();
 });
+
+// Set the selected theme in the dropdown.
+function setSelectedTheme(theme) {
+	if (theme) {
+		const themeSelect = document.getElementById("themeSelect");
+		const themeOptions = Array.from(themeSelect.options);
+		const optionToSelect = themeOptions.find(opt => opt.text === theme);
+		optionToSelect.selected = true;
+
+		
+		editor.aceEditor.setTheme(`ace/theme/${theme}`);
+	}
+}
 
 // Save configuration to local storage.
 function saveConfiguration(config) {
@@ -153,14 +172,7 @@ function getConfiguration() {
 						}
 					}
 
-					if (response.aceTheme) {
-						const themeSelect = document.getElementById("themeSelect");
-						const themeOptions = Array.from(themeSelect.options);
-						const optionToSelect = themeOptions.find(opt => opt.text === response.aceTheme);
-						optionToSelect.selected = true;
-
-						editor.aceEditor.setTheme(`ace/theme/${response.aceTheme}`);
-					}
+					setSelectedTheme(response.aceTheme);
 				}
 			}
 		);
