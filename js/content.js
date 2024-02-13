@@ -31,6 +31,7 @@ let shouldKill = false;
 let shouldKillParse = null;
 let stance = null;
 let weaponItemName = null;
+let recoveringWeapon = false;
 // Scripts
 let currentScript = null;
 let currentScriptName = null;
@@ -459,12 +460,15 @@ function combatGlobals(data) {
 	) {
 		// Just set override since fumble requires waiting for no longer busy anyway.
 		if (data.indexOf(weaponItemName) >= 0) {
-			commandOverride = `take ${weaponItemName}`;
+			commandOverride = `get ${weaponItemName}`;
+			recoveringWeapon = true;
 		} else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
-			commandOverride = `take ${shieldItemName}`;
+			commandOverride = `get ${shieldItemName}`;
+			recoveringWeapon = true;
 		}
 	}
-	if (data.indexOf("You take a") >= 0) {
+	// Continuation of the fumble handling after picking up the weapon/shield...
+	if (data.indexOf("You take a") >= 0 && recoveringWeapon) {
 		let cmds = [];
 		if (data.indexOf(weaponItemName) >= 0) {
 			cmds.push(`wield ${weaponItemName}`);
@@ -473,7 +477,10 @@ function combatGlobals(data) {
 		}
 		cmds.push(getFormattedCommand());
 		sendDelayedCommands(cmds);
+
+		recoveringWeapon = false;
 	}
+	// These not-wielding scenarios don't require waiting for no longer busy.
 	if (data.indexOf("You can't do that right now") >= 0) {
 		let cmds = [`get ${weaponItemName}`, `wield ${weaponItemName}`];
 		if (shieldItemName) {
@@ -736,6 +743,7 @@ function killCurrentScript() {
 	target = "";
 	weaponItemName = "";
 	shieldItemName = "";
+	recoveringWeapon = false;
 	shouldKill = false;
 	shouldKillParse = "";
 	attemptingKill = false;
