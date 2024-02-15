@@ -439,7 +439,8 @@ function combatGlobals(data) {
 	// Handle sweeped/knocked down after failed attack attempt:
 	if (
 		data.indexOf("You must be standing") >= 0 ||
-		data.indexOf("You have disabled fighting while prone") >= 0
+		data.indexOf("You have disabled fighting while prone") >= 0 ||
+		data.indexOf("You fumble, falling to one knee") >= 0
 	) {
 		let standCommand = extConfig.useBackwardsRiseToStand ? `brise` : `stand`;
 		setTimeout(function () {
