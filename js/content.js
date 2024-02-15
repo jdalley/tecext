@@ -439,8 +439,7 @@ function combatGlobals(data) {
 	// Handle sweeped/knocked down after failed attack attempt:
 	if (
 		data.indexOf("You must be standing") >= 0 ||
-		data.indexOf("You have disabled fighting while prone") >= 0 ||
-		data.indexOf("You fumble, falling to one knee") >= 0
+		data.indexOf("You have disabled fighting while prone") >= 0
 	) {
 		let standCommand = extConfig.useBackwardsRiseToStand ? `brise` : `stand`;
 		setTimeout(function () {
@@ -468,6 +467,13 @@ function combatGlobals(data) {
 			recoveringWeapon = true;
 		}
 	}
+	// Handle fumble/dropping to one knee (brawling/pank)
+	if (
+		data.indexOf("You fumble, falling to one knee") >= 0
+	) {
+		commandOverride = `stand`;
+	}
+
 	// Continuation of the fumble handling after picking up the weapon/shield...
 	if (data.indexOf("You take a") >= 0 && recoveringWeapon) {
 		let cmds = [];
