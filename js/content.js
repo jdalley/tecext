@@ -467,9 +467,9 @@ function combatGlobals(data) {
 			recoveringWeapon = true;
 		}
 	}
-	// Handle fumble/dropping to one knee (brawling/pank)
+	// Handle fumble+fall (brawling/pank)
 	if (
-		data.indexOf("You fumble, falling to one knee") >= 0
+		data.indexOf("You fumble, falling") >= 0
 	) {
 		commandOverride = `stand`;
 	}
