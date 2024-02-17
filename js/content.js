@@ -30,6 +30,7 @@ let shieldItemName = null;
 let shouldKill = false;
 let shouldKillParse = null;
 let stance = null;
+let entangledCommand = null;
 let weaponItemName = null;
 let recoveringWeapon = false;
 // Scripts
@@ -530,7 +531,20 @@ function combatGlobals(data) {
 		data.indexOf("You are unable to do that,") >= 0 ||
 		data.indexOf("You must be free of entanglements") >= 0
 	) {
-		sendDelayedCommands([`free`, getFormattedCommand()]);
+		// Use the script's custom entangledCommand ability, ie: Flinging Disarm.
+		if (entangledCommand) {
+			if (entangledCommand.indexOf("<weapon>") >= 0) {
+				entangledCommand = entangledCommand.replaceAll("<weapon>", weaponItemName);
+			} 
+			// Not using sendDelayedCommands here as it wipes out `commandOverride`,
+			// and can interfere with `kill` attempts.
+			setTimeout(function () {
+				sendCommand(entangledCommand);
+			}, getCommandDelayInMs());
+		}
+		else {
+			sendDelayedCommands([`free`, getFormattedCommand()]);
+		}
 	}
 
 	// Handle distance/approaching
@@ -685,6 +699,7 @@ function runScriptByName(scriptName, options) {
 				: script.continueOnWalkIn;
 		addAttack = script.addAttack;
 		stance = script.stanceCommand;
+		entangledCommand = script.entangledCommand;
 		currentScriptType = script.scriptType.toLowerCase();
 		currentScriptName = script.scriptName;
 		currentScript = script;
@@ -762,6 +777,7 @@ function killCurrentScript() {
 	commandList = [];
 	addAttack = false;
 	stance = "";
+	entangledCommand = "";
 	commandOverride = "";
 	currentCmdIndex = 0;
 	currentMoveNextWhen = null;

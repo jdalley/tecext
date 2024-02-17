@@ -166,7 +166,17 @@ Combat scripts have special handling logic, which has automatic handling for cer
   "shouldKillParse": "You thrust your",
   // If you don't have stance mastered so it auto-assumes, this command will be used
   // to enter your stance when the game tells you `You are not in the correct stance`.
-  "stanceCommand": "scorpion"
+  "stanceCommand": "scorpion",
+	// If this command is used in a script, it will replace the usage of the `free` 
+	// command when your weapon is entangled.
+	// The commands work in the following ways:
+	//		- Note: `fling` is an example, you would replace this with your freeing ability.
+	// 		- "fling <weapon>": You need to literally use <weapon> here, and it'll be replaced
+	//			dynamically with what is entered as your weapon name when starting the script.
+	//		- "fling gladius": You can 'hard-code' the name of your weapon here and it'll use it.
+	//		- "fling": This will work as expected if the ability doesn't need to also target
+	//			your weapon by name.
+	"entangledCommand": "fling <weapon>"
 },
 ```
 
