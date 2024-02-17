@@ -829,7 +829,7 @@ function sendNextCommand(additionalDelay) {
 		// This numeric value, if it's configured for the current command in the commandList,
 		// is intended to delay the script from moving onto the next command for a given
 		// number of milliseconds.
-		delayNextCommandBy = commandList[currentCmdIndex].delayBeforeNext ?? 0;
+		delayNextCommandBy = commandList[currentCmdIndex]?.delayBeforeNext ?? 0;
 	}, commandDelayInMs);
 }
 
