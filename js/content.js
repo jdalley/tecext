@@ -290,7 +290,7 @@ function parseMessage(data) {
 
 	// Handle running the simple repeat command
 	if (runRepeat) {
-		if (data.indexOf("You are no longer busy.") >= 0) {
+		if (data.includes("You are no longer busy.")) {
 			setTimeout(function () {
 				sendCommand(repeatCommand);
 			}, getCommandDelayInMs());
@@ -324,7 +324,7 @@ function combatScript(data) {
 	}
 
 	// Handle scenarios where we need to stop trying the current command and move to the next.
-	if (data.indexOf("You can't trip") >= 0) {
+	if (data.includes("You can't trip")) {
 		moveCombatCmdIndex();
 		// Delay to avoid commands being sent too close together.
 		sendNextCommand(850);
@@ -334,23 +334,23 @@ function combatScript(data) {
 	if (shouldKill) {
 		// Override based on specific scenarios.
 		if (
-			data.indexOf("falls unconscious") >= 0 ||
+			data.includes("falls unconscious") ||
 			(attemptingKill &&
-				(data.indexOf("You hit") >= 0 || data.indexOf("You miss") >= 0))
+				(data.includes("You hit") || data.includes("You miss")))
 		) {
 			attemptingKill = true;
 			commandOverride = `kill ${target}`;
 		}
 
 		// Handle being stuck trying to kill something.
-		if (data.indexOf("must be unconscious first") >= 0) {
+		if (data.includes("must be unconscious first")) {
 			commandOverride = "";
 			attemptingKill = false;
 			sendNextCommand();
 		}
 
 		// Handle resetting commandOverride after an `advance` attempt failure.
-		if (extConfig.useMeleeAdvance && data.indexOf("You advance toward") >= 0) {
+		if (extConfig.useMeleeAdvance && data.includes("You advance toward")) {
 			if (advancingToKill) {
 				commandOverride = `kill ${target}`;
 				advancingToKill = false;
@@ -360,10 +360,7 @@ function combatScript(data) {
 		}
 
 		// Detect weapon-specific kill echo and wipe the override for next no longer busy.
-		if (
-			data.indexOf(shouldKillParse) >= 0 &&
-			commandOverride.indexOf("kill") >= 0
-		) {
+		if (data.includes(shouldKillParse) && commandOverride.includes("kill")) {
 			attemptingKill = false;
 			commandOverride = "";
 		}
@@ -372,22 +369,22 @@ function combatScript(data) {
 	// Attempt to continue script after a critter/target walks in/arrives.
 	if (continueOnWalkIn) {
 		if (
-			data.indexOf("walks in") >= 0 ||
-			data.indexOf(" in from a") >= 0 ||
-			data.indexOf(" arrives.") >= 0 ||
-			data.indexOf(" charges in") >= 0 ||
-			data.indexOf(" charge in") >= 0 ||
-			data.indexOf(" rushes in") >= 0 ||
-			data.indexOf(" rush in") >= 0 ||
-			data.indexOf(" lopes in") >= 0 ||
-			data.indexOf(" and onto your boat") >= 0
+			data.includes("walks in") ||
+			data.includes(" in from a") ||
+			data.includes(" arrives.") ||
+			data.includes(" charges in") ||
+			data.includes(" charge in") ||
+			data.includes(" rushes in") ||
+			data.includes(" rush in") ||
+			data.includes(" lopes in") ||
+			data.includes(" and onto your boat")
 		) {
 			sendNextCommand(400);
 		}
 	}
 
 	// Handle coming out of a stun and continuing.
-	if (data.indexOf("You are once again able to change combat postures") >= 0) {
+	if (data.includes("You are once again able to change combat postures")) {
 		sendNextCommand();
 	}
 
@@ -398,7 +395,7 @@ function combatScript(data) {
 	if (
 		currentMoveNextWhen &&
 		currentMoveNextWhen.length > 0 &&
-		data.indexOf(currentMoveNextWhen) >= 0
+		data.includes(currentMoveNextWhen)
 	) {
 		sendNextCommand();
 	}
@@ -431,16 +428,16 @@ function moveCombatCmdIndex() {
 function combatGlobals(data) {
 	// Handle addAttack commandOverride off-switch
 	if (
-		commandOverride.indexOf("att") >= 0 &&
-		(data.indexOf("You hit") >= 0 || data.indexOf("You miss") >= 0)
+		commandOverride.includes("att") &&
+		(data.includes("You hit") || data.includes("You miss"))
 	) {
 		commandOverride = "";
 	}
 
 	// Handle sweeped/knocked down after failed attack attempt:
 	if (
-		data.indexOf("You must be standing") >= 0 ||
-		data.indexOf("You have disabled fighting while prone") >= 0
+		data.includes("You must be standing") ||
+		data.includes("You have disabled fighting while prone")
 	) {
 		let standCommand = extConfig.useBackwardsRiseToStand ? `brise` : `stand`;
 		setTimeout(function () {
@@ -449,38 +446,35 @@ function combatGlobals(data) {
 	}
 
 	// Handle continuing after being stunned:
-	if (data.indexOf("You are no longer stunned") >= 0) {
+	if (data.includes("You are no longer stunned")) {
 		sendNextCommand();
 	}
 
 	// Handle fumble or disarm:
 	if (
-		data.indexOf(
-			"You fumble! You drop a" || data.indexOf("You fumble, dropping")
-		) >= 0
+		data.includes("You fumble! You drop a") ||
+		data.includes("You fumble, dropping")
 	) {
 		// Just set override since fumble requires waiting for no longer busy anyway.
-		if (data.indexOf(weaponItemName) >= 0) {
+		if (data.includes(weaponItemName)) {
 			commandOverride = `get ${weaponItemName}`;
 			recoveringWeapon = true;
-		} else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
+		} else if (shieldItemName && data.includes(shieldItemName)) {
 			commandOverride = `get ${shieldItemName}`;
 			recoveringWeapon = true;
 		}
 	}
 	// Handle fumble+fall (brawling/pank)
-	if (
-		data.indexOf("You fumble, falling") >= 0
-	) {
+	if (data.includes("You fumble, falling")) {
 		commandOverride = `stand`;
 	}
 
 	// Continuation of the fumble handling after picking up the weapon/shield...
-	if (data.indexOf("You take a") >= 0 && recoveringWeapon) {
+	if (data.includes("You take a") && recoveringWeapon) {
 		let cmds = [];
-		if (data.indexOf(weaponItemName) >= 0) {
+		if (data.includes(weaponItemName)) {
 			cmds.push(`wield ${weaponItemName}`);
-		} else if (shieldItemName && data.indexOf(shieldItemName) >= 0) {
+		} else if (shieldItemName && data.includes(shieldItemName)) {
 			cmds.push(`wield ${shieldItemName}`);
 		}
 		cmds.push(getFormattedCommand());
@@ -489,7 +483,7 @@ function combatGlobals(data) {
 		recoveringWeapon = false;
 	}
 	// These not-wielding scenarios don't require waiting for no longer busy.
-	if (data.indexOf("You can't do that right now") >= 0) {
+	if (data.includes("You can't do that right now")) {
 		let cmds = [`get ${weaponItemName}`, `wield ${weaponItemName}`];
 		if (shieldItemName) {
 			cmds.push(`get ${shieldItemName}`);
@@ -499,10 +493,10 @@ function combatGlobals(data) {
 		sendDelayedCommands(cmds);
 	}
 	if (
-		data.indexOf("You must be carrying something to wield it") >= 0 ||
-		data.indexOf("You need to be wielding") >= 0 ||
-		data.indexOf("You must be wielding") >= 0 ||
-		data.indexOf("You are not wielding") >= 0
+		data.includes("You must be carrying something to wield it") ||
+		data.includes("You need to be wielding") ||
+		data.includes("You must be wielding") ||
+		data.includes("You are not wielding")
 	) {
 		let cmds = [`get ${weaponItemName}`, `wield ${weaponItemName}`];
 		if (shieldItemName) {
@@ -512,11 +506,11 @@ function combatGlobals(data) {
 		cmds.push(getFormattedCommand());
 		sendDelayedCommands(cmds);
 	}
-	if (data.indexOf("You must be wielding your weapon in two hands") >= 0) {
+	if (data.includes("You must be wielding your weapon in two hands")) {
 		sendDelayedCommands([`wield ${weaponItemName}`, getFormattedCommand()]);
 	}
 
-	if (data.indexOf("You must be wielding a shield to") >= 0) {
+	if (data.includes("You must be wielding a shield to")) {
 		sendDelayedCommands([
 			`get ${shieldItemName}`,
 			`wield ${shieldItemName}`,
@@ -526,29 +520,31 @@ function combatGlobals(data) {
 
 	// Handle entagled weapon
 	if (
-		data.indexOf("You cannot attack with an entangled weapon") >= 0 ||
-		data.indexOf("You cannot use that action while grappling") >= 0 ||
-		data.indexOf("You are unable to do that,") >= 0 ||
-		data.indexOf("You must be free of entanglements") >= 0
+		data.includes("You cannot attack with an entangled weapon") ||
+		data.includes("You cannot use that action while grappling") ||
+		data.includes("You are unable to do that,") ||
+		data.includes("You must be free of entanglements")
 	) {
 		// Use the script's custom entangledCommand ability, ie: Flinging Disarm.
 		if (entangledCommand) {
-			if (entangledCommand.indexOf("<weapon>") >= 0) {
-				entangledCommand = entangledCommand.replaceAll("<weapon>", weaponItemName);
-			} 
+			if (entangledCommand.includes("<weapon>")) {
+				entangledCommand = entangledCommand.replaceAll(
+					"<weapon>",
+					weaponItemName
+				);
+			}
 			// Not using sendDelayedCommands here as it wipes out `commandOverride`,
 			// and can interfere with `kill` attempts.
 			setTimeout(function () {
 				sendCommand(entangledCommand);
 			}, getCommandDelayInMs());
-		}
-		else {
+		} else {
 			sendDelayedCommands([`free`, getFormattedCommand()]);
 		}
 	}
 
 	// Handle distance/approaching
-	if (data.indexOf("is not close enough") >= 0) {
+	if (data.includes("is not close enough")) {
 		let engageCommand = `engage`;
 
 		if (extConfig.useMeleeAdvance) {
@@ -560,7 +556,7 @@ function combatGlobals(data) {
 			engageCommand = extConfig.customApproachCommand;
 		}
 
-		if (extConfig.useMeleeAdvance && commandOverride.indexOf("kill") >= 0) {
+		if (extConfig.useMeleeAdvance && commandOverride.includes("kill")) {
 			// In combatScript, this is used to reset commandOverride to `kill` when
 			// Melee Advance/Custom Approach is done successfully.
 			advancingToKill = true;
@@ -570,7 +566,7 @@ function combatGlobals(data) {
 		setTimeout(function () {
 			sendCommand(`${engageCommand} ${target}`);
 
-			if (engageCommand.indexOf("engage") >= 0) {
+			if (engageCommand.includes("engage")) {
 				setTimeout(function () {
 					// Next attack as 'You attempt to engage <target>' doesn't have a round time.
 					sendCommand(
@@ -581,8 +577,8 @@ function combatGlobals(data) {
 		}, getCommandDelayInMs());
 	}
 	// Handle failing to Melee Advance if it's toggled on
-	if (extConfig.useMeleeAdvance && data.indexOf("but can't get close") >= 0) {
-		if (commandOverride.indexOf("kill") >= 0) {
+	if (extConfig.useMeleeAdvance && data.includes("but can't get close")) {
+		if (commandOverride.includes("kill")) {
 			// In combatScript, this is used to reset commandOverride to `kill` when
 			// Melee Advance is done successfully.
 			advancingToKill = true;
@@ -593,9 +589,9 @@ function combatGlobals(data) {
 	// Handle being stuck trying to engage an already approached target, having
 	// being too close to approach, or are already standing.
 	if (
-		data.indexOf("You are already engaging") >= 0 ||
-		data.indexOf("is too close.") >= 0 || 
-		data.indexOf("You are already standing") >= 0
+		data.includes("You are already engaging") ||
+		data.includes("is too close.") ||
+		data.includes("You are already standing")
 	) {
 		commandOverride = "";
 		sendNextCommand(850);
@@ -603,7 +599,7 @@ function combatGlobals(data) {
 
 	// Handle the scenario where you're trying to attack/kill something that has
 	// been pushed back/retreated.
-	if (data.indexOf("You'll have to retreat first") >= 0) {
+	if (data.includes("You'll have to retreat first")) {
 		// If melee advance is toggled on in config, use it.
 		if (extConfig.useMeleeAdvance) {
 			// Not using sendDelayedCommands here as it wipes out `commandOverride`,
@@ -618,7 +614,7 @@ function combatGlobals(data) {
 	}
 
 	// Handle stance when not auto:
-	if (data.indexOf("You are not in the correct stance") >= 0) {
+	if (data.includes("You are not in the correct stance")) {
 		if (stance) {
 			sendDelayedCommands([stance]);
 		}
@@ -626,8 +622,8 @@ function combatGlobals(data) {
 
 	// Handle being stuck in berserk/defensive after stance-affecting maneuvers:
 	if (
-		data.indexOf("You are already in a berserk stance") >= 0 ||
-		data.indexOf("You are already in a defensive stance") >= 0
+		data.includes("You are already in a berserk stance") ||
+		data.includes("You are already in a defensive stance")
 	) {
 		sendDelayedCommands(["normal"]);
 	}
@@ -660,7 +656,7 @@ function nonComScript(data) {
 	if (
 		currentMoveNextWhen &&
 		currentMoveNextWhen.length > 0 &&
-		data.indexOf(currentMoveNextWhen) >= 0
+		data.includes(currentMoveNextWhen)
 	) {
 		sendNextCommand();
 	}
@@ -906,7 +902,7 @@ function getFormattedCommand() {
 		}
 
 		// Check if the command has moved <target> to be replaced:
-		if (command.indexOf("<target>") >= 0) {
+		if (command.includes("<target>")) {
 			// Check for target replacement:
 			command = command.replaceAll("<target>", target);
 		} else if (targetRequired) {
@@ -971,14 +967,14 @@ function matchExpectedParse(data) {
 function matchOutcome(data, outcome) {
 	// Support a pipe delimeter for outcome strings.
 	const outcomeSplit = outcome.split("|").map(function (item) {
-		if (item.indexOf("<target>") >= 0) {
+		if (item.includes("<target>")) {
 			// Check for target replacement:
 			item = item.replaceAll("<target>", target);
 		}
 		return item.trim();
 	});
 
-	return outcomeSplit.some((outcome) => data.indexOf(outcome) >= 0);
+	return outcomeSplit.some((outcome) => data.includes(outcome));
 }
 
 /*********************************************************************************************/

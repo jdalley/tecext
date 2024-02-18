@@ -104,11 +104,11 @@ function pullCommunication(msg) {
 
 	// Example: Someone say to SomeoneElse, "This is a speech message."
 	// https://regex101.com/r/wBJAIK/2
-	//let speechMatch = msg.match(/(.+)(?:, \"|&quot;)(.*)(\"|&quot;)/);
+	// let speechMatch = msg.match(/(.+)(?:, \"|&quot;)(.*)(\"|&quot;)/);
 	let speechMatch = msg.match(/(.+)(?:, (\"|&quot;))(.*)(\"|&quot;|<\/font>)/);
 	if (
 		injectedConfig.includeSpeech &&
-		msg.indexOf("OOC>") == -1 &&
+		!msg.includes("OOC>") &&
 		speechMatch &&
 		speechMatch.length >= 1
 	) {
