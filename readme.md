@@ -167,16 +167,16 @@ Combat scripts have special handling logic, which has automatic handling for cer
   // If you don't have stance mastered so it auto-assumes, this command will be used
   // to enter your stance when the game tells you `You are not in the correct stance`.
   "stanceCommand": "scorpion",
-	// If this command is used in a script, it will replace the usage of the `free` 
-	// command when your weapon is entangled.
-	// The commands work in the following ways:
-	//		- Note: `fling` is an example, you would replace this with your freeing ability.
-	// 		- "fling <weapon>": You need to literally use <weapon> here, and it'll be replaced
-	//			dynamically with what is entered as your weapon name when starting the script.
-	//		- "fling gladius": You can 'hard-code' the name of your weapon here and it'll use it.
-	//		- "fling": This will work as expected if the ability doesn't need to also target
-	//			your weapon by name.
-	"entangledCommand": "fling <weapon>"
+  // If this command is used in a script, it will replace the usage of the `free` 
+  // command when your weapon is entangled.
+  // The commands work in the following ways:
+  //  - Note: `fling` is an example, you would replace this with your freeing ability.
+  //  - "fling <weapon>": You need to literally use <weapon> here, and it'll be replaced
+  //    dynamically with what is entered as your weapon name when starting the script.
+  //  - "fling gladius": You can 'hard-code' the name of your weapon here and it'll use it.
+  //  - "fling": This will work as expected if the ability doesn't need to also target
+  //    your weapon by name.
+  "entangledCommand": "fling <weapon>"
 },
 ```
 
@@ -248,23 +248,23 @@ Note that all of the syntax/features mentioned below are also available for Comb
 {
   "commandList": [
     {
-        "command": "palm",
-        "parse": [
-            {
-                "moveNextWhen": "You are no longer busy",
-                // Players will be aware you can use the | character in game to collect multiple
-                // things to look for into one command, this works similarly. Adding | between
-                // outcomes is a replacement for having multiple parses in some cases. In this
-                // specific case I'm using a mix of `moveNextWhen` and `moveNextNow`, so I still
-                // need multiple parses, but otherwise I could use this feature to shorten my 
-                // script to one parse!
-                "outcome": "You very nimbly palm|You barely manage to palm|You nearly drop a|You manage to palm"
-            },
-            {
-                "moveNextNow": true,
-                "outcome": "You are already palming that"
-            }
-        ]
+      "command": "palm",
+      "parse": [
+        {
+          "moveNextWhen": "You are no longer busy",
+          // Players will be aware you can use the | character in game to collect multiple
+          // things to look for into one command, this works similarly. Adding | between
+          // outcomes is a replacement for having multiple parses in some cases. In this
+          // specific case I'm using a mix of `moveNextWhen` and `moveNextNow`, so I still
+          // need multiple parses, but otherwise I could use this feature to shorten my 
+          // script to one parse!
+          "outcome": "You very nimbly palm|You barely manage to palm|You nearly drop a|You manage to palm"
+        },
+        {
+          "moveNextNow": true,
+          "outcome": "You are already palming that"
+        }
+      ]
     },
     {
         "command": "unpalm",
