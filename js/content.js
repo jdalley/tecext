@@ -17,6 +17,7 @@ let commandList = [];
 let commandOverride = null;
 let defaultCommandDelayMin = 900;
 let defaultCommandDelayMax = 1100;
+let defaultCommandRetryMs = 60000;
 let delayNextCommandBy = 0;
 let lastCommandRan = null;
 let moveNextNow = false;
@@ -38,6 +39,7 @@ let currentScript = null;
 let currentScriptName = null;
 let currentScriptType = null;
 let scriptPaused = false;
+let lastCommandSent = null;
 
 // Store scripts separately from the cache due to potential size
 let userScripts = null;
@@ -172,6 +174,8 @@ function sendCommand(msg) {
 			},
 		})
 	);
+
+	lastCommandSent = Date.now();
 
 	return;
 }
@@ -835,8 +839,6 @@ function sendNextCommand(additionalDelay) {
 		delayNextCommandBy = 0;
 	}
 
-	consoleLog("commandDelayInMs: " + commandDelayInMs);
-
 	setTimeout(function () {
 		// Set override or use current command value:
 		sendCommand(getFormattedCommand());
@@ -1083,6 +1085,33 @@ function stringToBoolean(string) {
 function isPositiveNumeric(value) {
 	return /^\d+$/.test(value);
 }
+
+/**
+ * Constantly running function to check if it's been more than a
+ * defined number of milliseconds since the last command was sent
+ * while a script is running. If it has, send the next command to
+ * kick things off again.
+ */
+(function(){
+	let maxCmdDelay = isPositiveNumeric(extConfig?.commandDelayMax)
+		? Number(extConfig.commandDelayMax)
+		: defaultCommandDelayMax;
+
+	if (commandList.length > 0 && !scriptPaused) {
+		let retryMs = isPositiveNumeric(extConfig?.commandRetryMs)
+			? Number(extConfig.commandRetryMs)
+			: defaultCommandRetryMs;
+
+		const timeDiff = Date.now() - lastCommandSent;
+		// `0` effectively turns off the retry.
+		if (retryMs > 0 && timeDiff > retryMs) {
+			consoleLog(`${retryMs/1000} seconds since last command sent, sending next command.`);
+			sendNextCommand();
+		}
+	}
+	// Rerun timer buffered by configured max command delay and a bit more.
+	setTimeout(arguments.callee, maxCmdDelay + 500);
+})();
 
 /**
  * Handle slash commands that are received from the game client.

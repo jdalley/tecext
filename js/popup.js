@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// General Config
 		config.commandDelayMin = document.getElementById("commandDelayMin").value;
 		config.commandDelayMax = document.getElementById("commandDelayMax").value;
+		config.commandRetryMs = document.getElementById("commandRetryMs").value;
 		config.darkModeEnabled = document.getElementById("darkModeEnabled").checked;
 
 		saveConfiguration(config);
@@ -251,6 +252,7 @@ function getConfiguration() {
 					// General Config
 					config.commandDelayMin = response.commandDelayMin;
 					config.commandDelayMax = response.commandDelayMax;
+					config.commandRetryMs = response.commandRetryMs;
 					config.darkModeEnabled = response.darkModeEnabled;
 
 					// Apply configurations to inputs
@@ -285,6 +287,8 @@ function getConfiguration() {
 						config.commandDelayMin ?? 900;
 					document.getElementById("commandDelayMax").value =
 						config.commandDelayMax ?? 1100;
+					document.getElementById("commandRetryMs").value = 
+						config.commandRetryMs ?? 60000;
 					document.getElementById("darkModeEnabled").checked =
 						config.darkModeEnabled ?? false;
 

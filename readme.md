@@ -193,6 +193,9 @@ Note that all of the syntax/features mentioned below are also available for Comb
   "commandList": [
     {
       "command": "bait pole with worm",
+      // This causes a 5 second delay (in milliseconds) before running the next command after
+      // the `outcome` conditions of this command are met.
+      "delayBeforeNext": 5000, 
       "parse": [
         {
           "moveNextWhen": "You are no longer busy",

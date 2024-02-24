@@ -79,8 +79,9 @@ const getConfig = async () => {
 				extConfig.useMeleeAdvance = false;
 				extConfig.useCustomApproach = false;
 				extConfig.customApproachCommand = '';
-				extConfig.commandDelayMin = 900; // miliseconds
-				extConfig.commandDelayMax = 1100; // miliseconds
+				extConfig.commandDelayMin = 900; // milliseconds
+				extConfig.commandDelayMax = 1100; // milliseconds
+				extConfig.commandRetryMs = 60000; // milliseconds
 				extConfig.darkModeEnabled = false;
 				extConfig.aceTheme = 'gruvbox';
 				resolve(extConfig);

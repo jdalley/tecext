@@ -224,7 +224,7 @@
 									>Approach: Use Custom Approach</label
 								>
 							</div>
-							<div class="input-group">
+							<div class="input-group" title="If Use Custom Approach is enabled, this is the command that will be used when engaging a target that's out of range.">
 								<span class="input-group-text">Approach Command:</span>
 								<input
 									class="form-control"
@@ -240,7 +240,7 @@
 							aria-labelledby="generalTabPane"
 							tabindex="0"
 						>
-							<div class="input-group">
+							<div class="input-group" title="This range is the number of milliseconds the script running code will use between sending commands. This helps avoid the server swallowing commands that would otherwise be sent too quickly after one another. This can be adjusted higher if you're on a bad or unreliable internet connection.">
 								<span class="input-group-text">Cmd Delay Range (ms):</span>
 								<input
 									class="form-control"
@@ -252,6 +252,15 @@
 									class="form-control"
 									id="commandDelayMax"
 									name="commandDelayMax"
+									type="text"
+								/>
+							</div>
+							<div class="input-group" title="While a script is running and is not paused, if this number of milliseconds has elapsed since the last command was sent, it will send the next command. Setting this to 0 turns it off.">
+								<span class="input-group-text">Cmd Retry (ms):</span>
+								<input
+									class="form-control"
+									id="commandRetryMs"
+									name="commandRetryMs"
 									type="text"
 								/>
 							</div>
