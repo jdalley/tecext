@@ -1097,6 +1097,11 @@ function isPositiveNumeric(value) {
 		? Number(extConfig.commandDelayMax)
 		: defaultCommandDelayMax;
 
+	// Min value to avoid sending too fast back to back.
+	maxCmdDelay = maxCmdDelay < 1000
+			? 1000
+			: maxCmdDelay;
+
 	if (commandList.length > 0 && !scriptPaused) {
 		let retryMs = isPositiveNumeric(extConfig?.commandRetryMs)
 			? Number(extConfig.commandRetryMs)
@@ -1109,8 +1114,8 @@ function isPositiveNumeric(value) {
 			sendNextCommand();
 		}
 	}
-	// Rerun timer buffered by configured max command delay and a bit more.
-	setTimeout(arguments.callee, maxCmdDelay + 500);
+	// Rerun timer buffered by configured max command delay.
+	setTimeout(arguments.callee, maxCmdDelay);
 })();
 
 /**
