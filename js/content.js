@@ -470,13 +470,20 @@ function combatGlobals(data) {
 	}
 
 	// Continuation of the fumble handling after picking up the weapon/shield...
-	if (data.includes("You take a") && recoveringWeapon) {
+	if (
+		(data.includes("You take a") ||
+			data.includes("You are already carrying")) &&
+		recoveringWeapon
+	) {
+		
 		let cmds = [];
 		if (data.includes(weaponItemName)) {
 			cmds.push(`wield ${weaponItemName}`);
 		} else if (shieldItemName && data.includes(shieldItemName)) {
 			cmds.push(`wield ${shieldItemName}`);
 		}
+		// reset/remove `get {weapon/shield}`
+		commandOverride = "";
 		cmds.push(getFormattedCommand());
 		sendDelayedCommands(cmds);
 
