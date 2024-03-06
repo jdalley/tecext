@@ -193,7 +193,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		// Start simple repeat from popup
 		case "popup-send-repeat":
 			if (request.message) {
+				scriptPaused = false;
 				runSimpleRepeat(request.message);
+				sendClientMessage(`Starting to repeat the command: ${request.message}`);
 			}
 			break;
 
@@ -726,16 +728,13 @@ function runScriptByName(scriptName, options) {
  * @param {string} command
  */
 function runSimpleRepeat(command) {
-	// If runRepeat isn't true (not already the current script), we can set it up.
-	// This allows us to call the function again to start it after a pause, without
-	// re-running kill script and re-setting variables.
-	if (!runRepeat) {
+	if (!scriptPaused) {
 		killCurrentScript();
-		// This variable is used in the parseMessage function to repeat the command.
-		runRepeat = true;
-		repeatCommand = command;
-		lastCommandRan = command;
 	}
+	// This variable is used in the parseMessage function to repeat the command.
+	runRepeat = true;
+	repeatCommand = command;
+	lastCommandRan = command;
 
 	setTimeout(function () {
 		sendCommand(command);
@@ -769,6 +768,8 @@ function killCurrentScript() {
 	if (currentScriptName || lastCommandRan) {
 		sendClientMessage(`Stopping script: ${getRunningCommand()}`);
 	}
+
+	consoleLog("killCurrentScript ran");
 
 	target = "";
 	weaponItemName = "";
@@ -807,13 +808,12 @@ function pauseCurrentScript() {
  * Resume the current script
  */
 function resumeCurrentScript() {
-	scriptPaused = false;
-
-	// Start the repeat again if it's the active script, don't need to
-	// pass a command as it's active and variables are already set.
+	// Start the repeat again if it's the active script.
 	if (runRepeat) {
-		runSimpleRepeat();
+		runSimpleRepeat(repeatCommand);
+		scriptPaused = false;
 	} else {
+		scriptPaused = false;
 		// Regular script, send the command.
 		sendNextCommand();
 	}
