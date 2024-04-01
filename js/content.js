@@ -443,6 +443,7 @@ function combatGlobals(data) {
 	// Handle sweeped/knocked down after failed attack attempt:
 	if (
 		data.includes("You must be standing") ||
+		data.includes("You cannot do that right now") ||
 		data.includes("You have disabled fighting while prone")
 	) {
 		let standCommand = extConfig.useBackwardsRiseToStand ? `brise` : `stand`;
@@ -1190,10 +1191,10 @@ function slashCommand(command) {
 			let shouldKill = null;
 			let continueOnWalkIn = null;
 
-			if (commandParams.length >= 5) {
+			if (commandParams.length >= 6) {
 				shouldKill = stringToBoolean(commandParams[5]);
 			}
-			if (commandParams.length >= 6) {
+			if (commandParams.length >= 7) {
 				continueOnWalkIn = stringToBoolean(commandParams[6]);
 			}
 
