@@ -535,6 +535,7 @@ function combatGlobals(data) {
 	// Handle entagled weapon
 	if (
 		data.includes("You cannot attack with an entangled weapon") ||
+		data.includes("You cannot attempt this maneuver with an entangled") ||
 		data.includes("You cannot use that action while grappling") ||
 		data.includes("You are unable to do that,") ||
 		data.includes("You must be free of entanglements")
