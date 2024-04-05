@@ -383,7 +383,8 @@ function combatScript(data) {
 			data.includes(" rushes in") ||
 			data.includes(" rush in") ||
 			data.includes(" lopes in") ||
-			data.includes(" and onto your boat")
+			data.includes(" and onto your boat" ||
+			data.includes(" steps out of the nearby shadows."))
 		) {
 			sendNextCommand(400);
 		}
