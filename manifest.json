@@ -19,7 +19,7 @@
 	"content_scripts": [
 		{
 			"matches": ["*://client.eternalcitygame.com/*"],
-			"js": ["js/content.js"],
+			"js": ["content.js"],
 			"run_at": "document_end"
 		}
 	],
@@ -29,8 +29,10 @@
 				"*://client.eternalcitygame.com/*"
 			],
 			"resources": [
-				"js/content.js",
-				"js/injected.js"
+				"content.js",
+				"injected.js",
+				"jsoneditor.js",
+				"popup.js"
 			]
 		}
 	],

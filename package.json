@@ -1,0 +1,21 @@
+{
+  "name": "tecext",
+  "version": "1.0.0",
+  "description": "Extensions and goodies for The Eternal City's Orchil client: http://client.eternalcitygame.com/tec/tec.htm.",
+	"type":"module",
+  "scripts": {
+    "build": "vite build && node build.js",
+		"zip": "vite build && node build.js && node archive.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.2.8"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "fs-extra": "^11.2.0"
+  }
+}
+	

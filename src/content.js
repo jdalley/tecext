@@ -1,3 +1,5 @@
+import { isPositiveNumeric } from "./utils.js";
+
 /*********************************************************************************************/
 /* Main script that contains primary logic for parsing and scripting. */
 
@@ -112,7 +114,7 @@ function saveConfiguration(config) {
  * relevant events, variables, and data from web sockets.
  */
 const script = document.createElement("script");
-script.src = chrome.runtime.getURL("js/injected.js");
+script.src = chrome.runtime.getURL("injected.js");
 (document.head || document.documentElement).appendChild(script);
 script.onload = function () {
 	script.remove();
@@ -1078,15 +1080,6 @@ function stringToBoolean(string) {
 		default:
 			return Boolean(string);
 	}
-}
-
-/**
- * Tests whether a variable is a positive number.
- * @param {*} value
- * @returns Boolean indicating paramter is a positive number.
- */
-function isPositiveNumeric(value) {
-	return /^\d+$/.test(value);
 }
 
 /**
