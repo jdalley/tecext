@@ -6,7 +6,6 @@ import {
 	stringToBoolean 
 } from "./utils.js";
  
-
 /*********************************************************************************************/
 /* Main script that contains primary logic for parsing and scripting. */
 

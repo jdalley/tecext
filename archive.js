@@ -36,7 +36,6 @@ archive.on('error', (err) => {
   throw err;
 });
 
-
 // Grab folders and files from the /dist folder for the archive.
 archive.directory(__dirname + '/dist/css', 'css');
 archive.directory(__dirname + '/dist/deps', 'deps');

@@ -5,11 +5,8 @@
 	"type":"module",
   "scripts": {
     "build": "vite build && node build.js",
-		"zip": "vite build && node build.js && node archive.js"
+		"archive": "vite build && node build.js && node archive.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "vite": "^5.2.8"
   },

@@ -12,7 +12,6 @@ async function copy(source, destination) {
   await fs.copy(sourcePath, destPath);
 }
 
-// Copy directories and files
 const tasks = [
   copy('deps', 'dist/deps'),
   copy('css', 'dist/css'),

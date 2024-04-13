@@ -2386,7 +2386,7 @@
           "outcome": "Lifting it in one hand, you"
         }
       },
-			{
+      {
         "command": "stomp",
         "parse": {
           "moveNextWhen": "You are no longer busy",

@@ -10,19 +10,23 @@ Here's a GREAT walkthrough written by JagerBtFM which does a much better job tha
 
 https://docs.google.com/document/d/1s0jJVMRsAlHK2J7mT21lr1SA6segsAIY/edit
 
+**Note**: The manual installation process has changed since this document was written, please see [Manual Installation Instructions](#manual-installation-instructions) for more details.
+
 ### Chrome Web Store
 The TEC Extender is now on the Chrome Web Store! Grab it here if you prefer to have it auto update over time and not manually install a specific version: https://chrome.google.com/webstore/detail/tec-extender/aegdmagbofbclblaidikleeophbplmad
 
 **Note:** As it takes time for new versions to be approved on the web store, this version may be behind compared to what can be found here on GitHub. If you find it's missing features, you can always uninstall it temporarily and grab the latest version here instead. 
 
 ### Manual Installation Instructions
-After cloning/downloading a copy of this repository:
+**Updated 04/13/2024**  
+These instructions have been updated, see below for updated steps to install the extension manually from this repository.
 
-1. Navigate to ```chrome://extensions```
-2. Make sure Developer Mode is turned on in the top right.
-3. Click Load unpacked in the top left.
-4. In the file browser, navigate to the root of this project directory on your machine, then click Ok.
-5. The extension is now installed - and it can be accessed by the TEC icon in the extension icon area, or by right clicking anywhere in the Orchil client and clicking '[TEC] Open UI...'
+1. Navigate to https://github.com/jdalley/tecext/releases and download the latest release's `tecext_<version>.zip` file, and extract it.
+2. Navigate to ```chrome://extensions```
+3. Make sure Developer Mode is turned on in the top right.
+4. Click Load unpacked in the top left.
+5. In the file browser, navigate to the folder you extracted in step 1 and then click Ok.
+6. The extension is now installed - and it can be accessed by the TEC icon in the extension icon area, or by right clicking anywhere in the Orchil client and clicking '[TEC] Open UI...'
 
 You should see something like this under chrome://extensions if all goes well:
 

@@ -1,0 +1,56 @@
+# .github/workflows/release.yml
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run archive
+
+      - name: Find zip file
+        id: findzip
+        run: echo "::set-output name=zipfile::$(find ./releases -name '*.zip')"
+
+      - name: Get previous tag
+        id: previoustag
+        run: echo "::set-output name=comparetag::$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1 --max-count=1`)"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: 'Changes: https://github.com/${{ github.repository }}/compare/${{ steps.previoustag.outputs.comparetag }}...${{ github.ref }}'
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.findzip.outputs.zipfile }}
+          asset_name: ${{ steps.findzip.outputs.zipfile }}
+          asset_content_type: application/zip
