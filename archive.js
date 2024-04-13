@@ -9,6 +9,9 @@ const __dirname = path.dirname(__filename);
 
 const manifest = JSON.parse(fs.readFileSync('dist/manifest.json', 'utf-8'));
 
+// Ensure the ./releases directory exists
+fs.mkdirSync(path.join(__dirname, 'releases'), { recursive: true });
+
 const output = createWriteStream(`./releases/tecext_${manifest.version}.zip`);
 const archive = archiver('zip', {
 	zlib: { level: 9 }
