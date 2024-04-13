@@ -1,4 +1,11 @@
-import { isPositiveNumeric } from "./utils.js";
+import { State } from "./state.js";
+import { 
+	consoleLog, 
+	dedent,
+	isPositiveNumeric, 
+	stringToBoolean 
+} from "./utils.js";
+ 
 
 /*********************************************************************************************/
 /* Main script that contains primary logic for parsing and scripting. */
@@ -6,71 +13,10 @@ import { isPositiveNumeric } from "./utils.js";
 /*********************************************************************************************/
 /* Initialization and Chrome setup */
 
-// Simple repeat
-let repeatCommand = null;
-let runRepeat = false;
-// Repeat constantly with a delay
-let repeatWithDelayCommand = null;
-let runRepeatWithDelay = false;
-// General
-let currentCmdIndex = 0;
-let currentMoveNextWhen = null;
-let commandList = [];
-let commandOverride = null;
-let defaultCommandDelayMin = 900;
-let defaultCommandDelayMax = 1100;
-let defaultCommandRetryMs = 60000;
-let delayNextCommandBy = 0;
-let lastCommandRan = null;
-let moveNextNow = false;
-let target = null;
-// Combat
-let addAttack = false;
-let advancingToKill = false;
-let attemptingKill = false;
-let continueOnWalkIn = false;
-let shieldItemName = null;
-let shouldKill = false;
-let shouldKillParse = null;
-let stance = null;
-let entangledCommand = null;
-let weaponItemName = null;
-let recoveringWeapon = false;
-// Scripts
-let currentScript = null;
-let currentScriptName = null;
-let currentScriptType = null;
-let scriptPaused = false;
-let lastCommandSent = null;
-
-// Store scripts separately from the cache due to potential size
-let userScripts = null;
-
-// Configuration used to set options for the extension, controlled in the popup.
-let extConfig = null;
-
-// Load data from background service worker (local storage): user scripts and config
-function loadExtData() {
-	// Load scripts:
-	chrome.runtime.sendMessage(
-		{ type: "background-get-user-scripts" },
-		function (response) {
-			// response will be an array of script objects
-			userScripts = response;
-		}
-	);
-
-	// Load config:
-	chrome.runtime.sendMessage(
-		{ type: "background-get-configuration" },
-		function (response) {
-			// response will be an object with properties
-			extConfig = response;
-
-			applyConfiguration(extConfig);
-		}
-	);
-}
+// Load the extension's configuration and user script data into State.
+const state = new State();
+//.Load scripts once the state is created.
+state.loadExtData();
 
 /**
  *  Send the configuration to the injected script to apply it to the client page.
@@ -90,7 +36,7 @@ function applyConfiguration(config) {
  * @param {string} scripts
  */
 function saveScripts(scripts) {
-	userScripts = scripts;
+	state.userScripts = scripts;
 	chrome.runtime.sendMessage({
 		type: "background-save-user-scripts",
 		message: scripts,
@@ -101,8 +47,8 @@ function saveScripts(scripts) {
  * Save configuration here and in local storage via the background service worker
  */
 function saveConfiguration(config) {
-	extConfig = config;
-	applyConfiguration(extConfig);
+	state.extConfig = config;
+	applyConfiguration(state.extConfig);
 	chrome.runtime.sendMessage({
 		type: "background-save-configuration",
 		message: config,
@@ -119,11 +65,6 @@ script.src = chrome.runtime.getURL("injected.js");
 script.onload = function () {
 	script.remove();
 };
-
-/**
- * Load scripts once from the root
- */
-loadExtData();
 
 /*********************************************************************************************/
 /** Communication with other scripts **/
@@ -177,7 +118,7 @@ function sendCommand(msg) {
 		})
 	);
 
-	lastCommandSent = Date.now();
+	state.lastCommandSent = Date.now();
 
 	return;
 }
@@ -195,7 +136,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		// Start simple repeat from popup
 		case "popup-send-repeat":
 			if (request.message) {
-				scriptPaused = false;
+				state.scriptPaused = false;
 				runSimpleRepeat(request.message);
 				sendClientMessage(`Starting to repeat the command: ${request.message}`);
 			}
@@ -225,7 +166,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 		// Return userScripts to the popup
 		case "popup-get-scripts":
-			sendResponse(userScripts);
+			sendResponse(state.userScripts);
 			break;
 
 		case "popup-save-configuration":
@@ -233,12 +174,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			break;
 
 		case "popup-get-configuration":
-			sendResponse(extConfig);
+			sendResponse(state.extConfig);
 			break;
 
 		// Return userScripts to the JSON editor
 		case "editor-get-scripts":
-			sendResponse(userScripts);
+			sendResponse(state.userScripts);
 			break;
 
 		// Save changes to userScripts from the JSON editor
@@ -292,23 +233,23 @@ function parseMessage(data) {
 	// Uncomment to dump data from server to the console
 	//consoleLog(data, false);
 
-	if (scriptPaused === true) {
+	if (state.scriptPaused === true) {
 		return;
 	}
 
 	// Handle running the simple repeat command
-	if (runRepeat) {
+	if (state.runRepeat) {
 		if (data.includes("You are no longer busy.")) {
 			setTimeout(function () {
-				sendCommand(repeatCommand);
+				sendCommand(state.repeatCommand);
 			}, getCommandDelayInMs());
 			return;
 		}
 	}
 
-	if (commandList.length > 0 && currentScriptType === "combat") {
+	if (state.commandList.length > 0 && state.currentScriptType === "combat") {
 		combatScript(data);
-	} else if (commandList.length > 0 && currentScriptType === "noncom") {
+	} else if (state.commandList.length > 0 && state.currentScriptType === "noncom") {
 		nonComScript(data);
 	}
 }
@@ -322,9 +263,9 @@ function combatScript(data) {
 	if (matchFound) {
 		moveCombatCmdIndex();
 
-		// If the parse has moveNextNow set to true, or if currentMoveNextWhen
+		// If the parse has moveNextNow set to true, or if state.currentMoveNextWhen
 		// is null, send the next command now:
-		if (moveNextNow || !currentMoveNextWhen) {
+		if (state.moveNextNow || !state.currentMoveNextWhen) {
 			// Delay to avoid commands being sent too close together.
 			sendNextCommand(400);
 			return;
@@ -339,43 +280,43 @@ function combatScript(data) {
 		return;
 	}
 
-	if (shouldKill) {
+	if (state.shouldKill) {
 		// Override based on specific scenarios.
 		if (
 			data.includes("falls unconscious") ||
-			(attemptingKill &&
+			(state.attemptingKill &&
 				(data.includes("You hit") || data.includes("You miss")))
 		) {
-			attemptingKill = true;
-			commandOverride = `kill ${target}`;
+			state.attemptingKill = true;
+			state.commandOverride = `kill ${state.target}`;
 		}
 
 		// Handle being stuck trying to kill something.
 		if (data.includes("must be unconscious first")) {
-			commandOverride = "";
-			attemptingKill = false;
+			state.commandOverride = "";
+			state.attemptingKill = false;
 			sendNextCommand();
 		}
 
-		// Handle resetting commandOverride after an `advance` attempt failure.
-		if (extConfig.useMeleeAdvance && data.includes("You advance toward")) {
-			if (advancingToKill) {
-				commandOverride = `kill ${target}`;
-				advancingToKill = false;
+		// Handle resetting state.commandOverride after an `advance` attempt failure.
+		if (state.extConfig.useMeleeAdvance && data.includes("You advance toward")) {
+			if (state.advancingToKill) {
+				state.commandOverride = `kill ${state.target}`;
+				state.advancingToKill = false;
 			} else {
-				commandOverride = "";
+				state.commandOverride = "";
 			}
 		}
 
 		// Detect weapon-specific kill echo and wipe the override for next no longer busy.
-		if (data.includes(shouldKillParse) && commandOverride.includes("kill")) {
-			attemptingKill = false;
-			commandOverride = "";
+		if (data.includes(state.shouldKillParse) && state.commandOverride.includes("kill")) {
+			state.attemptingKill = false;
+			state.commandOverride = "";
 		}
 	}
 
 	// Attempt to continue script after a critter/target walks in/arrives.
-	if (continueOnWalkIn) {
+	if (state.continueOnWalkIn) {
 		if (
 			data.includes("walks in") ||
 			data.includes(" in from a") ||
@@ -402,27 +343,27 @@ function combatScript(data) {
 
 	// Main work for combat loop:
 	if (
-		currentMoveNextWhen &&
-		currentMoveNextWhen.length > 0 &&
-		data.includes(currentMoveNextWhen)
+		state.currentMoveNextWhen &&
+		state.currentMoveNextWhen.length > 0 &&
+		data.includes(state.currentMoveNextWhen)
 	) {
 		sendNextCommand();
 	}
 }
 
 /**
- * Move the currentCmdIndex forward or reset to the first index.
+ * Move the state.currentCmdIndex forward or reset to the first index.
  */
 function moveCombatCmdIndex() {
-	if (currentCmdIndex === commandList.length - 1) {
-		if (addAttack) {
-			commandOverride = `att ${target}`;
+	if (state.currentCmdIndex === state.commandList.length - 1) {
+		if (state.addAttack) {
+			state.commandOverride = `att ${state.target}`;
 		}
 		// Reset
-		currentCmdIndex = 0;
+		state.currentCmdIndex = 0;
 	} else {
 		// Move the command list index forward...
-		currentCmdIndex++;
+		state.currentCmdIndex++;
 	}
 }
 
@@ -435,12 +376,12 @@ function moveCombatCmdIndex() {
  * @param {string} data
  */
 function combatGlobals(data) {
-	// Handle addAttack commandOverride off-switch
+	// Handle addAttack state.commandOverride off-switch
 	if (
-		commandOverride.includes("att") &&
+		state.commandOverride.includes("att") &&
 		(data.includes("You hit") || data.includes("You miss"))
 	) {
-		commandOverride = "";
+		state.commandOverride = "";
 	}
 
 	// Handle sweeped/knocked down after failed attack attempt:
@@ -449,7 +390,7 @@ function combatGlobals(data) {
 		data.includes("You cannot do that right now") ||
 		data.includes("You have disabled fighting while prone")
 	) {
-		let standCommand = extConfig.useBackwardsRiseToStand ? `brise` : `stand`;
+		let standCommand = state.extConfig.useBackwardsRiseToStand ? `brise` : `stand`;
 		setTimeout(function () {
 			sendCommand(standCommand);
 		}, getCommandDelayInMs());
@@ -466,45 +407,44 @@ function combatGlobals(data) {
 		data.includes("You fumble, dropping")
 	) {
 		// Just set override since fumble requires waiting for no longer busy anyway.
-		if (data.includes(weaponItemName)) {
-			commandOverride = `get ${weaponItemName}`;
-			recoveringWeapon = true;
-		} else if (shieldItemName && data.includes(shieldItemName)) {
-			commandOverride = `get ${shieldItemName}`;
-			recoveringWeapon = true;
+		if (data.includes(state.weaponItemName)) {
+			state.commandOverride = `get ${state.weaponItemName}`;
+			state.recoveringWeapon = true;
+		} else if (state.shieldItemName && data.includes(state.shieldItemName)) {
+			state.commandOverride = `get ${state.shieldItemName}`;
+			state.recoveringWeapon = true;
 		}
 	}
 	// Handle fumble+fall (brawling/pank)
 	if (data.includes("You fumble, falling")) {
-		commandOverride = `stand`;
+		state.commandOverride = `stand`;
 	}
 
 	// Continuation of the fumble handling after picking up the weapon/shield...
 	if (
 		(data.includes("You take a") ||
-			data.includes("You are already carrying")) &&
-		recoveringWeapon
+			data.includes("You are already carrying")) &&	state.recoveringWeapon
 	) {
 		
 		let cmds = [];
-		if (data.includes(weaponItemName)) {
-			cmds.push(`wield ${weaponItemName}`);
-		} else if (shieldItemName && data.includes(shieldItemName)) {
-			cmds.push(`wield ${shieldItemName}`);
+		if (data.includes(state.weaponItemName)) {
+			cmds.push(`wield ${state.weaponItemName}`);
+		} else if (state.shieldItemName && data.includes(state.shieldItemName)) {
+			cmds.push(`wield ${state.shieldItemName}`);
 		}
 		// reset/remove `get {weapon/shield}`
-		commandOverride = "";
+		state.commandOverride = "";
 		cmds.push(getFormattedCommand());
 		sendDelayedCommands(cmds);
 
-		recoveringWeapon = false;
+		state.recoveringWeapon = false;
 	}
 	// These not-wielding scenarios don't require waiting for no longer busy.
 	if (data.includes("You can't do that right now")) {
-		let cmds = [`get ${weaponItemName}`, `wield ${weaponItemName}`];
-		if (shieldItemName) {
-			cmds.push(`get ${shieldItemName}`);
-			cmds.push(`wield ${shieldItemName}`);
+		let cmds = [`get ${state.weaponItemName}`, `wield ${state.weaponItemName}`];
+		if (state.shieldItemName) {
+			cmds.push(`get ${state.shieldItemName}`);
+			cmds.push(`wield ${state.shieldItemName}`);
 		}
 		cmds.push(getFormattedCommand());
 		sendDelayedCommands(cmds);
@@ -515,22 +455,22 @@ function combatGlobals(data) {
 		data.includes("You must be wielding") ||
 		data.includes("You are not wielding")
 	) {
-		let cmds = [`get ${weaponItemName}`, `wield ${weaponItemName}`];
-		if (shieldItemName) {
-			cmds.push(`get ${shieldItemName}`);
-			cmds.push(`wield ${shieldItemName}`);
+		let cmds = [`get ${state.weaponItemName}`, `wield ${state.weaponItemName}`];
+		if (state.shieldItemName) {
+			cmds.push(`get ${state.shieldItemName}`);
+			cmds.push(`wield ${state.shieldItemName}`);
 		}
 		cmds.push(getFormattedCommand());
 		sendDelayedCommands(cmds);
 	}
 	if (data.includes("You must be wielding your weapon in two hands")) {
-		sendDelayedCommands([`wield ${weaponItemName}`, getFormattedCommand()]);
+		sendDelayedCommands([`wield ${state.weaponItemName}`, getFormattedCommand()]);
 	}
 
 	if (data.includes("You must be wielding a shield to")) {
 		sendDelayedCommands([
-			`get ${shieldItemName}`,
-			`wield ${shieldItemName}`,
+			`get ${state.shieldItemName}`,
+			`wield ${state.shieldItemName}`,
 			getFormattedCommand(),
 		]);
 	}
@@ -544,17 +484,17 @@ function combatGlobals(data) {
 		data.includes("You must be free of entanglements")
 	) {
 		// Use the script's custom entangledCommand ability, ie: Flinging Disarm.
-		if (entangledCommand) {
+		if (state.entangledCommand) {
 			if (entangledCommand.includes("<weapon>")) {
-				entangledCommand = entangledCommand.replaceAll(
+				state.entangledCommand = state.entangledCommand.replaceAll(
 					"<weapon>",
-					weaponItemName
+					state.weaponItemName
 				);
 			}
-			// Not using sendDelayedCommands here as it wipes out `commandOverride`,
+			// Not using sendDelayedCommands here as it wipes out `state.commandOverride`,
 			// and can interfere with `kill` attempts.
 			setTimeout(function () {
-				sendCommand(entangledCommand);
+				sendCommand(state.entangledCommand);
 			}, getCommandDelayInMs());
 		} else {
 			sendDelayedCommands([`free`, getFormattedCommand()]);
@@ -565,44 +505,44 @@ function combatGlobals(data) {
 	if (data.includes("is not close enough")) {
 		let engageCommand = `engage`;
 
-		if (extConfig.useMeleeAdvance) {
+		if (state.extConfig.useMeleeAdvance) {
 			engageCommand = `advance`;
 		}
 		// If both useMeleeAdvance and useCustomApproach are enabled, use
 		// custom approach.
-		if (extConfig.useCustomApproach) {
-			engageCommand = extConfig.customApproachCommand;
+		if (state.extConfig.useCustomApproach) {
+			engageCommand = state.extConfig.customApproachCommand;
 		}
 
-		if (extConfig.useMeleeAdvance && commandOverride.includes("kill")) {
-			// In combatScript, this is used to reset commandOverride to `kill` when
+		if (state.extConfig.useMeleeAdvance && state.commandOverride.includes("kill")) {
+			// In combatScript, this is used to reset state.commandOverride to `kill` when
 			// Melee Advance/Custom Approach is done successfully.
-			advancingToKill = true;
+			state.advancingToKill = true;
 		}
-		// Not using sendDelayedCommands here as it wipes out `commandOverride`,
+		// Not using sendDelayedCommands here as it wipes out `state.commandOverride`,
 		// and can interfere with `kill` attempts.
 		setTimeout(function () {
-			sendCommand(`${engageCommand} ${target}`);
+			sendCommand(`${engageCommand} ${state.target}`);
 
 			if (engageCommand.includes("engage")) {
 				setTimeout(function () {
 					// Next attack as 'You attempt to engage <target>' doesn't have a round time.
 					sendCommand(
-						commandOverride ? commandOverride : getFormattedCommand()
+						state.commandOverride ? state.commandOverride : getFormattedCommand()
 					);
 				}, getCommandDelayInMs(400));
 			}
 		}, getCommandDelayInMs());
 	}
 	// Handle failing to Melee Advance if it's toggled on
-	if (extConfig.useMeleeAdvance && data.includes("but can't get close")) {
-		if (commandOverride.includes("kill")) {
-			// In combatScript, this is used to reset commandOverride to `kill` when
+	if (state.extConfig.useMeleeAdvance && data.includes("but can't get close")) {
+		if (state.commandOverride.includes("kill")) {
+			// In combatScript, this is used to reset state.commandOverride to `kill` when
 			// Melee Advance is done successfully.
-			advancingToKill = true;
+			state.advancingToKill = true;
 		}
 		// Next No Longer Busy will advance the target
-		commandOverride = `advance ${target}`;
+		state.commandOverride = `advance ${state.target}`;
 	}
 	// Handle being stuck trying to engage an already approached target, having
 	// being too close to approach, or are already standing.
@@ -611,7 +551,7 @@ function combatGlobals(data) {
 		data.includes("is too close.") ||
 		data.includes("You are already standing")
 	) {
-		commandOverride = "";
+		state.commandOverride = "";
 		sendNextCommand(850);
 	}
 
@@ -619,11 +559,11 @@ function combatGlobals(data) {
 	// been pushed back/retreated.
 	if (data.includes("You'll have to retreat first")) {
 		// If melee advance is toggled on in config, use it.
-		if (extConfig.useMeleeAdvance) {
-			// Not using sendDelayedCommands here as it wipes out `commandOverride`,
+		if (state.extConfig.useMeleeAdvance) {
+			// Not using sendDelayedCommands here as it wipes out `state.commandOverride`,
 			// and can interfere with `kill` attempts.
 			setTimeout(function () {
-				sendCommand(`advance ${target}`);
+				sendCommand(`advance ${state.target}`);
 			}, getCommandDelayInMs());
 		} else {
 			// Best attempt to try to continue and see if the distance resolves itself.
@@ -633,8 +573,8 @@ function combatGlobals(data) {
 
 	// Handle stance when not auto:
 	if (data.includes("You are not in the correct stance")) {
-		if (stance) {
-			sendDelayedCommands([stance]);
+		if (state.stance) {
+			sendDelayedCommands([state.stance]);
 		}
 	}
 
@@ -654,16 +594,16 @@ function combatGlobals(data) {
 function nonComScript(data) {
 	const matchFound = matchExpectedParse(data);
 	if (matchFound) {
-		if (currentCmdIndex === commandList.length - 1) {
+		if (state.currentCmdIndex === state.commandList.length - 1) {
 			// Reset
-			currentCmdIndex = 0;
+			state.currentCmdIndex = 0;
 		} else {
 			// Move the command list index forward...
-			currentCmdIndex++;
+			state.currentCmdIndex++;
 		}
 
-		// If the parse has moveNextNow set to true, or if  currentMoveNextWhen is null, send the next command now:
-		if (moveNextNow || !currentMoveNextWhen) {
+		// If the parse has moveNextNow set to true, or if  state.currentMoveNextWhen is null, send the next command now:
+		if (state.moveNextNow || !state.currentMoveNextWhen) {
 			// Delay to avoid commands being sent too close together.
 			sendNextCommand(400);
 			return;
@@ -672,9 +612,9 @@ function nonComScript(data) {
 
 	// Main work for nonCom loop:
 	if (
-		currentMoveNextWhen &&
-		currentMoveNextWhen.length > 0 &&
-		data.includes(currentMoveNextWhen)
+		state.currentMoveNextWhen &&
+		state.currentMoveNextWhen.length > 0 &&
+		data.includes(state.currentMoveNextWhen)
 	) {
 		sendNextCommand();
 	}
@@ -687,7 +627,7 @@ function nonComScript(data) {
  */
 function runScriptByName(scriptName, options) {
 	// Get the script object by name:
-	const script = userScripts.find((s) => {
+	const script = state.userScripts.find((s) => {
 		return s.scriptName.toLowerCase() === scriptName.toLowerCase();
 	});
 
@@ -699,28 +639,28 @@ function runScriptByName(scriptName, options) {
 			`Starting script: ${scriptName} (${script.scriptFriendlyName})`
 		);
 
-		currentMoveNextWhen = "You are no longer busy";
+		state.currentMoveNextWhen = "You are no longer busy";
 
-		target = options.target || "";
-		weaponItemName = options.weaponItemName || "";
-		shieldItemName = options.shieldItemName || "";
-		shouldKill =
+		state.target = options.target || "";
+		state.weaponItemName = options.weaponItemName || "";
+		state.shieldItemName = options.shieldItemName || "";
+		state.shouldKill =
 			options.shouldKill !== null ? options.shouldKill : script.shouldKill;
-		shouldKillParse = script.shouldKillParse;
-		continueOnWalkIn =
+		state.shouldKillParse = script.shouldKillParse;
+		state.continueOnWalkIn =
 			options.continueOnWalkIn !== null
 				? options.continueOnWalkIn
 				: script.continueOnWalkIn;
-		addAttack = script.addAttack;
-		stance = script.stanceCommand;
-		entangledCommand = script.entangledCommand;
-		currentScriptType = script.scriptType.toLowerCase();
-		currentScriptName = script.scriptName;
-		currentScript = script;
-		scriptPaused = false;
+		state.addAttack = script.addAttack;
+		state.stance = script.stanceCommand;
+		state.entangledCommand = script.entangledCommand;
+		state.currentScriptType = script.scriptType.toLowerCase();
+		state.currentScriptName = script.scriptName;
+		state.currentScript = script;
+		state.scriptPaused = false;
 
 		script.commandList.forEach(function (command, index) {
-			commandList.push(command);
+			state.commandList.push(command);
 		});
 
 		// Kick it off...
@@ -733,13 +673,13 @@ function runScriptByName(scriptName, options) {
  * @param {string} command
  */
 function runSimpleRepeat(command) {
-	if (!scriptPaused) {
+	if (!state.scriptPaused) {
 		killCurrentScript();
 	}
 	// This variable is used in the parseMessage function to repeat the command.
-	runRepeat = true;
-	repeatCommand = command;
-	lastCommandRan = command;
+	state.runRepeat = true;
+	state.repeatCommand = command;
+	state.lastCommandRan = command;
 
 	setTimeout(function () {
 		sendCommand(command);
@@ -752,15 +692,15 @@ function runSimpleRepeat(command) {
  */
 function runSimpleRepeatWithDelay(command) {
 	killCurrentScript();
-	runRepeatWithDelay = true;
-	repeatWithDelayCommand = command;
-	lastCommandRan = command;
+	state.runRepeatWithDelay = true;
+	state.repeatWithDelayCommand = command;
+	state.lastCommandRan = command;
 
 	var intr = setInterval(function () {
-		if (!runRepeatWithDelay) {
+		if (!state.runRepeatWithDelay) {
 			clearInterval(intr);
 		}
-		if (!scriptPaused && runRepeatWithDelay) {
+		if (!state.scriptPaused && state.runRepeatWithDelay) {
 			sendCommand(command);
 		}
 	}, 1000);
@@ -770,42 +710,18 @@ function runSimpleRepeatWithDelay(command) {
  * Kill it with fire (reset all state for the currently configured script)
  */
 function killCurrentScript() {
-	if (currentScriptName || lastCommandRan) {
+	if (state.currentScriptName || state.lastCommandRan) {
 		sendClientMessage(`Stopping script: ${getRunningCommand()}`);
 	}
 
-	consoleLog("killCurrentScript ran");
-
-	target = "";
-	weaponItemName = "";
-	shieldItemName = "";
-	recoveringWeapon = false;
-	shouldKill = false;
-	shouldKillParse = "";
-	attemptingKill = false;
-	runRepeat = false;
-	repeatCommand = "";
-	runRepeatWithDelay = false;
-	repeatWithDelayCommand = "";
-	commandList = [];
-	addAttack = false;
-	stance = "";
-	entangledCommand = "";
-	commandOverride = "";
-	currentCmdIndex = 0;
-	currentMoveNextWhen = null;
-	moveNextNow = false;
-	currentScriptType = "";
-	currentScriptName = "";
-	currentScript = null;
-	scriptPaused = false;
+	state.resetState();
 }
 
 /**
  * Pause the current script
  */
 function pauseCurrentScript() {
-	scriptPaused = true;
+	state.scriptPaused = true;
 	sendClientMessage(`Paused: ${getRunningCommand()}`);
 }
 
@@ -814,11 +730,11 @@ function pauseCurrentScript() {
  */
 function resumeCurrentScript() {
 	// Start the repeat again if it's the active script.
-	if (runRepeat) {
-		runSimpleRepeat(repeatCommand);
-		scriptPaused = false;
+	if (state.runRepeat) {
+		runSimpleRepeat(state.repeatCommand);
+		state.scriptPaused = false;
 	} else {
-		scriptPaused = false;
+		state.scriptPaused = false;
 		// Regular script, send the command.
 		sendNextCommand();
 	}
@@ -827,7 +743,7 @@ function resumeCurrentScript() {
 }
 
 /**
- * Send the next command on the commandList
+ * Send the next command on the state.commandList
  * @param {number} additionalDelay
  */
 function sendNextCommand(additionalDelay) {
@@ -838,10 +754,10 @@ function sendNextCommand(additionalDelay) {
 
 	let commandDelayInMs = getCommandDelayInMs(additionalDelay);
 	// Handle delaying this command given the previous command's delayBeforeNext value, if present.
-	if (delayNextCommandBy > 0) {
-		commandDelayInMs = delayNextCommandBy;
+	if (state.delayNextCommandBy > 0) {
+		commandDelayInMs = state.delayNextCommandBy;
 		// Reset the delay
-		delayNextCommandBy = 0;
+		state.delayNextCommandBy = 0;
 	}
 
 	setTimeout(function () {
@@ -849,13 +765,13 @@ function sendNextCommand(additionalDelay) {
 		sendCommand(getFormattedCommand());
 
 		// Reset to a default here now to prevent it from sending back to back commands
-		currentMoveNextWhen = "You are no longer busy";
-		moveNextNow = false;
+		state.currentMoveNextWhen = "You are no longer busy";
+		state.moveNextNow = false;
 
-		// This numeric value, if it's configured for the current command in the commandList,
+		// This numeric value, if it's configured for the current command in the state.commandList,
 		// is intended to delay the script from moving onto the next command for a given
 		// number of milliseconds.
-		delayNextCommandBy = commandList[currentCmdIndex]?.delayBeforeNext ?? 0;
+		state.delayNextCommandBy = state.commandList[state.currentCmdIndex]?.delayBeforeNext ?? 0;
 	}, commandDelayInMs);
 }
 
@@ -866,7 +782,7 @@ function shouldSendNextCommand() {
 	var sendCommand = true;
 
 	// Only rule, for now.
-	if (runRepeatWithDelay) {
+	if (state.runRepeatWithDelay) {
 		sendCommand = false;
 	}
 	return sendCommand;
@@ -885,7 +801,7 @@ function sendDelayedCommands(commands) {
 			}, offsetMs * (index + 2));
 		});
 		// This may cause bugs... but for now.
-		commandOverride = "";
+		state.commandOverride = "";
 	}
 }
 
@@ -894,23 +810,23 @@ function sendDelayedCommands(commands) {
  * values from script variables. This will likely become more robust over time.
  */
 function getFormattedCommand() {
-	if (commandList.length <= 0 || commandList[currentCmdIndex] === undefined) {
+	if (state.commandList.length <= 0 || state.commandList[state.currentCmdIndex] === undefined) {
 		return "";
 	}
 
 	let command = "";
 
 	// If we have a temporary command override, apply it.
-	if (commandOverride) {
-		command = commandOverride;
+	if (state.commandOverride) {
+		command = state.commandOverride;
 	} else {
-		command = commandList[currentCmdIndex].command;
+		command = state.commandList[state.currentCmdIndex].command;
 		let targetRequired = true;
 
 		// If there is a value present for targetRequired, and it is false, then don't add a target.
 		if (
-			commandList[currentCmdIndex].targetRequired !== undefined &&
-			!commandList[currentCmdIndex].targetRequired
+			state.commandList[state.currentCmdIndex].targetRequired !== undefined &&
+			!state.commandList[state.currentCmdIndex].targetRequired
 		) {
 			targetRequired = false;
 		}
@@ -918,11 +834,11 @@ function getFormattedCommand() {
 		// Check if the command has moved <target> to be replaced:
 		if (command.includes("<target>")) {
 			// Check for target replacement:
-			command = command.replaceAll("<target>", target);
+			command = command.replaceAll("<target>", state.target);
 		} else if (targetRequired) {
 			// Tack target onto the end by default:
-			if (target) {
-				command += ` ${target}`;
+			if (state.target) {
+				command += ` ${state.target}`;
 			}
 		}
 	}
@@ -933,17 +849,17 @@ function getFormattedCommand() {
 /**
  * Check data from the server to determine if it satisfies the parse requirements
  * for the current command in commandList. If matched it will set the value of
- * currentMoveNextWhen (identifies the trigger to run the next command).
+ * state.currentMoveNextWhen (identifies the trigger to run the next command).
  * @param {string} data
  */
 function matchExpectedParse(data) {
-	if (commandList.length < 1) {
+	if (state.commandList.length < 1) {
 		consoleLog("commandList is empty... stop running?");
 		return false;
 	}
 
 	let matchFound = false;
-	const parse = commandList[currentCmdIndex].parse;
+	const parse = state.commandList[state.currentCmdIndex].parse;
 
 	// If the expected parse check is an array, check each:
 	if (Array.isArray(parse)) {
@@ -951,10 +867,10 @@ function matchExpectedParse(data) {
 			if (matchOutcome(data, parse[i].outcome)) {
 				matchFound = true;
 				if (parse[i].moveNextNow) {
-					moveNextNow = true;
+					state.moveNextNow = true;
 				}
 				// Set value to detect for moving onto the next command:
-				currentMoveNextWhen = parse[i].moveNextWhen;
+				state.currentMoveNextWhen = parse[i].moveNextWhen;
 				break;
 			}
 		}
@@ -962,10 +878,10 @@ function matchExpectedParse(data) {
 		if (matchOutcome(data, parse.outcome)) {
 			matchFound = true;
 			if (parse.moveNextNow) {
-				moveNextNow = true;
+				state.moveNextNow = true;
 			}
 			// Set value to detect for moving onto the next command:
-			currentMoveNextWhen = parse.moveNextWhen;
+			state.currentMoveNextWhen = parse.moveNextWhen;
 		}
 	}
 	return matchFound;
@@ -983,7 +899,7 @@ function matchOutcome(data, outcome) {
 	const outcomeSplit = outcome.split("|").map(function (item) {
 		if (item.includes("<target>")) {
 			// Check for target replacement:
-			item = item.replaceAll("<target>", target);
+			item = item.replaceAll("<target>", state.target);
 		}
 		return item.trim();
 	});
@@ -992,15 +908,7 @@ function matchOutcome(data, outcome) {
 }
 
 /*********************************************************************************************/
-/** Utility **/
-
-const delay = (function () {
-	var timer = 0;
-	return function (callback, ms) {
-		clearTimeout(timer);
-		timer = setTimeout(callback, ms);
-	};
-})();
+/** Local Utility **/
 
 /**
  * Get a somewhat random delay in miliseconds
@@ -1008,18 +916,18 @@ const delay = (function () {
  * @returns
  */
 function getCommandDelayInMs(additionalDelay) {
-	let min = isPositiveNumeric(extConfig.commandDelayMin)
-		? Number(extConfig.commandDelayMin)
-		: defaultCommandDelayMin;
-	let max = isPositiveNumeric(extConfig.commandDelayMax)
-		? Number(extConfig.commandDelayMax)
-		: defaultCommandDelayMax;
+	let min = isPositiveNumeric(state.extConfig.commandDelayMin)
+		? Number(state.extConfig.commandDelayMin)
+		: state.defaultCommandDelayMin;
+	let max = isPositiveNumeric(state.extConfig.commandDelayMax)
+		? Number(state.extConfig.commandDelayMax)
+		: state.defaultCommandDelayMax;
 	let diff = max - min;
 
 	// Fallback for an incorrectly defined range in config
 	if (diff <= 0) {
-		min = defaultCommandDelayMin;
-		max = defaultCommandDelayMax;
+		min = state.defaultCommandDelayMin;
+		max = state.defaultCommandDelayMax;
 		diff = max - min;
 	}
 
@@ -1034,76 +942,27 @@ function getCommandDelayInMs(additionalDelay) {
 }
 
 /**
- * Remove indent from template strings, borrowed from:
- * https://gist.github.com/zenparsing/5dffde82d9acef19e43c
- * @param {string} callSite
- * @param  {...any} args
- * @returns String without indentation
- */
-function dedent(callSite, ...args) {
-	function format(str) {
-		let size = -1;
-		return str.replace(/\n(\s+)/g, (m, m1) => {
-			if (size < 0) size = m1.replace(/\t/g, "    ").length;
-
-			return "\n" + m1.slice(Math.min(m1.length, size));
-		});
-	}
-
-	if (typeof callSite === "string") {
-		return format(callSite);
-	}
-
-	if (typeof callSite === "function") {
-		return (...args) => format(callSite(...args));
-	}
-
-	let output = callSite
-		.slice(0, args.length + 1)
-		.map((text, i) => (i === 0 ? "" : args[i - 1]) + text)
-		.join("");
-
-	return format(output);
-}
-
-function stringToBoolean(string) {
-	switch (string.toLowerCase().trim()) {
-		case "true":
-		case "yes":
-		case "1":
-			return true;
-		case "false":
-		case "no":
-		case "0":
-		case null:
-			return false;
-		default:
-			return Boolean(string);
-	}
-}
-
-/**
  * Constantly running function to check if it's been more than a
  * defined number of milliseconds since the last command was sent
  * while a script is running. If it has, send the next command to
  * kick things off again.
  */
 (function(){
-	let maxCmdDelay = isPositiveNumeric(extConfig?.commandDelayMax)
-		? Number(extConfig.commandDelayMax)
-		: defaultCommandDelayMax;
+	let maxCmdDelay = isPositiveNumeric(state.extConfig?.commandDelayMax)
+		? Number(state.extConfig.commandDelayMax)
+		: state.defaultCommandDelayMax;
 
 	// Min value to avoid sending too fast back to back.
 	maxCmdDelay = maxCmdDelay < 1000
 			? 1000
 			: maxCmdDelay;
 
-	if (commandList.length > 0 && !scriptPaused) {
-		let retryMs = isPositiveNumeric(extConfig?.commandRetryMs)
-			? Number(extConfig.commandRetryMs)
-			: defaultCommandRetryMs;
+	if (state.commandList.length > 0 && !state.scriptPaused) {
+		let retryMs = isPositiveNumeric(state.extConfig?.commandRetryMs)
+			? Number(state.extConfig.commandRetryMs)
+			: state.defaultCommandRetryMs;
 
-		const timeDiff = Date.now() - lastCommandSent;
+		const timeDiff = Date.now() - state.lastCommandSent;
 		// `0` effectively turns off the retry.
 		if (retryMs > 0 && timeDiff > retryMs) {
 			consoleLog(`${retryMs/1000} seconds since last command sent, sending next command.`);
@@ -1149,7 +1008,7 @@ function slashCommand(command) {
 			);
 			break;
 		case "/scripts":
-			const scripts = userScripts
+			const scripts = state.userScripts
 				.map((s) => s.scriptName)
 				.toString()
 				.replace(/,/g, "\r\n");
@@ -1165,7 +1024,7 @@ function slashCommand(command) {
 			openEditScripts();
 			break;
 		case "/current":
-			sendClientMessage(`The current script is: ${currentScriptName}`);
+			sendClientMessage(`The current script is: ${state.currentScriptName}`);
 			break;
 		case "/start":
 			// Remove empty param option if found
@@ -1180,20 +1039,20 @@ function slashCommand(command) {
 			}
 
 			const scriptName = commandParams[1];
-			const target = commandParams[2];
-			const weaponItemName = commandParams[3];
-			const shieldItemName = commandParams[4];
-			let shouldKill = null;
-			let continueOnWalkIn = null;
+			const scriptTarget = commandParams[2];
+			const scriptWeaponItemName = commandParams[3];
+			const scriptShieldItemName = commandParams[4];
+			let scriptShouldKill = null;
+			let scriptContinueOnWalkIn = null;
 
 			if (commandParams.length >= 6) {
-				shouldKill = stringToBoolean(commandParams[5]);
+				scriptShouldKill = stringToBoolean(commandParams[5]);
 			}
 			if (commandParams.length >= 7) {
-				continueOnWalkIn = stringToBoolean(commandParams[6]);
+				scriptContinueOnWalkIn = stringToBoolean(commandParams[6]);
 			}
 
-			const script = userScripts.find((s) => {
+			const script = state.userScripts.find((s) => {
 				return s.scriptName.toLowerCase() === scriptName.toLowerCase();
 			});
 
@@ -1202,13 +1061,13 @@ function slashCommand(command) {
 			}
 
 			runScriptByName(scriptName, {
-				target: target,
-				weaponItemName: weaponItemName,
-				shieldItemName: shieldItemName,
-				shouldKill: shouldKill,
-				continueOnWalkIn: continueOnWalkIn,
+				target: scriptTarget,
+				weaponItemName: scriptWeaponItemName,
+				shieldItemName: scriptShieldItemName,
+				shouldKill: scriptShouldKill,
+				continueOnWalkIn: scriptContinueOnWalkIn,
 			});
-			lastCommandRan = command;
+			state.lastCommandRan = command;
 			break;
 		case "/stop":
 			killCurrentScript();
@@ -1221,7 +1080,7 @@ function slashCommand(command) {
 			}
 
 			const repeatCmd = repeatParams[1].trim();
-			scriptPaused = false;
+			state.scriptPaused = false;
 			runSimpleRepeatWithDelay(repeatCmd);
 			sendClientMessage(`Starting to repeat the command: ${repeatCmd}`);
 			break;
@@ -1235,7 +1094,7 @@ function slashCommand(command) {
 			}
 
 			const repeatNlbCmd = repeatNlbParams[1].trim();
-			scriptPaused = false;
+			state.scriptPaused = false;
 			runSimpleRepeat(repeatNlbCmd);
 			sendClientMessage(`Starting to repeat the command: ${repeatNlbCmd}`);
 			break;
@@ -1256,23 +1115,11 @@ function slashCommand(command) {
 function getRunningCommand() {
 	let runningCmd = "";
 
-	if (currentScriptName) {
-		runningCmd = `Script - ${currentScriptName}`;
+	if (state.currentScriptName) {
+		runningCmd = `Script - ${state.currentScriptName}`;
 	} else {
-		runningCmd = lastCommandRan;
+		runningCmd = state.lastCommandRan;
 	}
 
 	return runningCmd;
-}
-
-/**
- * Send a coloured message to the console (yellow background, dark red text)
- * @param {string} message The message to send to the console
- * @param {boolean} shouldColor Should output be coloured? Defaults to true
- */
-function consoleLog(message, shouldColor = true) {
-	console.log(
-		`%c${message}`,
-		shouldColor ? "color: darkred; background: yellow;" : ""
-	);
 }
