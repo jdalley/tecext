@@ -35,7 +35,7 @@ jobs:
 
       - name: Get previous tag
         id: previoustag
-        run: echo "previoustag=$(git describe --abbrev=0 --tags --exclude="$(git describe --abbrev=0 --tags)")" >> $GITHUB_OUTPUT"
+        run: echo "previoustag=$(git describe --abbrev=0 --tags --exclude="$(git describe --abbrev=0 --tags)")" >> $GITHUB_OUTPUT
 
       - name: Create Release and Upload Assets
         id: createrelease
