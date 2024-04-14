@@ -26,7 +26,10 @@ jobs:
 
       - name: Find zip file
         id: findzip
-        run: echo "::set-output name=zipfile::$(find ./releases -name '*.zip')"
+        run: |
+          zipfile=$(find ./releases -name '*.zip')
+          echo "::set-output name=zipfilepath::${zipfile}"
+          echo "::set-output name=zipfilename::$(basename ${zipfile})"
 
       - name: Get previous tag
         id: previoustag
@@ -51,6 +54,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.findzip.outputs.zipfile }}
-          asset_name: ${{ steps.findzip.outputs.zipfile }}
+          asset_path: ${{ steps.findzip.outputs.zipfilepath }}
+          asset_name: ${{ steps.findzip.outputs.zipfilename }}
           asset_content_type: application/zip
