@@ -28,12 +28,12 @@ jobs:
         id: findzip
         run: |
           zipfile=$(find ./releases -name '*.zip')
-          echo "::set-output name=zipfilepath::${zipfile}"
-          echo "::set-output name=zipfilename::$(basename ${zipfile})"
+          echo "zipfilepath=${zipfile}" >> $GITHUB_OUTPUT
+          echo "zipfilename=$(basename ${zipfile})" >> $GITHUB_OUTPUT
 
       - name: Get previous tag
         id: previoustag
-        run: echo "::set-output name=comparetag::$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1 --max-count=1`)"
+        run: echo "comparetag=$(git tag --sort=-creatordate | awk 'NR==2')" >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: create_release
@@ -42,8 +42,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: 'Changes: https://github.com/${{ github.repository }}/compare/${{ steps.previoustag.outputs.comparetag }}...${{ github.ref }}'
+          release_name: Release ${{ github.ref_name }}
+          body: 'Changes: https://github.com/${{ github.repository }}/compare/${{ steps.previoustag.outputs.comparetag }}...${{ github.ref_name }}'
           draft: false
           prerelease: false
 
