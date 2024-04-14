@@ -36,8 +36,8 @@ jobs:
         run: |
           set -e
           comparetag=$(git for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags | sed -n '2p')
-          echo "comparetag: $comparetag"
-          echo "comparetag=$comparetag" >> $GITHUB_OUTPUT
+          echo "comparetag: ${comparetag}"
+          echo "comparetag=${comparetag}" >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: create_release
