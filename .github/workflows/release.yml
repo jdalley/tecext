@@ -35,7 +35,7 @@ jobs:
         id: previoustag
         run: |
           set -e
-          comparetag=$(git for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags | sed -n '2p')
+          comparetag=$(git describe --abbrev=0 --tags --exclude="$(git describe --abbrev=0 --tags)")
           echo "comparetag: ${comparetag}"
           echo "comparetag=${comparetag}" >> $GITHUB_OUTPUT
 
