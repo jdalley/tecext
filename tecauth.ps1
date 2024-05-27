@@ -8,18 +8,16 @@ if ($args[0] -eq "--help") {
   exit
 }
 
-# Create a new WebRequestSession object
+# Session, Cookie, and URI required for the login request
 $session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
-$uri = [System.Uri]"https://login.eternalcitygame.com/login.php"
-
-# Add a new cookie
 $cookie = New-Object System.Net.Cookie
 $cookie.Name = "biscuit"
 $cookie.Value = "test"
 $cookie.Domain = $uri.Host
 $session.Cookies.Add($cookie)
+$uri = [System.Uri]"https://login.eternalcitygame.com/login.php"
 
-# Fetch the cookie from the login page.
+# Fetch the cookie from the login page
 Invoke-WebRequest `
 	-Uri $uri `
 	-Method POST `
