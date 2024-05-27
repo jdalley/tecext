@@ -2,8 +2,10 @@ import { State } from "./state.js";
 import { 
 	consoleLog, 
 	dedent,
+	dedentPreserveLayout,
 	isPositiveNumeric, 
-	stringToBoolean 
+	stringToBoolean,
+	getAuthHash
 } from "./utils.js";
  
 /*********************************************************************************************/
@@ -199,13 +201,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  * Send message to the client output
  * @param {string} msg
  */
-function sendClientMessage(msg) {
+function sendClientMessage(msg, usePre = false) {
 	// Add message to output
 	const output = document.getElementById("output");
 	const div = document.createElement("div");
 	const text = document.createTextNode(`\r\n${msg}`);
 
-	div.appendChild(text);
+	if (usePre) {
+		const pre = document.createElement("pre");
+		pre.appendChild(text);
+		div.appendChild(pre);
+	}
+	else {
+		div.appendChild(text);
+	}
+
 	div.style.color = "red";
 	div.style.fontSize = "smaller";
 	output.appendChild(div);
@@ -988,23 +998,38 @@ function slashCommand(command) {
 
 	switch (commandName) {
 		case "/help":
-			sendClientMessage(
-				dedent(`
-					Command notes:
-					- [] denotes a command argument
-					- *[] denotes a boolean argument that's optional (default is true) 
-					Available commands:
-					- List of currently defined scripts: /scripts
-					- Open the edit scripts window: /editscripts 
-					- Display the currently running script: /current
-					- Start a script by name: /start [scriptName] [target] [weaponItemName] [shieldItemName] *[shouldKill] *[continueOnWalkIn]
-					- Stop the currently running script: /stop
-					- Repeat a command with a delay: /repeat [command]
-					- Repeat a command after 'No longer busy': /repeatnlb [command]
-					- Pause the current script: /pause 
-					- Resume the current script: /resume
-					`)
-			);
+			const message = dedentPreserveLayout(`
+				Command Notes
+				  - Square brackets ([]) denote a command argument
+				  - Asterisk square brackets (*[]) denote a boolean argument that's optional (default is true) 
+				  - Commands with arguments should be separated by spaces all within a single line, ie:
+				    /start spearClose thug|brute boison-tipped
+				    /start archShot thug|brute bow none true true
+				    /start clubShieldBrawl thug|brute mace triangle false true
+				
+				Script Commands
+				  /scripts : List of currently defined scripts
+				  /editscripts : Open the edit scripts window
+				  /current : Display the currently running script
+				  /start : Start a script by name
+				    [scriptName]
+				    [target]
+				    [weaponItemName]
+				    [shieldItemName]	
+				    *[shouldKill]
+				    *[continueOnWalkIn]
+				  /stop : Stop the currently running script
+				  /repeat	: Repeat a command with a delay
+				    [command]
+				  /repeatnlb : Repeat a command after 'No longer busy'
+				    [command]
+				  /pause : Pause the current script
+				  /resume : Resume the current script
+				
+				Utility Commands
+				  /authhash : Get the TEC auth hash for the current user
+			`)
+			sendClientMessage(message, true);
 			break;
 		case "/scripts":
 			const scripts = state.userScripts
@@ -1012,12 +1037,10 @@ function slashCommand(command) {
 				.toString()
 				.replace(/,/g, "\r\n");
 
-			sendClientMessage(
-				dedent(
-					`Here are the names of available scripts:
-							${scripts}`
-				)
-			);
+			sendClientMessage(dedent(`
+				Here are the names of available scripts:
+					${scripts}
+			`));
 			break;
 		case "/editscripts":
 			openEditScripts();
@@ -1102,6 +1125,9 @@ function slashCommand(command) {
 			break;
 		case "/resume":
 			resumeCurrentScript();
+			break;
+		case "/authhash":
+			sendClientMessage(`Auth hash: ${getAuthHash()}`);
 			break;
 		default:
 			sendClientMessage(`Slash command ${command} not found.`);

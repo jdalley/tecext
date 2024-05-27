@@ -1,3 +1,5 @@
+import { MD5 } from "crypto-js";
+
 /**
  * Send a coloured message to the console (yellow background, dark red text)
  * @param {string} message The message to send to the console
@@ -11,36 +13,49 @@ export function consoleLog(message, shouldColor = true) {
 }
 
 /**
- * Remove indent from template strings, borrowed from:
- * https://gist.github.com/zenparsing/5dffde82d9acef19e43c
- * @param {string} callSite
- * @param  {...any} args
- * @returns String without indentation
+ * Remove leading spaces from each line of a string, while preserving layout.
+ * @param {string} str The string to dedent
+ * @returns The dedented string
  */
-export function dedent(callSite, ...args) {
-	function format(str) {
-		let size = -1;
-		return str.replace(/\n(\s+)/g, (m, m1) => {
-			if (size < 0) size = m1.replace(/\t/g, "    ").length;
+export function dedentPreserveLayout(str) {
+	// Split the input into lines
+	const lines = str.split('\n');
+	// Find the first non-empty line
+	const firstNonEmptyLine = lines.find(line => line.trim() !== '');
+	// Find the number of leading spaces on the first non-empty line
+	const leadingSpaces = firstNonEmptyLine.match(/^(\s*)/)[0].length;
+	// Remove the leading spaces from each line and align the explanations
+	const dedentedLines = lines.map(line => {
+		const trimmedLine = line.slice(leadingSpaces);
+		// Replace all tab characters with spaces
+		const noTabLine = trimmedLine.replace(/\t/g, ' ');
+		// Split the line into a command and an explanation
+		const [command, ...explanation] = noTabLine.split(':');
+		// If there's an explanation, pad the command to a fixed length
+		if (explanation.length > 0) {
+				return command.padEnd(30) + ':' + explanation.join(':');
+		}
+		// If there's no explanation, return the command as is
+		return command;
+	});
+	// Join the lines back together
+	return dedentedLines.join('\n');
+}
 
-			return "\n" + m1.slice(Math.min(m1.length, size));
-		});
-	}
+/**
+ * Remove leading spaces from each line of a string.
+ * @param {string} str The string to dedent
+ * @returns The dedented string
+ */
+export function dedent(str) {
+	// Split the input into lines
+	const lines = str.split('\n');
 
-	if (typeof callSite === "string") {
-		return format(callSite);
-	}
+	// Remove the leading spaces from each line
+	const dedentedLines = lines.map(line => line.trimStart());
 
-	if (typeof callSite === "function") {
-		return (...args) => format(callSite(...args));
-	}
-
-	let output = callSite
-		.slice(0, args.length + 1)
-		.map((text, i) => (i === 0 ? "" : args[i - 1]) + text)
-		.join("");
-
-	return format(output);
+	// Join the lines back together
+	return dedentedLines.join('\n');
 }
 
 /**
@@ -72,4 +87,26 @@ export function stringToBoolean(string) {
 		default:
 			return Boolean(string);
 	}
+}
+
+/**
+ * Get a cookie by name.
+ * @param {string} name The name of the cookie to retrieve
+ * @returns The cookie value
+ */
+export function getCookieByName(name) {
+	const cookies = document.cookie.split("; ");
+	const cookie = cookies.find((cookie) => cookie.startsWith(name));
+	return cookie ? cookie.split("=")[1] : null;
+}
+
+/**
+ * Get the calculated authentication hash from the user and pass cookies in document.cookie.
+ * @returns The authentication hash
+ */
+export function getAuthHash() {
+	const username = getCookieByName("user");
+	const passhash = getCookieByName("pass");
+	const hash = MD5(`${username}${passhash}NONE`).toString();
+	return hash;
 }
