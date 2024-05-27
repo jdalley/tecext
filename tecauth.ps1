@@ -26,9 +26,8 @@ Invoke-WebRequest `
 	-Body @{"submit"="true"; "uname"=$args[0]; "pwd"=$args[1]} `
 	-WebSession $session | Out-Null
 
-# Get the pass hash value from the 7th column of the cookie.
+# Get the server's pass hash value from the `pass` cookie
 $cookies = $session.Cookies.GetCookies($uri)
-
 foreach ($cookie in $cookies) {
 	if ($cookie.Name -eq "pass") {
 			$passhash = $cookie.Value
@@ -38,7 +37,7 @@ foreach ($cookie in $cookies) {
 
 Write-Host "Passhash: $passhash"
 
-# The md5 hash is the md5 of the username, passhash, and the secret "NONE".
+# This is the md5 hash of username, passhash, and the secret "NONE".
 $md5hash = Get-FileHash `
 	-Algorithm MD5 `
 	-InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($args[0] + $passhash + "NONE")))
