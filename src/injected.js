@@ -333,7 +333,7 @@ setTimeout(function () {
 				);
 			});
 	}
-}, 1000);
+}, 1500);
 
 // Remove the focusFix event from mouseup so click events can fire.
 setTimeout(function () {

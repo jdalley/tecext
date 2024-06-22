@@ -62,6 +62,15 @@ export class State {
 			function (response) {
 				// response will be an object with properties
 				this.extConfig = response;
+
+				// Dispatch an event to notify the extension that the config has been loaded.
+				document.dispatchEvent(
+					new CustomEvent("extensionApplyConfig", {
+						detail: {
+							data: this.extConfig,
+						},
+					})
+				);
 			}.bind(this)
 		);
 	}

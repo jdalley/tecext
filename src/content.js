@@ -14,11 +14,6 @@ import {
 /*********************************************************************************************/
 /* Initialization and Chrome setup */
 
-// Load the extension's configuration and user script data into State.
-const state = new State();
-//.Load scripts once the state is created.
-state.loadExtData();
-
 /**
  *  Send the configuration to the injected script to apply it to the client page.
  */
@@ -59,6 +54,9 @@ function saveConfiguration(config) {
 /**
  * Inject the script used to work directly with the contents of the page; hooking into
  * relevant events, variables, and data from web sockets.
+ * 
+ * The order of operations is important here. The injected script must be loaded before
+ * the extension's configuration and user script data is loaded into State.
  */
 const script = document.createElement("script");
 script.src = chrome.runtime.getURL("injected.js");
@@ -66,6 +64,12 @@ script.src = chrome.runtime.getURL("injected.js");
 script.onload = function () {
 	script.remove();
 };
+
+// Load the extension's configuration and user script data into State.
+const state = new State();
+//.Load scripts once the state is created. 
+state.loadExtData();
+
 
 /*********************************************************************************************/
 /** Communication with other scripts **/
