@@ -3,7 +3,7 @@
 	"name": "TEC Extender",
 	"short_name": "tecext",
 	"description": "Extensions and goodies for The Eternal City",
-	"version": "2.3.1",
+	"version": "2.3.2",
 	"action": {
 		"default_icon": "images/icon32.png"
 	},
