@@ -168,6 +168,13 @@ Combat scripts have special handling logic, which has automatic handling for cer
   // This is the `outcome` the script looks for to identify when you've successfully
   // killed a target with the `kill` command, and will continue the next command.
   "shouldKillParse": "You thrust your",
+  // If this command is present in a script and has a non-empty/non-null value, it will
+  // be used INSTEAD of the `kill` command when an enemy falls unconscious.
+  "customKillCommand": "fslash",
+  // This is the `outcome` the script looks for to identify when you've successfully
+  // killed a target with the `customKillCommand` command, and will continue the next
+  // command.
+  "customKillCommandParse": "Your blade cuts cleanly through",
   // If you don't have stance mastered so it auto-assumes, this command will be used
   // to enter your stance when the game tells you `You are not in the correct stance`.
   "stanceCommand": "scorpion",

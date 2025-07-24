@@ -34,6 +34,8 @@ export class State {
 		this.shieldItemName = null;
 		this.shouldKill = false;
 		this.shouldKillParse = null;
+		this.customKillCommand = null;
+		this.customKillCommandParse = null;
 		this.stance = null;
 		this.entangledCommand = null;
 		this.weaponItemName = null;
@@ -76,27 +78,29 @@ export class State {
 	}
 
 	resetState() {
-		this.target = "";
-		this.weaponItemName = "";
-		this.shieldItemName = "";
+		this.target = '';
+		this.weaponItemName = '';
+		this.shieldItemName = '';
 		this.recoveringWeapon = false;
 		this.shouldKill = false;
-		this.shouldKillParse = "";
+		this.shouldKillParse = '';
+		this.customKillCommand = '';
+		this.customKillCommandParse = '';
 		this.attemptingKill = false;
 		this.runRepeat = false;
-		this.repeatCommand = "";
+		this.repeatCommand = '';
 		this.runRepeatWithDelay = false;
-		this.repeatWithDelayCommand = "";
+		this.repeatWithDelayCommand = '';
 		this.commandList = [];
 		this.addAttack = false;
-		this.stance = "";
-		this.entangledCommand = "";
-		this.commandOverride = "";
+		this.stance = '';
+		this.entangledCommand = '';
+		this.commandOverride = '';
 		this.currentCmdIndex = 0;
 		this.currentMoveNextWhen = null;
 		this.moveNextNow = false;
-		this.currentScriptType = "";
-		this.currentScriptName = "";
+		this.currentScriptType = '';
+		this.currentScriptName = '';
 		this.currentScript = null;
 		this.scriptPaused = false;
 	}

@@ -298,10 +298,16 @@ function combatScript(data) {
 		if (
 			data.includes("falls unconscious") ||
 			(state.attemptingKill &&
-				(data.includes("You hit") || data.includes("You miss")))
+				((data.includes("You hit") || data.includes("You miss")) || state.customKillCommand))
 		) {
 			state.attemptingKill = true;
-			state.commandOverride = `kill ${state.target}`;
+			consoleLog(`state.customKillCommand: ${state.customKillCommand}, state.customKillCommandParse: ${state.customKillCommandParse}`);
+			if (state.customKillCommand) {
+				state.commandOverride = `${state.customKillCommand} ${state.target}`;
+			}
+			else {
+				state.commandOverride = `kill ${state.target}`;
+			}
 		}
 
 		// Handle being stuck trying to kill something.
@@ -314,7 +320,12 @@ function combatScript(data) {
 		// Handle resetting state.commandOverride after an `advance` attempt failure.
 		if (state.extConfig.useMeleeAdvance && data.includes("You advance toward")) {
 			if (state.advancingToKill) {
-				state.commandOverride = `kill ${state.target}`;
+				if (state.customKillCommand) {
+					state.commandOverride = `${state.customKillCommand} ${state.target}`;
+				}
+				else {
+					state.commandOverride = `kill ${state.target}`;
+				}
 				state.advancingToKill = false;
 			} else {
 				state.commandOverride = "";
@@ -322,7 +333,9 @@ function combatScript(data) {
 		}
 
 		// Detect weapon-specific kill echo and wipe the override for next no longer busy.
-		if (data.includes(state.shouldKillParse) && state.commandOverride.includes("kill")) {
+		if ((data.includes(state.shouldKillParse) && state.commandOverride.includes("kill")) || 
+			(data.includes(state.customKillCommandParse) && state.commandOverride.includes(state.customKillCommand))
+		) {
 			state.attemptingKill = false;
 			state.commandOverride = "";
 		}
@@ -660,6 +673,11 @@ function runScriptByName(scriptName, options) {
 		state.shouldKill =
 			options.shouldKill !== null ? options.shouldKill : script.shouldKill;
 		state.shouldKillParse = script.shouldKillParse;
+		state.customKillCommand = script.customKillCommand;
+		state.customKillCommandParse = script.customKillCommandParse;
+
+		consoleLog(`customKillCommand: ${state.customKillCommand}, customKillCommandParse: ${state.customKillCommandParse}`);
+
 		state.continueOnWalkIn =
 			options.continueOnWalkIn !== null
 				? options.continueOnWalkIn
