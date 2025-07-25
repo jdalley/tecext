@@ -979,7 +979,7 @@ function getCommandDelayInMs(additionalDelay) {
  * kick things off again.
  */
 (function(){
-	let maxCmdDelay = isPositiveNumeric(state.extConfig?.commandDelayMax)
+ 	let maxCmdDelay = isPositiveNumeric(state.extConfig?.commandDelayMax)
 		? Number(state.extConfig.commandDelayMax)
 		: state.defaultCommandDelayMax;
 
@@ -988,10 +988,30 @@ function getCommandDelayInMs(additionalDelay) {
 			? 1000
 			: maxCmdDelay;
 
-	if (state.commandList.length > 0 && !state.scriptPaused) {
-		let retryMs = isPositiveNumeric(state.extConfig?.commandRetryMs)
-			? Number(state.extConfig.commandRetryMs)
-			: state.defaultCommandRetryMs;
+	if (state.commandList.length > 0 && !state.scriptPaused) 	{
+		let retryMs = state.defaultCommandDelayMax;
+
+		// Grab the commandRetryMs from the current command. If it's 0 the current command has disabled
+		// retries while it's waiting for a parse - so we carry that 0 below and it skips the retry.
+		// Otherwise, it's a command-level custom retry definition and we'll honor it while that command
+		// is running (script writer knows to move to the next command after a custom amount of time).
+		let commandRetryOverride = -1; 
+		if (state.commandList[state.currentCmdIndex]?.commandRetryMs !== undefined) {
+			commandRetryOverride = isPositiveNumeric(state.commandList[state.currentCmdIndex].commandRetryMs)
+				? Number(state.commandList[state.currentCmdIndex].commandRetryMs)
+				: commandRetryOverride; 
+		}
+
+		// Use command-level retry override
+		if (commandRetryOverride > -1) {
+			retryMs = commandRetryOverride;
+		} 
+		// Use globally defined command retry
+		else {
+			retryMs = isPositiveNumeric(commstate.extConfig?.commandRetryMs)
+				? Number(state.extConfig.commandRetryMs)
+				: state.defaultCommandRetryMs;
+		}
 
 		const timeDiff = Date.now() - state.lastCommandSent;
 		// `0` effectively turns off the retry.
@@ -1000,6 +1020,7 @@ function getCommandDelayInMs(additionalDelay) {
 			sendNextCommand();
 		}
 	}
+
 	// Rerun timer buffered by configured max command delay.
 	setTimeout(arguments.callee, maxCmdDelay);
 })();

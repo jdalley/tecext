@@ -224,6 +224,20 @@ Note that all of the syntax/features mentioned below are also available for Comb
     },
     {
       "command": "cast pole",
+      // If you use this within a command for either a nonCom or a combat script, it will 
+      // effectively override the global Cmd Retry (ms) setting for the extension.
+      // Usage examples:
+      //    1. You may want to use this if you know the command's parse could take a while and
+      //    you think it could get stuck. You'd set a custom value to move on to the next
+      //    command after X milliseconds.
+      //    2. You may want to keep a global Cmd Retry (ms) value configured for most scripts,
+      //    but have the option to override it to NOT retry for a command you expect to run
+      //    for a long time and are confident it'll finish.
+      // Options:
+      //    1. Setting it to 0 turns the retry off (it will ignore the global Cmd Retry (ms))
+      //    2. Setting it to any positive number will use that number of milliseconds
+      //    instead of the globally defined Cmd Retry (ms) value.
+      "commandRetryMs": 0,
       "parse": {
         "moveNextWhen": "You are no longer busy",
         "outcome": "no longer has any bait on it"
