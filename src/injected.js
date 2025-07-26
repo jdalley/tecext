@@ -295,25 +295,25 @@ setTimeout(function () {
 		document.getElementById("macro_area").insertAdjacentHTML(
 			"beforebegin",
 			`
-						<style>
-								@keyframes fadeIn {
-										from {
-												opacity:0;
-										}
-										to {
-												opacity:1;
-										}
-								}
-						</style>
-						<div id="tecext" style="
-								margin-bottom: 3px;
-								padding: 6px;
-								animation: fadeIn 0.75s;">
-								<div id="editScripts" style="
-										cursor: pointer;
-										background-color:#5eba7d;">Edit Scripts</div>
-						</div>
-				`
+				<style>
+					@keyframes fadeIn {
+						from {
+							opacity:0;
+						}
+						to {
+							opacity:1;
+						}
+					}
+				</style>
+				<div id="tecext" style="
+					margin-bottom: 3px;
+					padding: 6px;
+					animation: fadeIn 0.75s;">
+					<div id="editScripts" style="
+						cursor: pointer;
+						background-color:#5eba7d;">Edit Scripts</div>
+				</div>
+			`
 		);
 	}
 

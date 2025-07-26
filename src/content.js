@@ -67,8 +67,10 @@ script.onload = function () {
 
 // Load the extension's configuration and user script data into State.
 const state = new State();
-//.Load scripts once the state is created. 
-state.loadExtData();
+// Initial load of extension config and scripts once the state is created. 
+setTimeout(function () {
+	state.loadExtData();
+}, 1000);
 
 
 /*********************************************************************************************/
@@ -301,7 +303,6 @@ function combatScript(data) {
 				((data.includes("You hit") || data.includes("You miss")) || state.customKillCommand))
 		) {
 			state.attemptingKill = true;
-			consoleLog(`state.customKillCommand: ${state.customKillCommand}, state.customKillCommandParse: ${state.customKillCommandParse}`);
 			if (state.customKillCommand) {
 				state.commandOverride = `${state.customKillCommand} ${state.target}`;
 			}
@@ -1008,7 +1009,7 @@ function getCommandDelayInMs(additionalDelay) {
 		} 
 		// Use globally defined command retry
 		else {
-			retryMs = isPositiveNumeric(commstate.extConfig?.commandRetryMs)
+			retryMs = isPositiveNumeric(state.extConfig?.commandRetryMs)
 				? Number(state.extConfig.commandRetryMs)
 				: state.defaultCommandRetryMs;
 		}
