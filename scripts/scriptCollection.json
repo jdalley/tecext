@@ -1428,6 +1428,254 @@
     "scriptName": "healingBandaging",
     "scriptType": "nonCom"
   },
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "bjab",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Slamming your shield"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You slam your shield at"
+          }
+        ]
+      },
+      {
+        "command": "pthrust",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "With a deft twist"
+				}
+      },
+      {
+        "command": "shstab",
+        "parse": {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Using your shield to balance"
+          }
+      },
+      {
+        "command": "drep",
+        "parse": {
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You push"
+        	}
+      },
+      {
+        "command": "rthrust",
+        "parse": [
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "Rising from a low crouch, you surge"
+      		},
+					{
+						"moveNextNow": true,
+						"outcome": "is not close enough"
+      		}
+				]
+      },
+      {
+        "command": "rbash",
+        "parse": {
+          "moveNextNow": "You are no longer busy",
+          "outcome": "You sling your"
+        }
+      },
+      {
+        "command": "sswing",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "With a bold lunge, you"
+        }
+      },
+      {
+        "command": "uthrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You sweep your shield aside and thrust"
+        }
+      },
+			{
+        "command": "lthrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You step to the side sudden"
+        }
+      },
+			{
+        "command": "sthrust",
+        "parse": [
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You lunge forward, slamming your shield"
+        	},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You lunge forward to slam your shield"
+        	}
+				]
+      },
+			{
+        "command": "schop",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You swing your shield wide"
+        }
+      },
+			{
+        "command": "swthrust",
+        "parse": [
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "Reversing your grip"
+        	},
+					{
+						"moveNextWhen":"You are no longer busy",
+						"outcome": "You may only use sweep and thrust on a standing opponent"
+					}
+				]
+      },
+			{
+        "command": "wstrike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Crouching low, you swing your"
+        }
+      },
+			{
+        "command": "lstrike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You deftly lunge at"
+        }
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Hoplite - Full Rotation",
+    "scriptName": "hopFull",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "bjab",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Slamming your shield"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You slam your shield at"
+          }
+        ]
+      },
+      {
+        "command": "pthrust",
+				"parse": {
+					"moveNextWhen": "You are no longer busy",
+					"outcome": "With a deft twist"
+				}
+      },
+      {
+        "command": "shstab",
+        "parse": {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Using your shield to balance"
+          }
+      },
+      {
+        "command": "rbash",
+        "parse": {
+          "moveNextNow": "You are no longer busy",
+          "outcome": "You sling your"
+        }
+      },
+      {
+        "command": "sswing",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "With a bold lunge, you"
+        }
+      },
+      {
+        "command": "uthrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You sweep your shield aside and thrust"
+        }
+      },
+			{
+        "command": "lthrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You step to the side sudden"
+        }
+      },
+			{
+        "command": "sthrust",
+        "parse": [
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You lunge forward, slamming your shield"
+        	},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "You lunge forward to slam your shield"
+        	}
+				]
+      },
+			{
+        "command": "schop",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You swing your shield wide"
+        }
+      },
+			{
+        "command": "swthrust",
+        "parse": [
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "Reversing your grip"
+        	},
+					{
+						"moveNextWhen":"You are no longer busy",
+						"outcome": "You may only use sweep and thrust on a standing opponent"
+					}
+				]
+      },
+			{
+        "command": "wstrike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Crouching low, you swing your"
+        }
+      },
+			{
+        "command": "lstrike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You deftly lunge at"
+        }
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Hoplite Hunting",
+    "scriptName": "hopHunt",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
   {
     "commandList": [
       {
