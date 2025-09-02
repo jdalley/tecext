@@ -3064,6 +3064,78 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "upslash <target> face",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
+        }
+      },
+			{
+        "command": "strike",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "is not wielding anything"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "With a quick snapping motion, you"
+          }
+        ]
+      },
+      {
+        "command": "thrust <target> face",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Lifting it in one hand, you"
+        }
+      },
+			{
+        "command": "stab <target> face",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You make a quick stabbing"
+        }
+      },
+			{
+        "command": "chop <target> face",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You slide your grip toward the butt"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "is too close."
+          }
+        ]
+      },
+			{
+        "command": "smash <target> face",
+        "parse": [
+					{
+						"moveNextNow": true,
+						"outcome": "not close enough"
+        	},
+					{
+						"moveNextWhen": "You are no longer busy",
+						"outcome": "you swing the butt"
+        	}
+				]
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Spear Ranged - Aim Face",
+    "scriptName": "spearRangeFace",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
   {
     "addAttack": false,
     "commandList": [
