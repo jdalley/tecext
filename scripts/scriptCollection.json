@@ -1534,7 +1534,7 @@
 						"outcome": "Reversing your grip"
         	},
 					{
-						"moveNextWhen":"You are no longer busy",
+						"moveNextNow": true,
 						"outcome": "You may only use sweep and thrust on a standing opponent"
 					}
 				]
@@ -1648,7 +1648,7 @@
 						"outcome": "Reversing your grip"
         	},
 					{
-						"moveNextWhen":"You are no longer busy",
+						"moveNextNow": true,
 						"outcome": "You may only use sweep and thrust on a standing opponent"
 					}
 				]
