@@ -345,17 +345,19 @@ function combatScript(data) {
 	// Attempt to continue script after a critter/target walks in/arrives.
 	if (state.continueOnWalkIn) {
 		if (
-			data.includes("walks in") ||
-			data.includes(" in from a") ||
-			data.includes(" arrives.") ||
-			data.includes(" charges in") ||
-			data.includes(" charge in") ||
-			data.includes(" rushes in") ||
-			data.includes(" rush in") ||
-			data.includes(" lopes in") ||
-			data.includes(" and onto your boat" ||
-			data.includes(" steps out of the nearby shadows."))
+			data.includes("walks in") || 
+			data.includes(" in from a") || 
+			data.includes(" arrives.") || 
+			data.includes(" charges in") || 
+			data.includes(" charge in") || 
+			data.includes(" rushes in") || 
+			data.includes(" rush in") || 
+			data.includes(" lopes in") || 
+			data.includes(" and onto your boat") || 
+			data.includes(" steps out of the nearby shadows.") || 
+			data.includes(" reanimates from")
 		) {
+			consoleLog("Continue on walk in triggered, sending next command");
 			sendNextCommand(400);
 		}
 	}
@@ -676,8 +678,6 @@ function runScriptByName(scriptName, options) {
 		state.shouldKillParse = script.shouldKillParse;
 		state.customKillCommand = script.customKillCommand;
 		state.customKillCommandParse = script.customKillCommandParse;
-
-		consoleLog(`customKillCommand: ${state.customKillCommand}, customKillCommandParse: ${state.customKillCommandParse}`);
 
 		state.continueOnWalkIn =
 			options.continueOnWalkIn !== null

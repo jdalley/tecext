@@ -2167,182 +2167,8 @@
       }
     ],
     "continueOnWalkIn": true,
-    "scriptFriendlyName": "Spear Hunting",
-    "scriptName": "spearHunt",
-    "scriptType": "combat",
-    "shouldKill": true,
-    "shouldKillParse": "You thrust your",
-    "stanceCommand": ""
-  },
-	{
-    "addAttack": false,
-    "commandList": [
-      {
-        "command": "pslash",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Sliding your front leg back"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You start to fumble"
-          }
-        ]
-      },
-      {
-        "command": "sstab",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Stepping forward aggressively, you clear"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You lead with your"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You start to fumble"
-          }
-        ]
-      },
-      {
-        "command": "upslash",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You twist your wrists"
-        }
-      },
-      {
-        "command": "slash",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You slash horizontally"
-        }
-      },
-      {
-        "command": "smash",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "you swing the butt"
-        }
-      },
-      {
-        "command": "thrust",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "Lifting it in one hand, you"
-        }
-      },
-      {
-        "command": "strike",
-        "parse": [
-          {
-            "moveNextNow": true,
-            "outcome": "is not wielding anything"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "With a quick snapping motion, you"
-          }
-        ]
-      }
-    ],
-    "continueOnWalkIn": true,
-    "scriptFriendlyName": "Spear Hunting - Franlius",
-    "scriptName": "spearHuntFran",
-    "scriptType": "combat",
-    "shouldKill": true,
-    "shouldKillParse": "You thrust your",
-    "stanceCommand": ""
-  },
-	{
-    "addAttack": false,
-    "commandList": [
-      {
-        "command": "pslash",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Sliding your front leg back"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You start to fumble"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Your stance is now"
-          }
-        ]
-      },
-      {
-        "command": "sstab <target> high",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Stepping forward aggressively, you clear"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You lead with your"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You start to fumble"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Your stance is now"
-          }
-        ]
-      },
-      {
-        "command": "upslash <target> high",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You twist your wrists"
-        }
-      },
-      {
-        "command": "slash <target> high",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You slash horizontally"
-        }
-      },
-      {
-        "command": "smash <target> high",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "you swing the butt"
-        }
-      },
-      {
-        "command": "thrust",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "Lifting it in one hand, you"
-        }
-      },
-      {
-        "command": "strike <target> high",
-        "parse": [
-          {
-            "moveNextNow": true,
-            "outcome": "is not wielding anything"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "With a quick snapping motion, you"
-          }
-        ]
-      }
-    ],
-    "continueOnWalkIn": true,
-    "scriptFriendlyName": "Spear Hunting - Franlius Aim High",
-    "scriptName": "spearHuntFranHigh",
+    "scriptFriendlyName": "Spear",
+    "scriptName": "spear",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You thrust your",
@@ -2437,8 +2263,8 @@
       }
     ],
     "continueOnWalkIn": true,
-    "scriptFriendlyName": "Spear Hunting - Aim High",
-    "scriptName": "spearHuntHigh",
+    "scriptFriendlyName": "Spear - Aim High",
+    "scriptName": "spearHigh",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You thrust your",
@@ -2533,137 +2359,14 @@
       }
     ],
     "continueOnWalkIn": true,
-    "scriptFriendlyName": "Spear Hunting - Aim Neck",
-    "scriptName": "spearHuntNeck",
+    "scriptFriendlyName": "Spear - Aim Neck",
+    "scriptName": "spearNeck",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-  {
-    "addAttack": false,
-    "commandList": [
-      {
-        "command": "pslash <target> face",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Sliding your front leg back"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You start to fumble"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Your stance is now"
-          }
-        ]
-      },
-      {
-        "command": "chop <target> face",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You slide your grip toward the butt"
-          },
-          {
-            "moveNextNow": true,
-            "outcome": "is too close."
-          }
-        ]
-      },
-      {
-        "command": "sstab <target> face",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Stepping forward aggressively, you clear"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You lead with your"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You start to fumble"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Your stance is now"
-          }
-        ]
-      },
-      {
-        "command": "upslash <target> face",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You twist your wrists"
-        }
-      },
-      {
-        "command": "slash <target> high",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You slash horizontally"
-        }
-      },
-      {
-        "command": "smash <target> face",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "you swing the butt"
-        }
-      },
-      {
-        "command": "thrust <target> face",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "Lifting it in one hand, you"
-        }
-      },
-      {
-        "command": "strike <target> high",
-        "parse": [
-          {
-            "moveNextNow": true,
-            "outcome": "is not wielding anything"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "With a quick snapping motion, you"
-          }
-        ]
-      }
-    ],
-    "continueOnWalkIn": true,
-    "scriptFriendlyName": "Spear Hunting - Monlon",
-    "scriptName": "spearHuntMon",
-    "scriptType": "combat",
-    "shouldKill": true,
-    "shouldKillParse": "You thrust your",
-    "stanceCommand": ""
-  },
-  {
-    "addAttack": false,
-    "commandList": [
-      {
-        "command": "stab",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You make a quick stabbing"
-        }
-      }
-    ],
-    "continueOnWalkIn": true,
-    "scriptFriendlyName": "Spear Min Gains",
-    "scriptName": "spearMin",
-    "scriptType": "combat",
-    "shouldKill": true,
-    "shouldKillParse": "You thrust your",
-    "stanceCommand": ""
-  },
-  {
+	{
     "addAttack": false,
     "commandList": [
       {
@@ -2915,6 +2618,569 @@
     "continueOnWalkIn": true,
     "scriptFriendlyName": "Spear Close Range + Weapon Strike",
     "scriptName": "spearCloseWs",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "pslash",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Sliding your front leg back"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          }
+        ]
+      },
+      {
+        "command": "sstab",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Stepping forward aggressively, you clear"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lead with your"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          }
+        ]
+      },
+      {
+        "command": "upslash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
+        }
+      },
+      {
+        "command": "slash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slash horizontally"
+        }
+      },
+      {
+        "command": "smash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you swing the butt"
+        }
+      },
+      {
+        "command": "thrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Lifting it in one hand, you"
+        }
+      },
+      {
+        "command": "strike",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "is not wielding anything"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "With a quick snapping motion, you"
+          }
+        ]
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Spear - Franlius",
+    "scriptName": "spearFran",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  }, 
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "pslash",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Sliding your front leg back"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          }
+        ]
+      },
+      {
+        "command": "sstab",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Stepping forward aggressively, you clear"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lead with your"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          }
+        ]
+      },
+      {
+        "command": "upslash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
+        }
+      },
+      {
+        "command": "slash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slash horizontally"
+        }
+      },
+      {
+        "command": "smash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you swing the butt"
+        }
+      },
+      {
+        "command": "thrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Lifting it in one hand, you"
+        }
+      },
+      {
+        "command": "strike",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "is not wielding anything"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "With a quick snapping motion, you"
+          }
+        ]
+      },
+      {
+        "command": "normal",
+        "targetRequired": false,
+        "parse": [
+					{
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Combat mode changed to"
+          },
+					{
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You are already in"
+          }
+			  ]
+      },
+      {
+        "command": "pslash",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Sliding your front leg back"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          }
+        ]
+      },
+      {
+        "command": "sstab",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Stepping forward aggressively, you clear"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lead with your"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          }
+        ]
+      },
+      {
+        "command": "upslash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
+        }
+      },
+      {
+        "command": "slash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slash horizontally"
+        }
+      },
+      {
+        "command": "smash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you swing the butt"
+        }
+      },
+      {
+        "command": "thrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Lifting it in one hand, you"
+        }
+      },
+      {
+        "command": "strike",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "is not wielding anything"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "With a quick snapping motion, you"
+          }
+        ]
+      },
+      {
+        "command": "wary",
+        "targetRequired": false,
+        "parse": [
+					{
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Combat mode changed to"
+          },
+					{
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You are already in"
+          }
+			  ]
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Spear - Franlius Turtle",
+    "scriptName": "spearFranTurtle",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "pslash",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Sliding your front leg back"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Your stance is now"
+          }
+        ]
+      },
+      {
+        "command": "sstab <target> high",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Stepping forward aggressively, you clear"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lead with your"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Your stance is now"
+          }
+        ]
+      },
+      {
+        "command": "upslash <target> high",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
+        }
+      },
+      {
+        "command": "slash <target> high",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slash horizontally"
+        }
+      },
+      {
+        "command": "smash <target> high",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you swing the butt"
+        }
+      },
+      {
+        "command": "thrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Lifting it in one hand, you"
+        }
+      },
+      {
+        "command": "strike <target> high",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "is not wielding anything"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "With a quick snapping motion, you"
+          }
+        ]
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Spear - Franlius Aim High",
+    "scriptName": "spearFranHigh",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
+	{
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "pslash <target> head",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Sliding your front leg back"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Your stance is now"
+          }
+        ]
+      },
+      {
+        "command": "sstab <target> head",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Stepping forward aggressively, you clear"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lead with your"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Your stance is now"
+          }
+        ]
+      },
+      {
+        "command": "upslash <target> head",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
+        }
+      },
+      {
+        "command": "smash <target> head",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you swing the butt"
+        }
+      },
+      {
+        "command": "thrust <target> head",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Lifting it in one hand, you"
+        }
+      },
+      {
+        "command": "strike <target> high",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "is not wielding anything"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "With a quick snapping motion, you"
+          }
+        ]
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Spear - Franlius Aim Head",
+    "scriptName": "spearFranHead",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
+  {
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "pslash <target> face",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Sliding your front leg back"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Your stance is now"
+          }
+        ]
+      },
+      {
+        "command": "chop <target> face",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You slide your grip toward the butt"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "is too close."
+          }
+        ]
+      },
+      {
+        "command": "sstab <target> face",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Stepping forward aggressively, you clear"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lead with your"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Your stance is now"
+          }
+        ]
+      },
+      {
+        "command": "upslash <target> face",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
+        }
+      },
+      {
+        "command": "slash <target> high",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slash horizontally"
+        }
+      },
+      {
+        "command": "smash <target> face",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you swing the butt"
+        }
+      },
+      {
+        "command": "thrust <target> face",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Lifting it in one hand, you"
+        }
+      },
+      {
+        "command": "strike <target> high",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "is not wielding anything"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "With a quick snapping motion, you"
+          }
+        ]
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Spear - Monlon",
+    "scriptName": "spearMon",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
+  {
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "stab",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You make a quick stabbing"
+        }
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Spear Min Gains",
+    "scriptName": "spearMin",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You thrust your",
