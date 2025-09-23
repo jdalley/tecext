@@ -1054,7 +1054,8 @@ function slashCommand(command) {
 				    /start clubShieldBrawl thug|brute mace triangle false true
 				
 				Script Commands
-				  /scripts : List of currently defined scripts
+				  /scripts : List of currently defined scripts, can filter by script name.
+				    [scriptNameSearch]
 				  /editscripts : Open the edit scripts window
 				  /current : Display the currently running script
 				  /start : Start a script by name
@@ -1078,7 +1079,14 @@ function slashCommand(command) {
 			sendClientMessage(message, true);
 			break;
 		case "/scripts":
+			// Remove empty param option if found
+			if (commandParams.includes("")) {
+				commandParams.splice(commandParams.indexOf(""), 1);
+			}
+
+			const scriptNameSearch = commandParams[1];
 			const scripts = state.userScripts
+				.filter((s) => scriptNameSearch ? s.scriptName.includes(scriptNameSearch) : s.scriptName)
 				.map((s) => s.scriptName)
 				.toString()
 				.replace(/,/g, "\r\n");
