@@ -496,7 +496,9 @@ function combatGlobals(data) {
 		sendDelayedCommands([`wield ${state.weaponItemName}`, getFormattedCommand()]);
 	}
 
-	if (data.includes("You must be wielding a shield to")) {
+	if (data.includes("You must be wielding a shield to") ||
+		data.includes("What kind of hoplite doesn't wield a shield")	
+	) {
 		sendDelayedCommands([
 			`get ${state.shieldItemName}`,
 			`wield ${state.shieldItemName}`,

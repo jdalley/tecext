@@ -1190,6 +1190,81 @@
         }
       },
       {
+        "command": "ankle",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You crouch low"
+        }
+      },
+      {
+        "command": "bash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You hold you"
+        }
+      },
+      {
+        "command": "slash",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You lean forward"
+        }
+      },
+      {
+        "command": "chop",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You swing the blade"
+        }
+      },
+      {
+        "command": "strike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You tilt the blade"
+        }
+      },
+      {
+        "command": "wstrike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You grip your"
+        }
+      },
+      {
+        "command": "break",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You lift your"
+        }
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Falx Early",
+    "scriptName": "falxEarly",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You slit",
+    "stanceCommand": "siege"
+  },
+  {
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "jab",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your torso"
+        }
+      },
+      {
+        "command": "stab",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You take a wide"
+        }
+      },
+      {
         "command": "bash",
         "parse": {
           "moveNextWhen": "You are no longer busy",
@@ -1428,7 +1503,7 @@
     "scriptName": "healingBandaging",
     "scriptType": "nonCom"
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -1446,37 +1521,37 @@
       },
       {
         "command": "pthrust",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "With a deft twist"
-				}
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "With a deft twist"
+        }
       },
       {
         "command": "shstab",
         "parse": {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Using your shield to balance"
-          }
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Using your shield to balance"
+        }
       },
       {
         "command": "drep",
         "parse": {
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "You push"
-        	}
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You push"
+        }
       },
       {
         "command": "rthrust",
         "parse": [
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "Rising from a low crouch, you surge"
-      		},
-					{
-						"moveNextNow": true,
-						"outcome": "is not close enough"
-      		}
-				]
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Rising from a low crouch, you surge"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "is not close enough"
+          }
+        ]
       },
       {
         "command": "rbash",
@@ -1499,54 +1574,54 @@
           "outcome": "You sweep your shield aside and thrust"
         }
       },
-			{
+      {
         "command": "lthrust",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You step to the side sudden"
         }
       },
-			{
+      {
         "command": "sthrust",
         "parse": [
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "You lunge forward, slamming your shield"
-        	},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "You lunge forward to slam your shield"
-        	}
-				]
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lunge forward, slamming your shield"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lunge forward to slam your shield"
+          }
+        ]
       },
-			{
+      {
         "command": "schop",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You swing your shield wide"
         }
       },
-			{
+      {
         "command": "swthrust",
         "parse": [
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "Reversing your grip"
-        	},
-					{
-						"moveNextNow": true,
-						"outcome": "You may only use sweep and thrust on a standing opponent"
-					}
-				]
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Reversing your grip"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "You may only use sweep and thrust on a standing opponent"
+          }
+        ]
       },
-			{
+      {
         "command": "wstrike",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "Crouching low, you swing your"
         }
       },
-			{
+      {
         "command": "lstrike",
         "parse": {
           "moveNextWhen": "You are no longer busy",
@@ -1562,7 +1637,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -1580,17 +1655,17 @@
       },
       {
         "command": "pthrust",
-				"parse": {
-					"moveNextWhen": "You are no longer busy",
-					"outcome": "With a deft twist"
-				}
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "With a deft twist"
+        }
       },
       {
         "command": "shstab",
         "parse": {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Using your shield to balance"
-          }
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Using your shield to balance"
+        }
       },
       {
         "command": "rbash",
@@ -1613,54 +1688,54 @@
           "outcome": "You sweep your shield aside and thrust"
         }
       },
-			{
+      {
         "command": "lthrust",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You step to the side sudden"
         }
       },
-			{
+      {
         "command": "sthrust",
         "parse": [
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "You lunge forward, slamming your shield"
-        	},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "You lunge forward to slam your shield"
-        	}
-				]
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lunge forward, slamming your shield"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lunge forward to slam your shield"
+          }
+        ]
       },
-			{
+      {
         "command": "schop",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You swing your shield wide"
         }
       },
-			{
+      {
         "command": "swthrust",
         "parse": [
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "Reversing your grip"
-        	},
-					{
-						"moveNextNow": true,
-						"outcome": "You may only use sweep and thrust on a standing opponent"
-					}
-				]
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Reversing your grip"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "You may only use sweep and thrust on a standing opponent"
+          }
+        ]
       },
-			{
+      {
         "command": "wstrike",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "Crouching low, you swing your"
         }
       },
-			{
+      {
         "command": "lstrike",
         "parse": {
           "moveNextWhen": "You are no longer busy",
@@ -2366,7 +2441,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -2420,7 +2495,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -2437,7 +2512,6 @@
           "outcome": "You jab at"
         }
       },
-    
       {
         "command": "smash <target> face",
         "parse": {
@@ -2472,7 +2546,7 @@
           }
         ]
       },
-			{
+      {
         "command": "slash <target> high",
         "parse": {
           "moveNextWhen": "You are no longer busy",
@@ -2488,7 +2562,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -2505,7 +2579,6 @@
           "outcome": "You jab at"
         }
       },
-    
       {
         "command": "smash <target> high",
         "parse": {
@@ -2540,7 +2613,7 @@
           }
         ]
       },
-			{
+      {
         "command": "slash",
         "parse": {
           "moveNextWhen": "You are no longer busy",
@@ -2623,7 +2696,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -2664,13 +2737,6 @@
         }
       },
       {
-        "command": "slash",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You slash horizontally"
-        }
-      },
-      {
         "command": "smash",
         "parse": {
           "moveNextWhen": "You are no longer busy",
@@ -2705,8 +2771,8 @@
     "shouldKill": true,
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
-  }, 
-	{
+  },
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -2782,17 +2848,17 @@
       },
       {
         "command": "normal",
-        "targetRequired": false,
         "parse": [
-					{
+          {
             "moveNextWhen": "You are no longer busy",
             "outcome": "Combat mode changed to"
           },
-					{
+          {
             "moveNextWhen": "You are no longer busy",
             "outcome": "You are already in"
           }
-			  ]
+        ],
+        "targetRequired": false
       },
       {
         "command": "pslash",
@@ -2867,17 +2933,17 @@
       },
       {
         "command": "wary",
-        "targetRequired": false,
         "parse": [
-					{
+          {
             "moveNextWhen": "You are no longer busy",
             "outcome": "Combat mode changed to"
           },
-					{
+          {
             "moveNextWhen": "You are no longer busy",
             "outcome": "You are already in"
           }
-			  ]
+        ],
+        "targetRequired": false
       }
     ],
     "continueOnWalkIn": true,
@@ -2888,7 +2954,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -2979,7 +3045,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -3058,6 +3124,97 @@
     "continueOnWalkIn": true,
     "scriptFriendlyName": "Spear - Franlius Aim Head",
     "scriptName": "spearFranHead",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": ""
+  },
+  {
+    "addAttack": false,
+    "commandList": [
+      {
+        "command": "pslash <target> waist",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Sliding your front leg back"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Your stance is now"
+          }
+        ]
+      },
+      {
+        "command": "sstab <target> waist",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Stepping forward aggressively, you clear"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You lead with your"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You start to fumble"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "Your stance is now"
+          }
+        ]
+      },
+      {
+        "command": "upslash <target> waist",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You twist your wrists"
+        }
+      },
+      {
+        "command": "slash <target> waist",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You slash horizontally"
+        }
+      },
+      {
+        "command": "smash <target> waist",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "you swing the butt"
+        }
+      },
+      {
+        "command": "thrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Lifting it in one hand, you"
+        }
+      },
+      {
+        "command": "strike",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "is not wielding anything"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "With a quick snapping motion, you"
+          }
+        ]
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Spear - Franlius Aim Waist",
+    "scriptName": "spearFranWaist",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You thrust your",
@@ -3186,7 +3343,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -3196,7 +3353,7 @@
           "outcome": "You twist your wrists"
         }
       },
-			{
+      {
         "command": "strike",
         "parse": [
           {
@@ -3216,14 +3373,14 @@
           "outcome": "Lifting it in one hand, you"
         }
       },
-			{
+      {
         "command": "stab",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You make a quick stabbing"
         }
       },
-			{
+      {
         "command": "chop",
         "parse": [
           {
@@ -3236,18 +3393,18 @@
           }
         ]
       },
-			{
+      {
         "command": "smash",
         "parse": [
-					{
-						"moveNextNow": true,
-						"outcome": "not close enough"
-        	},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "you swing the butt"
-        	}
-				]
+          {
+            "moveNextNow": true,
+            "outcome": "not close enough"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "you swing the butt"
+          }
+        ]
       }
     ],
     "continueOnWalkIn": true,
@@ -3258,7 +3415,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -3268,7 +3425,7 @@
           "outcome": "You twist your wrists"
         }
       },
-			{
+      {
         "command": "strike <target> high",
         "parse": [
           {
@@ -3288,14 +3445,14 @@
           "outcome": "Lifting it in one hand, you"
         }
       },
-			{
+      {
         "command": "stab <target> high",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You make a quick stabbing"
         }
       },
-			{
+      {
         "command": "chop <target> high",
         "parse": [
           {
@@ -3308,18 +3465,18 @@
           }
         ]
       },
-			{
+      {
         "command": "smash <target> high",
         "parse": [
-					{
-						"moveNextNow": true,
-						"outcome": "not close enough"
-        	},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "you swing the butt"
-        	}
-				]
+          {
+            "moveNextNow": true,
+            "outcome": "not close enough"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "you swing the butt"
+          }
+        ]
       }
     ],
     "continueOnWalkIn": true,
@@ -3330,7 +3487,7 @@
     "shouldKillParse": "You thrust your",
     "stanceCommand": ""
   },
-	{
+  {
     "addAttack": false,
     "commandList": [
       {
@@ -3340,7 +3497,7 @@
           "outcome": "You twist your wrists"
         }
       },
-			{
+      {
         "command": "strike",
         "parse": [
           {
@@ -3360,14 +3517,14 @@
           "outcome": "Lifting it in one hand, you"
         }
       },
-			{
+      {
         "command": "stab <target> face",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You make a quick stabbing"
         }
       },
-			{
+      {
         "command": "chop <target> face",
         "parse": [
           {
@@ -3380,18 +3537,18 @@
           }
         ]
       },
-			{
+      {
         "command": "smash <target> face",
         "parse": [
-					{
-						"moveNextNow": true,
-						"outcome": "not close enough"
-        	},
-					{
-						"moveNextWhen": "You are no longer busy",
-						"outcome": "you swing the butt"
-        	}
-				]
+          {
+            "moveNextNow": true,
+            "outcome": "not close enough"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "you swing the butt"
+          }
+        ]
       }
     ],
     "continueOnWalkIn": true,
