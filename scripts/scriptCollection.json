@@ -1154,53 +1154,27 @@
     "stanceCommand": "striker"
   },
   {
-    "addAttack": true,
-    "commandList": [
-      {
-        "command": "wstrike",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You grip your"
-        }
-      }
-    ],
-    "continueOnWalkIn": true,
-    "scriptFriendlyName": "Falx Basic",
-    "scriptName": "falxBasic",
-    "scriptType": "combat",
-    "shouldKill": true,
-    "shouldKillParse": "You slit",
-    "stanceCommand": "siege"
-  },
-  {
     "addAttack": false,
     "commandList": [
-      {
-        "command": "jab",
+     {
+        "command": "break",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "You twist your torso"
+          "outcome": "You lift your"
         }
       },
-      {
-        "command": "stab",
+			{
+        "command": "wslash",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "You take a wide"
+          "outcome": "You raise your"
         }
       },
-      {
-        "command": "ankle",
+			{
+        "command": "spin",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "You crouch low"
-        }
-      },
-      {
-        "command": "bash",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You hold you"
+          "outcome": "You slide your rear foot"
         }
       },
       {
@@ -1217,31 +1191,24 @@
           "outcome": "You swing the blade"
         }
       },
-      {
-        "command": "strike",
+			{
+        "command": "ankle",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "You tilt the blade"
+          "outcome": "You crouch low"
         }
       },
-      {
-        "command": "wstrike",
+			{
+        "command": "bash",
         "parse": {
           "moveNextWhen": "You are no longer busy",
-          "outcome": "You grip your"
-        }
-      },
-      {
-        "command": "break",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You lift your"
+          "outcome": "You hold your"
         }
       }
     ],
     "continueOnWalkIn": true,
-    "scriptFriendlyName": "Falx Early",
-    "scriptName": "falxEarly",
+    "scriptFriendlyName": "Falx Core",
+    "scriptName": "falxCore",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You slit",
