@@ -1156,21 +1156,21 @@
   {
     "addAttack": false,
     "commandList": [
-     {
+      {
         "command": "break",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You lift your"
         }
       },
-			{
+      {
         "command": "wslash",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You raise your"
         }
       },
-			{
+      {
         "command": "spin",
         "parse": {
           "moveNextWhen": "You are no longer busy",
@@ -1186,19 +1186,25 @@
       },
       {
         "command": "chop",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You swing the blade"
-        }
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You swing the blade"
+          },
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You swing your"
+          }
+        ]
       },
-			{
+      {
         "command": "ankle",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You crouch low"
         }
       },
-			{
+      {
         "command": "bash",
         "parse": {
           "moveNextWhen": "You are no longer busy",
@@ -3458,7 +3464,7 @@
     "addAttack": false,
     "commandList": [
       {
-        "command": "upslash <target> face",
+        "command": "upslash <target> head",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You twist your wrists"
@@ -3478,21 +3484,21 @@
         ]
       },
       {
-        "command": "thrust <target> face",
+        "command": "thrust <target> head",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "Lifting it in one hand, you"
         }
       },
       {
-        "command": "stab <target> face",
+        "command": "stab <target> head",
         "parse": {
           "moveNextWhen": "You are no longer busy",
           "outcome": "You make a quick stabbing"
         }
       },
       {
-        "command": "chop <target> face",
+        "command": "chop <target> head",
         "parse": [
           {
             "moveNextWhen": "You are no longer busy",
@@ -3505,7 +3511,7 @@
         ]
       },
       {
-        "command": "smash <target> face",
+        "command": "smash <target> head",
         "parse": [
           {
             "moveNextNow": true,
@@ -3519,8 +3525,8 @@
       }
     ],
     "continueOnWalkIn": true,
-    "scriptFriendlyName": "Spear Ranged - Aim Face",
-    "scriptName": "spearRangeFace",
+    "scriptFriendlyName": "Spear Ranged - Aim Head",
+    "scriptName": "spearRangeHead",
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You thrust your",
