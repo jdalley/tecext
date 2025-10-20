@@ -1738,6 +1738,87 @@
     "scriptName": "languageEcho",
     "scriptType": "nonCom"
   },
+	{
+    "commandList": [
+      {
+        "command": "unjam <target> with lockpick",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You feel an obstruction release"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "There is nothing jammed open"
+          }
+        ]
+      },
+      {
+        "command": "unlock <target> with lockpick",
+        "parse": [
+          {
+            "moveNextWhen": "You are no longer busy",
+            "outcome": "You hear a click as a tumbler mechanism releases"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "It is already unlocked"
+          }
+        ]
+      },
+      {
+        "command": "open <target>",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "You open"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "It is already open"
+          }
+        ]
+      },
+      {
+        "command": "empty <target> into my sack",
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "You empty the contents"
+          },
+          {
+            "moveNextNow": true,
+            "outcome": "has nothing in it"
+          }
+        ]
+      },
+      {
+        "command": "disc <target>",
+        "parse": {
+          "moveNextNow": true,
+          "outcome": "Are you sure you want to throw"
+        }
+      },
+      {
+        "command": "y",
+        "parse": {
+          "moveNextNow": true,
+          "outcome": "You discard"
+        },
+        "targetRequired": false
+      },
+      {
+        "command": "get <target>",
+        "parse": {
+          "moveNextNow": true,
+          "outcome": "You take"
+        }
+      }
+    ],
+    "scriptFriendlyName": "Locksmith - Open Locked Containers",
+    "scriptName": "lockOpen",
+    "scriptType": "nonCom"
+  },
   {
     "commandList": [
       {
@@ -1776,8 +1857,8 @@
         }
       }
     ],
-    "scriptFriendlyName": "Locksmith rotation",
-    "scriptName": "locksmithRotation",
+    "scriptFriendlyName": "Locksmith Rotation",
+    "scriptName": "lockRotation",
     "scriptType": "nonCom"
   },
   {
