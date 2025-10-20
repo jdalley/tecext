@@ -456,9 +456,13 @@ function combatGlobals(data) {
 	) {
 		
 		let cmds = [];
-		if (data.includes(state.weaponItemName)) {
-			cmds.push(`wield ${state.weaponItemName}`);
-		} else if (state.shieldItemName && data.includes(state.shieldItemName)) {
+		if (data.includes(state.weaponItemName) && !state.shieldItemName) {
+			// No shield, regular wield (two-hand) the weapon.
+			cmds.push(`wield ${state.weaponItemName}`)
+		} else if (data.includes(state.weaponItemName) && state.shieldItemName) {
+			// Using a shield, 1w the weapon to avoid stowing the shield.
+			cmds.push(`1w ${state.weaponItemName}`);
+		}	else if (state.shieldItemName && data.includes(state.shieldItemName)) {
 			cmds.push(`wield ${state.shieldItemName}`);
 		}
 		// reset/remove `get {weapon/shield}`
@@ -469,23 +473,19 @@ function combatGlobals(data) {
 		state.recoveringWeapon = false;
 	}
 	// These not-wielding scenarios don't require waiting for no longer busy.
-	if (data.includes("You can't do that right now")) {
-		let cmds = [`get ${state.weaponItemName}`, `wield ${state.weaponItemName}`];
-		if (state.shieldItemName) {
-			cmds.push(`get ${state.shieldItemName}`);
-			cmds.push(`wield ${state.shieldItemName}`);
-		}
-		cmds.push(getFormattedCommand());
-		sendDelayedCommands(cmds);
-	}
-	if (
+	if (data.includes("You can't do that right now") || 
 		data.includes("You must be carrying something to wield it") ||
 		data.includes("You need to be wielding") ||
 		data.includes("You must be wielding") ||
-		data.includes("You are not wielding")
-	) {
-		let cmds = [`get ${state.weaponItemName}`, `wield ${state.weaponItemName}`];
+		data.includes("You are not wielding")) {
+		let cmds = [`get ${state.weaponItemName}`];
+	  if (!state.shieldItemName) {
+			// No shield, regular wield (two-hand) the weapon.
+			cmds.push(`wield ${state.weaponItemName}`);
+		}
 		if (state.shieldItemName) {
+			// Using a shield, 1w the weapon to avoid stowing the shield.
+			cmds.push(`1w ${state.weaponItemName}`);
 			cmds.push(`get ${state.shieldItemName}`);
 			cmds.push(`wield ${state.shieldItemName}`);
 		}
