@@ -36,7 +36,7 @@ You should see something like this under chrome://extensions if all goes well:
 
 The UI for the extension's popup (after clicking on its icon in the Chrome extension menu bar in the top right), looks like this:
 
-![Extension UI](https://user-images.githubusercontent.com/232725/201487061-5365f5cc-5c0a-43bb-8260-ab4cd386bee6.png "Extension UI")
+<img width="734" height="467" alt="Extension popup UI" src="https://github.com/user-attachments/assets/c3cfe62e-9e80-446e-9b60-7f5fc418afc4" />
 
 ### Configuration Tabs
 
@@ -52,33 +52,50 @@ The UI for the extension's popup (after clicking on its icon in the Chrome exten
   * Dark Mode: this enables poor man's dark mode for the extension windows (sorry, not super visually appealing, but at least it won't blind you as much).  
 
 ### Main Input and Control
-* Send command does exactly what you'd think, you can enter commands to be sent to the server. Typing in this box and hitting enter will send, then clear the input so you can use it like the normal input in Orchil. If you leave something in the box, then click send - it stays in the box.
-* Repeat will take whatever command you input, and repeat it on 'No longer busy'. Useful for simple stuff.
-* Edit Scripts opens up another window with a really simple JSON editor; you can make your changes to scripts, add new ones etc. When you click Save, it will write the whole script to local storage in chrome, and next time you launch it it'll check there before loading the scriptCollection.json.
+* **Send** does exactly what you'd think, you can enter commands to be sent to the server. Typing in this box and hitting enter will send, then clear the input so you can use it like the normal input in Orchil. If you leave something in the box, then click send - it stays in the box.
+* **Repeat** will take whatever command you input, and repeat it on 'No longer busy'. Useful for simple stuff.
+* **Edit Scripts** opens up another window with a really simple JSON editor; you can make your changes to scripts, add new ones etc. When you click Save, it will write the whole script to local storage in chrome, and next time you launch it it'll check there before loading the scriptCollection.json.
   * After Save is clicked, the `Choose a script to run` dropdown is now updated with your new or updated script.
 
-  ![Edit Scripts UI](https://user-images.githubusercontent.com/232725/201486550-78cfb7a2-8b70-437e-9f93-18a729921d82.png "Edit Scripts UI")
+	<img width="884" height="992" alt="Edit scripts UI" src="https://github.com/user-attachments/assets/4a8efb97-e7f8-4558-ba0d-565cd4a3ae5a" />
 
-
-* The `Choose a script to run` dropdown starts off with a list of script examples that I continually update, found in this repo at [scripts/scriptCollection.json](scripts/scriptCollection.json).
-  * Weapon/item name: this input is used in scripts as the name of your weapon in case you drop it - it will pick it back up and wield it.
-  * Shield: this input is similar to weapon/item, and is used to identify the name of your shield so it can be picked up & wielded when disarmed or knocked away.
-  * Target name: this input is used in two different ways:
+* The **Choose a script to run** dropdown starts off with a list of script examples that I continually update, found in this repo at [scripts/scriptCollection.json](scripts/scriptCollection.json).
+  * **Weapon/item name**: this input is used in scripts as the name of your weapon in case you drop it - it will pick it back up and wield it.
+  * **Shield**: this input is similar to weapon/item, and is used to identify the name of your shield so it can be picked up & wielded when disarmed or knocked away.
+  * **Target**: this input is used in two different ways:
     * With combat scripts, it will be added to the end of your commands: slash target, ie: slash dog|rat.
     * With any script, you can place `<target>` anywhere in a command, and it will be replaced by whatever is in the target input. ie: if 'right arm' is in the input, "command": "bandage `<target>` with bandages" will be: bandage right arm with bandages.
-* Run Script: clears all current values of any in-progress scripts, and uses the weapon/target to start the selected script from scratch.
-* Pause/Resume Script: self explanatory, for pausing and resuming the current script.
-* Stop Script: stops the currently running script, and clears all current values set by that script.
+* **Run Script**: clears all current values of any in-progress scripts, and uses the weapon/target to start the selected script from scratch.
+* **Pause/Resume Script**: self explanatory, for pausing and resuming the current script.
+* **Stop Script**: stops the currently running script, and clears all current values set by that script.
 
 You can also get to the 'Edit Scripts' popup by clicking on the following button that appears above the macro section:  
 
 ![image](https://user-images.githubusercontent.com/232725/85637391-b0e63980-b648-11ea-801f-0fe4338437e9.png)
 
+## Slash Commands
+
+Slash commands can be entered directly into Orchil's command input box, and allow you to take advantage of some features without leaving the input (handy!). Any command starting with a forward slash is not sent to the TEC server, instead it's interpreted by the extension. 
+
+Type `/help` to view available command information, where you'll get output like this in red text:
+
+<img width="597" height="461" alt="The /help slash command output" src="https://github.com/user-attachments/assets/b460fb5e-2d14-4563-a3b9-f297596d64ad" />
+
+You can get a list of current scripts available with `/scripts`:
+- Note: you can filter the list with a keyword such as `/scripts spear`, which will return only scripts whose scriptName contains 'spear'.
+
+![Example available scripts list from /scripts command](https://user-images.githubusercontent.com/232725/85637298-78466000-b648-11ea-919d-8eb24d2bc1d2.png "Example available scripts list from /scripts command")
+
+Here are a few examples for the `/start` command:
+- `/start twohandcore dog|rat two-handed`
+- `/start outdoorsBasic`
+  - In this case you can see the target/weaponItemName are not added, this is because they aren't required for nonCom type scripts (check the example scripts for an example of nonCom vs combat).
+
 ## Script Syntax
 
 The following are example scripts of each type (Combat and Non-Combat), with comments above the keywords to explain their usage. Note that the best way to practice and learn how to utilize these is to reference existing default scripts while experimenting with your own!
 
-### Combat Script
+### Combat Scripts
 
 Combat scripts have special handling logic, which has automatic handling for certain scenarios like:
 * dropping your weapon or shield; picks it up and wields it 
@@ -195,9 +212,11 @@ Combat scripts have special handling logic, which has automatic handling for cer
 
 The Non-Combat script type shares most of the commands/syntax and interpretations with the combat scripts. However, you'll note there is some combat-script specific syntax in the above examples that are not used in nonCom scripts, like `addAttack`, `continueOnWalkIn`, `shouldKill`, and `shouldKillParse`.
 
-These scripts are more simplistic and generic, and don't have all the automatic scenario handling that combat scripts have.
+These scripts don't have all the automatic scenario handling that combat scripts have, and are meant to be more open-ended and multi-purpose.
 
-Note that all of the syntax/features mentioned below are also available for Combat scripts, I'm just separating the explanations as the Combat example is very busy.
+The following are a series of example scripts broken out and separated to explain different available syntax and their purposes.
+- It's highly recommended to read through all of these to understand what options you have available to you when writing your scripts.
+- **Note**: all of the syntax/features mentioned below are also available for Combat scripts, I'm just separating the explanations as the Combat example is very busy.
 
 ```jsonc
 {
@@ -390,20 +409,3 @@ Note that all of the syntax/features mentioned below are also available for Comb
     "scriptType": "nonCom"
   },
 ```
-
-## Slash Commands
-
-Additionally, there are some slash commands you can enter in the game input to take advantage of some features without leaving the input. Type `/help` to view available command information, where you'll get output like this in red text:
-
-![The /help slash command output](https://user-images.githubusercontent.com/232725/201486934-79de82df-c736-4f6d-8cda-5222c6f9d865.png "The /help slash command output")
-
-You can get a list of current scripts available with `/scripts`:
-
-![Example available scripts list from /scripts command](https://user-images.githubusercontent.com/232725/85637298-78466000-b648-11ea-919d-8eb24d2bc1d2.png "Example available scripts list from /scripts command")
-
-Here are a few examples for the `/start` command:
-- `/start twohandcore dog|rat two-handed`
-- `/start outdoorsBasic`
-  - In this case you can see the target/weaponItemName are not added, this is because they aren't required for nonCom type scripts (check the example scripts for an example of nonCom vs combat).
-Any command starting with a forward slash is not sent to the TEC server, instead it's interpreted by the extension. Additionally, all messages from the extension will be in a consistent red text with a smaller font size to distinguish it.
-
