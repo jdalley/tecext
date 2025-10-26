@@ -1132,7 +1132,7 @@ function slashCommand(command) {
 				    [command]
 					/resume : Resume the current script
 					/scripts : List of currently defined scripts, can filter by script name.
-				    [scriptNameSearch]
+				    *[scriptNameSearch]
 					/start : Start a script by name
 				    [scriptName]
 				    [target]
