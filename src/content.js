@@ -1,24 +1,24 @@
 import { State } from "./state.js";
-import { 
-	consoleLog, 
+import {
+	consoleLog,
 	dedent,
 	dedentPreserveLayout,
-	isPositiveNumeric, 
+	isPositiveNumeric,
 	stringToBoolean,
 	getAuthHash
 } from "./utils.js";
- 
+
 /*********************************************************************************************/
-/** 
+/**
  * Main script that contains primary logic for parsing, scripting, and modifying the DOM.
- * 
+ *
  * This script is injected into the Orchil client page as it loads. It has access to modify
  * the DOM, respond to user interactions with eventing, and pass messages to the background
- * script and the injected script. 
- * 
- * However, it is isolated from being able to access the existing JavaScript from Orchil. 
- * This is why we have to inject another script into the page (injected.js) to enable 
- * hooking into functions to intercept calls and take action on incoming data from the 
+ * script and the injected script.
+ *
+ * However, it is isolated from being able to access the existing JavaScript from Orchil.
+ * This is why we have to inject another script into the page (injected.js) to enable
+ * hooking into functions to intercept calls and take action on incoming data from the
  * server, and to send (game commands) or not send (slash commands) to the server, etc.
 */
 
@@ -27,7 +27,7 @@ import {
 
 /**
  *  Send the configuration to the injected script to apply it to the client page.
- * 
+ *
  *  @param {object} [config]
  */
 function applyConfiguration(config) {
@@ -68,9 +68,9 @@ function saveConfiguration(config) {
 }
 
 /**
- * Inject the script used to work directly with the javascript of the Orchil client; 
+ * Inject the script used to work directly with the javascript of the Orchil client;
  * hooking into relevant events, variables, and data from web sockets.
- * 
+ *
  * The order of operations is important here. The injected script must be loaded before
  * the extension's configuration and user script data is loaded into State.
  */
@@ -84,7 +84,7 @@ script.onload = function () {
 
 // Load the extension's configuration and user script data into State.
 const state = new State();
-// Initial load of extension config and scripts once the state is created. 
+// Initial load of extension config and scripts once the state is created.
 setTimeout(function () {
 	state.loadExtData();
 }, 1000);
@@ -352,7 +352,7 @@ function combatScript(data) {
 		}
 
 		// Detect weapon-specific kill echo and wipe the override for next no longer busy.
-		if ((data.includes(state.shouldKillParse) && state.commandOverride.includes("kill")) || 
+		if ((data.includes(state.shouldKillParse) && state.commandOverride.includes("kill")) ||
 			(data.includes(state.customKillCommandParse) && state.commandOverride.includes(state.customKillCommand))
 		) {
 			state.attemptingKill = false;
@@ -363,16 +363,16 @@ function combatScript(data) {
 	// Attempt to continue script after a critter/target walks in/arrives.
 	if (state.continueOnWalkIn) {
 		if (
-			data.includes("walks in") || 
-			data.includes(" in from a") || 
-			data.includes(" arrives.") || 
-			data.includes(" charges in") || 
-			data.includes(" charge in") || 
-			data.includes(" rushes in") || 
-			data.includes(" rush in") || 
-			data.includes(" lopes in") || 
-			data.includes(" and onto your boat") || 
-			data.includes(" steps out of the nearby shadows.") || 
+			data.includes("walks in") ||
+			data.includes(" in from a") ||
+			data.includes(" arrives.") ||
+			data.includes(" charges in") ||
+			data.includes(" charge in") ||
+			data.includes(" rushes in") ||
+			data.includes(" rush in") ||
+			data.includes(" lopes in") ||
+			data.includes(" and onto your boat") ||
+			data.includes(" steps out of the nearby shadows.") ||
 			data.includes(" reanimates from")
 		) {
 			consoleLog("Continue on walk in triggered, sending next command");
@@ -472,7 +472,7 @@ function combatGlobals(data) {
 		(data.includes("You take a") ||
 			data.includes("You are already carrying")) &&	state.recoveringWeapon
 	) {
-		
+
 		let cmds = [];
 		if (data.includes(state.weaponItemName) && !state.shieldItemName) {
 			// No shield, regular wield (two-hand) the weapon.
@@ -491,7 +491,7 @@ function combatGlobals(data) {
 		state.recoveringWeapon = false;
 	}
 	// These not-wielding scenarios don't require waiting for no longer busy.
-	if (data.includes("You can't do that right now") || 
+	if (data.includes("You can't do that right now") ||
 		data.includes("You must be carrying something to wield it") ||
 		data.includes("You need to be wielding") ||
 		data.includes("You must be wielding") ||
@@ -515,7 +515,7 @@ function combatGlobals(data) {
 	}
 
 	if (data.includes("You must be wielding a shield to") ||
-		data.includes("What kind of hoplite doesn't wield a shield")	
+		data.includes("What kind of hoplite doesn't wield a shield")
 	) {
 		sendDelayedCommands([
 			`get ${state.shieldItemName}`,
@@ -984,9 +984,9 @@ function matchOutcome(data, outcome) {
 
 /**
  * Determine if state.scriptCounterEnabled should be enabled or disabled, and set its value.
- * 
- * If any command in the current script contains the string <counter>, assume the intent of 
- * the entire script is to iterate the commandList exactly {state.extConfig.scriptCounterStopAt} 
+ *
+ * If any command in the current script contains the string <counter>, assume the intent of
+ * the entire script is to iterate the commandList exactly {state.extConfig.scriptCounterStopAt}
  * times.
  */
 function toggleScriptCounter() {
@@ -1000,8 +1000,8 @@ function toggleScriptCounter() {
 
 /**
  * Try to increment state.scriptCounterCurrent if the following is true:
- * 
- * 1. scriptCounterEnabled is true 
+ *
+ * 1. scriptCounterEnabled is true
  * 2. The scriptCounterStopAt value is greater than 0
  * 3. scriptCounterCurrent is less than or equaled to state.extConfig.scriptCounterStopAt
  * 4. The current command is the last in the state.commandList
@@ -1013,7 +1013,7 @@ function tryIncrementScriptCounterCurrent() {
 			state.currentCmdIndex === state.commandList.length - 1
 		) {
 		state.scriptCounterCurrent++;
-	} 
+	}
 }
 
 /*********************************************************************************************/
@@ -1073,17 +1073,17 @@ function getCommandDelayInMs(additionalDelay) {
 		// retries while it's waiting for a parse - so we carry that 0 below and it skips the retry.
 		// Otherwise, it's a command-level custom retry definition and we'll honor it while that command
 		// is running (script writer knows to move to the next command after a custom amount of time).
-		let commandRetryOverride = -1; 
+		let commandRetryOverride = -1;
 		if (state.commandList[state.currentCmdIndex]?.commandRetryMs !== undefined) {
 			commandRetryOverride = isPositiveNumeric(state.commandList[state.currentCmdIndex].commandRetryMs)
 				? Number(state.commandList[state.currentCmdIndex].commandRetryMs)
-				: commandRetryOverride; 
+				: commandRetryOverride;
 		}
 
 		// Use command-level retry override
 		if (commandRetryOverride > -1) {
 			retryMs = commandRetryOverride;
-		} 
+		}
 		// Use globally defined command retry
 		else {
 			retryMs = isPositiveNumeric(state.extConfig?.commandRetryMs)
@@ -1114,31 +1114,38 @@ function slashCommand(command) {
 	for (let i = 0, l = commandParams.length; i < l; i++) {
 		commandParams[i] = commandParams[i].replace(/^"|"$/g, "");
 	}
+	// Remove empty param option if found
+	if (commandParams.includes("")) {
+		commandParams.splice(commandParams.indexOf(""), 1);
+	}
 
+	// Slash command
 	const commandName = commandParams[0];
+	// Get the full string of parameters after the initial slash command name.
+	const paramStr = command.split(commandName)?.[1]?.trim();
 
 	switch (commandName) {
 		case "/help":
 			const message = dedentPreserveLayout(`
 				Command Notes
 					- Square brackets ([]) denote a command argument
-					- Asterisk square brackets (*[]) denote an argument that's optional (booleans default to true) 
+					- Asterisk square brackets (*[]) denote an argument that's optional (booleans default to true)
 					- Commands with arguments should be separated by spaces all within a single line, ie:
 				    /start spearClose thug|brute boison-tipped
 				    /start archShot thug|brute bow none true true
 				    /start clubShieldBrawl thug|brute mace triangle false true
-				
+
 				Script Commands
-					/counterstopat 
-					/csa : Get or set the value that <counter> variables will stop at. 
+					/counterstopat
+					/csa : Get or set the value that <counter> variables will stop at.
 				    *[counterStopAtValue]
 					/current : Display the currently running script
-					/editscripts 
+					/editscripts
 					/es : Open the edit scripts window
 					/pause : Pause the current script
 					/repeat	: Repeat a command with a delay
 				    [command]
-					/repeatnlb 
+					/repeatnlb
 					/rnlb : Repeat a command after 'No longer busy'
 				    [command]
 					/resume : Resume the current script
@@ -1148,7 +1155,7 @@ function slashCommand(command) {
 				    [scriptName]
 				    [target]
 				    [weaponItemName]
-				    [shieldItemName]	
+				    [shieldItemName]
 				    *[shouldKill]
 				    *[continueOnWalkIn]
 					/stop : Stop the currently running script
@@ -1158,16 +1165,11 @@ function slashCommand(command) {
 			sendClientMessage(message, true);
 			break;
 
-		case "/counterstopat":
 		case "/csa":
-			// Remove empty param option if found
-			if (commandParams.includes("")) {
-				commandParams.splice(commandParams.indexOf(""), 1);
-			}
-
+		case "/counterstopat":
 			let counterMaxValue = commandParams[1];
 			if (counterMaxValue) {
-				state.extConfig.scriptCounterStopAt = 
+				state.extConfig.scriptCounterStopAt =
 					(Number.isInteger(Number(counterMaxValue)) && counterMaxValue > 0)
 						? counterMaxValue : 0;
 
@@ -1180,8 +1182,8 @@ function slashCommand(command) {
 			sendClientMessage(`The current script is: ${state.currentScriptName}`);
 			break;
 
-		case "/editscripts":
 		case "/es":
+		case "/editscripts":
 			openEditScripts();
 			break;
 
@@ -1190,44 +1192,33 @@ function slashCommand(command) {
 			break;
 
 		case "/repeat":
-			// Grab the entire command after the command name to use verbatim.
-			const repeatParams = command.split("/repeat");
-			if (repeatParams.length <= 1) {
+			if (!paramStr) {
 				sendClientMessage(`A command to repeat is expected when using /repeat`);
 			}
 
-			const repeatCmd = repeatParams[1].trim();
 			state.scriptPaused = false;
-			runSimpleRepeatWithDelay(repeatCmd);
-			sendClientMessage(`Starting to repeat the command: ${repeatCmd}`);
+			runSimpleRepeatWithDelay(paramStr);
+			sendClientMessage(`Starting to repeat the command: ${paramStr}`);
 			break;
 
-		case "/repeatnlb":
 		case "/rnlb":
-			// Grab the entire command after the command name to use verbatim.
-			const repeatNlbParams = command.split("/repeatnlb");
-			if (repeatNlbParams.length <= 1) {
+		case "/repeatnlb":
+			if (!paramStr) {
 				sendClientMessage(
-					`A command to repeat is expected when using /repeatnlb`
+					`A command to repeat is expected when using /repeatnlb or /rnlb`
 				);
 			}
 
-			const repeatNlbCmd = repeatNlbParams[1].trim();
 			state.scriptPaused = false;
-			runSimpleRepeat(repeatNlbCmd);
-			sendClientMessage(`Starting to repeat the command: ${repeatNlbCmd}`);
+			runSimpleRepeat(paramStr);
+			sendClientMessage(`Starting to repeat the command: ${paramStr}`);
 			break;
-	
+
 		case "/resume":
 			resumeCurrentScript();
 			break;
 
 		case "/scripts":
-			// Remove empty param option if found
-			if (commandParams.includes("")) {
-				commandParams.splice(commandParams.indexOf(""), 1);
-			}
-
 			const scriptNameSearch = commandParams[1];
 			const scripts = state.userScripts
 				.filter((s) => scriptNameSearch ? s.scriptName.includes(scriptNameSearch) : s.scriptName)
@@ -1242,11 +1233,6 @@ function slashCommand(command) {
 			break;
 
 		case "/start":
-			// Remove empty param option if found
-			if (commandParams.includes("")) {
-				commandParams.splice(commandParams.indexOf(""), 1);
-			}
-
 			if (commandParams.length <= 1) {
 				sendClientMessage(
 					`A script name parameter is expected when using /scripts`
@@ -1294,7 +1280,7 @@ function slashCommand(command) {
 			break;
 
 		default:
-			sendClientMessage(`Slash command ${command} not found.`);
+			sendClientMessage(`Command ${command} not found.`);
 	}
 }
 

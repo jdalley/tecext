@@ -1802,6 +1802,23 @@
   {
     "commandList": [
       {
+        "command": "get <target> from <counter> corpse",
+        "commandRetryMs": 500,
+        "parse": [
+          {
+            "moveNextNow": true,
+            "outcome": "You don't see"
+          }
+        ]
+      }
+    ],
+    "scriptFriendlyName": "Looting",
+    "scriptName": "loot",
+    "scriptType": "nonCom"
+  },
+  {
+    "commandList": [
+      {
         "command": "study chest",
         "parse": {
           "moveNextWhen": "You are no longer busy",
