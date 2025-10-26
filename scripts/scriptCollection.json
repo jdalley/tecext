@@ -1476,6 +1476,100 @@
     "scriptName": "healingBandaging",
     "scriptType": "nonCom"
   },
+	{
+    "addAttack": false,
+    "commandList": [
+			{
+        "command": "lstrike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You deftly lunge at"
+        }
+      },
+      {
+        "command": "pthrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "With a deft twist"
+        }
+      },
+			{
+        "command": "wstrike",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Crouching low, you swing your"
+        }
+      },
+      {
+        "command": "lthrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You step to the side sudden"
+        }
+      },
+      {
+        "command": "shstab",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Using your shield to balance"
+        }
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Hoplite Core",
+    "scriptName": "hopCore",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": "hoplite"
+  },
+	{
+    "addAttack": false,
+    "commandList": [
+			{
+        "command": "lstrike <target> high",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You deftly lunge at"
+        }
+      },
+      {
+        "command": "pthrust <target> high",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "With a deft twist"
+        }
+      },
+			{
+        "command": "wstrike <target> high",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Crouching low, you swing your"
+        }
+      },
+      {
+        "command": "lthrust",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "You step to the side sudden"
+        }
+      },
+      {
+        "command": "shstab <target> high",
+        "parse": {
+          "moveNextWhen": "You are no longer busy",
+          "outcome": "Using your shield to balance"
+        }
+      }
+    ],
+    "continueOnWalkIn": true,
+    "scriptFriendlyName": "Hoplite Core - High",
+    "scriptName": "hopCoreHigh",
+    "scriptType": "combat",
+    "shouldKill": true,
+    "shouldKillParse": "You thrust your",
+    "stanceCommand": "hoplite"
+  },
   {
     "addAttack": false,
     "commandList": [
@@ -1608,121 +1702,7 @@
     "scriptType": "combat",
     "shouldKill": true,
     "shouldKillParse": "You thrust your",
-    "stanceCommand": ""
-  },
-  {
-    "addAttack": false,
-    "commandList": [
-      {
-        "command": "bjab",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Slamming your shield"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You slam your shield at"
-          }
-        ]
-      },
-      {
-        "command": "pthrust",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "With a deft twist"
-        }
-      },
-      {
-        "command": "shstab",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "Using your shield to balance"
-        }
-      },
-      {
-        "command": "rbash",
-        "parse": {
-          "moveNextNow": "You are no longer busy",
-          "outcome": "You sling your"
-        }
-      },
-      {
-        "command": "sswing",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "With a bold lunge, you"
-        }
-      },
-      {
-        "command": "uthrust",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You sweep your shield aside and thrust"
-        }
-      },
-      {
-        "command": "lthrust",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You step to the side sudden"
-        }
-      },
-      {
-        "command": "sthrust",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You lunge forward, slamming your shield"
-          },
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "You lunge forward to slam your shield"
-          }
-        ]
-      },
-      {
-        "command": "schop",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You swing your shield wide"
-        }
-      },
-      {
-        "command": "swthrust",
-        "parse": [
-          {
-            "moveNextWhen": "You are no longer busy",
-            "outcome": "Reversing your grip"
-          },
-          {
-            "moveNextNow": true,
-            "outcome": "You may only use sweep and thrust on a standing opponent"
-          }
-        ]
-      },
-      {
-        "command": "wstrike",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "Crouching low, you swing your"
-        }
-      },
-      {
-        "command": "lstrike",
-        "parse": {
-          "moveNextWhen": "You are no longer busy",
-          "outcome": "You deftly lunge at"
-        }
-      }
-    ],
-    "continueOnWalkIn": true,
-    "scriptFriendlyName": "Hoplite Hunting",
-    "scriptName": "hopHunt",
-    "scriptType": "combat",
-    "shouldKill": true,
-    "shouldKillParse": "You thrust your",
-    "stanceCommand": ""
+    "stanceCommand": "hoplite"
   },
   {
     "commandList": [
@@ -2205,6 +2185,20 @@
     ],
     "scriptFriendlyName": "Signpost",
     "scriptName": "signpost",
+    "scriptType": "nonCom"
+  },
+	{
+    "commandList": [
+      {
+        "command": "skin <counter> corpse",
+        "parse": {
+          "moveNextNow": true,
+          "outcome": "There isn't anything worth skinning on it"
+        }
+      }
+    ],
+    "scriptFriendlyName": "Skin Everything",
+    "scriptName": "skin",
     "scriptType": "nonCom"
   },
   {

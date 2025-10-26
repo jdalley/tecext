@@ -16,8 +16,13 @@ import {
 
 /**
  *  Send the configuration to the injected script to apply it to the client page.
+ * 
+ *  @param {object} [config]
  */
 function applyConfiguration(config) {
+	if (!config) {
+		config = state.extConfig;
+	}
 	document.dispatchEvent(
 		new CustomEvent("extensionApplyConfig", {
 			detail: {
@@ -276,6 +281,8 @@ function parseMessage(data) {
 function combatScript(data) {
 	const matchFound = matchExpectedParse(data);
 	if (matchFound) {
+		// Handle before potentially resetting the command index.
+		tryIncrementScriptCounterCurrent();
 		moveCombatCmdIndex();
 
 		// If the parse has moveNextNow set to true, or if state.currentMoveNextWhen
@@ -625,6 +632,9 @@ function combatGlobals(data) {
 function nonComScript(data) {
 	const matchFound = matchExpectedParse(data);
 	if (matchFound) {
+		// Handle before potentially resetting the command index.
+		tryIncrementScriptCounterCurrent();
+
 		if (state.currentCmdIndex === state.commandList.length - 1) {
 			// Reset
 			state.currentCmdIndex = 0;
@@ -697,6 +707,9 @@ function runScriptByName(scriptName, options) {
 			state.commandList.push(command);
 		});
 
+		// Set whether to enable script counter functionality.
+		toggleScriptCounter();
+
 		// Kick it off...
 		sendNextCommand();
 	}
@@ -743,11 +756,10 @@ function runSimpleRepeatWithDelay(command) {
 /**
  * Kill it with fire (reset all state for the currently configured script)
  */
-function killCurrentScript() {
+function killCurrentScript(msg) {
 	if (state.currentScriptName || state.lastCommandRan) {
-		sendClientMessage(`Stopping script: ${getRunningCommand()}`);
+		sendClientMessage(`Stopping script: ${getRunningCommand()} ${msg}`);
 	}
-
 	state.resetState();
 }
 
@@ -783,6 +795,11 @@ function resumeCurrentScript() {
 function sendNextCommand(additionalDelay) {
 	if (!shouldSendNextCommand()) {
 		consoleLog(`shouldSendNextCommand was false, don't send command.`);
+
+		// Handle stopping the script when running a `<counter>` script and the stop value is reached.
+		if (state.scriptCounterEnabled && state.extConfig.scriptCounterStopAt > 0) {
+			killCurrentScript("- script counter completed.")
+		}
 		return;
 	}
 
@@ -815,8 +832,15 @@ function sendNextCommand(additionalDelay) {
 function shouldSendNextCommand() {
 	var sendCommand = true;
 
-	// Only rule, for now.
+	// Running a simple repeat command with a delay, don't send next command via sendNextCommand.
 	if (state.runRepeatWithDelay) {
+		sendCommand = false;
+	}
+	// Check counter if running an incrementing <counter>-based script.
+	if (state.scriptCounterEnabled &&
+		state.extConfig.scriptCounterStopAt > 0 &&
+		state.scriptCounterCurrent > state.extConfig.scriptCounterStopAt) {
+		// scriptCounterCurrent has incremented above scriptCounterStopAt, stop running commands.
 		sendCommand = false;
 	}
 	return sendCommand;
@@ -874,6 +898,11 @@ function getFormattedCommand() {
 			if (state.target) {
 				command += ` ${state.target}`;
 			}
+		}
+
+		// Check if the command contains a <counter>, replace with state.scriptCounterCurrent.
+		if (command.includes("<counter>")) {
+			command = command.replaceAll("<counter>", state.scriptCounterCurrent);
 		}
 	}
 
@@ -939,6 +968,40 @@ function matchOutcome(data, outcome) {
 	});
 
 	return outcomeSplit.some((outcome) => data.includes(outcome));
+}
+
+/**
+ * Determine if state.scriptCounterEnabled should be enabled or disabled, and set its value.
+ * 
+ * If any command in the current script contains the string <counter>, assume the intent of 
+ * the entire script is to iterate the commandList exactly {state.extConfig.scriptCounterStopAt} 
+ * times.
+ */
+function toggleScriptCounter() {
+	if (state.commandList.some(e => e.command?.includes('<counter>'))) {
+		state.scriptCounterEnabled = true;
+	}
+	else {
+		state.scriptCounterEnabled = false;
+	}
+}
+
+/**
+ * Try to increment state.scriptCounterCurrent if the following is true:
+ * 
+ * 1. scriptCounterEnabled is true 
+ * 2. The scriptCounterStopAt value is greater than 0
+ * 3. scriptCounterCurrent is less than or equaled to state.extConfig.scriptCounterStopAt
+ * 4. The current command is the last in the state.commandList
+ */
+function tryIncrementScriptCounterCurrent() {
+	if (state.scriptCounterEnabled &&
+			state.extConfig.scriptCounterStopAt > 0 &&
+			state.scriptCounterCurrent <= state.extConfig.scriptCounterStopAt &&
+			state.currentCmdIndex === state.commandList.length - 1
+		) {
+		state.scriptCounterCurrent++;
+	} 
 }
 
 /*********************************************************************************************/
@@ -1047,37 +1110,106 @@ function slashCommand(command) {
 			const message = dedentPreserveLayout(`
 				Command Notes
 				  - Square brackets ([]) denote a command argument
-				  - Asterisk square brackets (*[]) denote a boolean argument that's optional (default is true) 
+				  - Asterisk square brackets (*[]) denote an argument that's optional (booleans default to true) 
 				  - Commands with arguments should be separated by spaces all within a single line, ie:
 				    /start spearClose thug|brute boison-tipped
 				    /start archShot thug|brute bow none true true
 				    /start clubShieldBrawl thug|brute mace triangle false true
 				
 				Script Commands
-				  /scripts : List of currently defined scripts, can filter by script name.
+					/counterstopat 
+					/csa : Get or set the value that <counter> variables will stop at. 
+				    *[counterStopAtValue]
+					/current : Display the currently running script
+					/editscripts 
+					/es : Open the edit scripts window
+					/pause : Pause the current script
+					/repeat	: Repeat a command with a delay
+				    [command]
+					/repeatnlb 
+					/rnlb : Repeat a command after 'No longer busy'
+				    [command]
+					/resume : Resume the current script
+					/scripts : List of currently defined scripts, can filter by script name.
 				    [scriptNameSearch]
-				  /editscripts : Open the edit scripts window
-				  /current : Display the currently running script
-				  /start : Start a script by name
+					/start : Start a script by name
 				    [scriptName]
 				    [target]
 				    [weaponItemName]
 				    [shieldItemName]	
 				    *[shouldKill]
 				    *[continueOnWalkIn]
-				  /stop : Stop the currently running script
-				  /repeat	: Repeat a command with a delay
-				    [command]
-				  /repeatnlb : Repeat a command after 'No longer busy'
-				    [command]
-				  /pause : Pause the current script
-				  /resume : Resume the current script
-				
+					/stop : Stop the currently running script
 				Utility Commands
-				  /authhash : Get the TEC auth hash for the current user
+					/authhash : Get the TEC auth hash for the current user
 			`)
 			sendClientMessage(message, true);
 			break;
+
+		case "/counterstopat":
+		case "/csa":
+			// Remove empty param option if found
+			if (commandParams.includes("")) {
+				commandParams.splice(commandParams.indexOf(""), 1);
+			}
+
+			let counterMaxValue = commandParams[1];
+			if (counterMaxValue) {
+				state.extConfig.scriptCounterStopAt = 
+					(Number.isInteger(Number(counterMaxValue)) && counterMaxValue > 0)
+						? counterMaxValue : 0;
+
+				applyConfiguration();
+			}
+			sendClientMessage(`CounterStopAt is set to: ${state.extConfig.scriptCounterStopAt}`);
+			break;
+
+		case "/current":
+			sendClientMessage(`The current script is: ${state.currentScriptName}`);
+			break;
+
+		case "/editscripts":
+		case "/es":
+			openEditScripts();
+			break;
+
+		case "/pause":
+			pauseCurrentScript();
+			break;
+
+		case "/repeat":
+			// Grab the entire command after the command name to use verbatim.
+			const repeatParams = command.split("/repeat");
+			if (repeatParams.length <= 1) {
+				sendClientMessage(`A command to repeat is expected when using /repeat`);
+			}
+
+			const repeatCmd = repeatParams[1].trim();
+			state.scriptPaused = false;
+			runSimpleRepeatWithDelay(repeatCmd);
+			sendClientMessage(`Starting to repeat the command: ${repeatCmd}`);
+			break;
+
+		case "/repeatnlb":
+		case "/rnlb":
+			// Grab the entire command after the command name to use verbatim.
+			const repeatNlbParams = command.split("/repeatnlb");
+			if (repeatNlbParams.length <= 1) {
+				sendClientMessage(
+					`A command to repeat is expected when using /repeatnlb`
+				);
+			}
+
+			const repeatNlbCmd = repeatNlbParams[1].trim();
+			state.scriptPaused = false;
+			runSimpleRepeat(repeatNlbCmd);
+			sendClientMessage(`Starting to repeat the command: ${repeatNlbCmd}`);
+			break;
+	
+		case "/resume":
+			resumeCurrentScript();
+			break;
+
 		case "/scripts":
 			// Remove empty param option if found
 			if (commandParams.includes("")) {
@@ -1096,12 +1228,7 @@ function slashCommand(command) {
 					${scripts}
 			`));
 			break;
-		case "/editscripts":
-			openEditScripts();
-			break;
-		case "/current":
-			sendClientMessage(`The current script is: ${state.currentScriptName}`);
-			break;
+
 		case "/start":
 			// Remove empty param option if found
 			if (commandParams.includes("")) {
@@ -1145,44 +1272,15 @@ function slashCommand(command) {
 			});
 			state.lastCommandRan = command;
 			break;
+
 		case "/stop":
 			killCurrentScript();
 			break;
-		case "/repeat":
-			// Grab the entire command after the command name to use verbatim.
-			const repeatParams = command.split("/repeat");
-			if (repeatParams.length <= 1) {
-				sendClientMessage(`A command to repeat is expected when using /repeat`);
-			}
 
-			const repeatCmd = repeatParams[1].trim();
-			state.scriptPaused = false;
-			runSimpleRepeatWithDelay(repeatCmd);
-			sendClientMessage(`Starting to repeat the command: ${repeatCmd}`);
-			break;
-		case "/repeatnlb":
-			// Grab the entire command after the command name to use verbatim.
-			const repeatNlbParams = command.split("/repeatnlb");
-			if (repeatNlbParams.length <= 1) {
-				sendClientMessage(
-					`A command to repeat is expected when using /repeatnlb`
-				);
-			}
-
-			const repeatNlbCmd = repeatNlbParams[1].trim();
-			state.scriptPaused = false;
-			runSimpleRepeat(repeatNlbCmd);
-			sendClientMessage(`Starting to repeat the command: ${repeatNlbCmd}`);
-			break;
-		case "/pause":
-			pauseCurrentScript();
-			break;
-		case "/resume":
-			resumeCurrentScript();
-			break;
 		case "/authhash":
 			sendClientMessage(`Auth hash: ${getAuthHash()}`);
 			break;
+
 		default:
 			sendClientMessage(`Slash command ${command} not found.`);
 	}

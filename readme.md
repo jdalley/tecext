@@ -206,6 +206,7 @@ Note that all of the syntax/features mentioned below are also available for Comb
       "command": "bait pole with worm",
       // This causes a 5 second delay (in milliseconds) before running the next command after
       // the `outcome` conditions of this command are met.
+      // Note: This can be used with both nonCom and combat scripts.
       "delayBeforeNext": 5000, 
       "parse": [
         {
@@ -361,6 +362,33 @@ Note that all of the syntax/features mentioned below are also available for Comb
   "scriptName": "ferry",
   "scriptType": "nonCom"
 },
+```
+```jsonc
+	{
+    "commandList": [
+      {
+        // This is the Counter feature; its primary use is in scripts for skinning and looting
+        // or any task that you want to repeat only a certain number of times.
+        // 
+        // This feature is enabled if two things are true:
+        //    1. <counter> is present in at least one command within the commandList of a script.
+        //    2. The `Script Counter Stop At` value is set to a value greater than 0.
+        //        a. This setting lives under the General tab in the popup UI.
+        //        b. It can also be managed via the /counterstopat or /csa commands, see /help for syntax.
+        //        c. Once you set its value, it'll be used for _any_ script that uses a <counter> variable.
+        //        So you'll want to be updating it for your needs depending on how many times you want the 
+        //        script to run through its commandList. Ie: 20 for 20 things to skin or loot in the room. 
+        "command": "skin <counter> corpse",
+        "parse": {
+          "moveNextNow": true,
+          "outcome": "There isn't anything worth skinning on it"
+        }
+      }
+    ],
+    "scriptFriendlyName": "Skin - Everything",
+    "scriptName": "skin",
+    "scriptType": "nonCom"
+  },
 ```
 
 ## Slash Commands

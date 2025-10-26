@@ -46,6 +46,8 @@ export class State {
 		this.currentScriptType = null;
 		this.scriptPaused = false;
 		this.lastCommandSent = null;
+		this.scriptCounterEnabled = false;
+		this.scriptCounterCurrent = 1;
 	}
 
 	loadExtData() {
@@ -103,5 +105,7 @@ export class State {
 		this.currentScriptName = '';
 		this.currentScript = null;
 		this.scriptPaused = false;
+		this.scriptCounterEnabled = false;
+		this.scriptCounterCurrent = 1;
 	}
 }
