@@ -9,7 +9,18 @@ import {
 } from "./utils.js";
  
 /*********************************************************************************************/
-/* Main script that contains primary logic for parsing and scripting. */
+/** 
+ * Main script that contains primary logic for parsing, scripting, and modifying the DOM.
+ * 
+ * This script is injected into the Orchil client page as it loads. It has access to modify
+ * the DOM, respond to user interactions with eventing, and pass messages to the background
+ * script and the injected script. 
+ * 
+ * However, it is isolated from being able to access the existing JavaScript from Orchil. 
+ * This is why we have to inject another script into the page (injected.js) to enable 
+ * hooking into functions to intercept calls and take action on incoming data from the 
+ * server, and to send (game commands) or not send (slash commands) to the server, etc.
+*/
 
 /*********************************************************************************************/
 /* Initialization and Chrome setup */
@@ -33,7 +44,7 @@ function applyConfiguration(config) {
 }
 
 /**
- *  Save scripts here and in local storage via the background service worker
+ * Save scripts here and in local storage via the background service worker
  * @param {string} scripts
  */
 function saveScripts(scripts) {
@@ -57,8 +68,8 @@ function saveConfiguration(config) {
 }
 
 /**
- * Inject the script used to work directly with the contents of the page; hooking into
- * relevant events, variables, and data from web sockets.
+ * Inject the script used to work directly with the javascript of the Orchil client; 
+ * hooking into relevant events, variables, and data from web sockets.
  * 
  * The order of operations is important here. The injected script must be loaded before
  * the extension's configuration and user script data is loaded into State.
@@ -67,6 +78,7 @@ const script = document.createElement("script");
 script.src = chrome.runtime.getURL("injected.js");
 (document.head || document.documentElement).appendChild(script);
 script.onload = function () {
+	// Cleanup the script tag after the script is loaded into the page's context.
 	script.remove();
 };
 
@@ -228,7 +240,6 @@ function sendClientMessage(msg, usePre = false) {
 	}
 
 	div.style.color = "red";
-	div.style.fontSize = "smaller";
 	output.appendChild(div);
 
 	// scroll to bottom
@@ -1110,9 +1121,9 @@ function slashCommand(command) {
 		case "/help":
 			const message = dedentPreserveLayout(`
 				Command Notes
-				  - Square brackets ([]) denote a command argument
-				  - Asterisk square brackets (*[]) denote an argument that's optional (booleans default to true) 
-				  - Commands with arguments should be separated by spaces all within a single line, ie:
+					- Square brackets ([]) denote a command argument
+					- Asterisk square brackets (*[]) denote an argument that's optional (booleans default to true) 
+					- Commands with arguments should be separated by spaces all within a single line, ie:
 				    /start spearClose thug|brute boison-tipped
 				    /start archShot thug|brute bow none true true
 				    /start clubShieldBrawl thug|brute mace triangle false true

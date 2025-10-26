@@ -1,8 +1,15 @@
+
+/*********************************************************************************************/
 /**
- * This is injected into the page to have access to existing javascript variables, events, data
- * from web sockets, and functions. It will send messages back and forth to the content script
- * that injected it; which will pipe back to the background script for the extension.
+ * This is injected into the page to have access to existing javascript variables, events, 
+ * data from web sockets, and functions. 
+ * 
+ * It will send messages back and forth to the content script that injected it; which can
+ * pipe back to the background script for the extension when necessary.
  */
+
+/*********************************************************************************************/
+/* Function definitions for use in overrides and listeners. */ 
 
 // Contains config received from local storage.
 let injectedConfig = {};

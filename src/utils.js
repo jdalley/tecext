@@ -67,14 +67,13 @@ export function isPositiveNumeric(value) {
 	return /^\d+$/.test(value);
 }
 
-
 /**
  * Converts a string to a boolean value.
- * @param {string} The string to convert to a boolean
+ * @param {string} s The string to convert to a boolean
  * @returns 
  */
-export function stringToBoolean(string) {
-	switch (string.toLowerCase().trim()) {
+export function stringToBoolean(s) {
+	switch (s.toLowerCase().trim()) {
 		case "true":
 		case "yes":
 		case "1":
@@ -85,7 +84,7 @@ export function stringToBoolean(string) {
 		case null:
 			return false;
 		default:
-			return Boolean(string);
+			return Boolean(s);
 	}
 }
 
