@@ -43,6 +43,7 @@ export class State {
 		// Scripts
 		this.currentScript = null;
 		this.currentScriptName = null;
+		this.currentScriptFriendlyName = null;
 		this.currentScriptType = null;
 		this.scriptPaused = false;
 		this.lastCommandSent = null;
@@ -103,6 +104,7 @@ export class State {
 		this.moveNextNow = false;
 		this.currentScriptType = '';
 		this.currentScriptName = '';
+		this.currentScriptFriendlyName = '';
 		this.currentScript = null;
 		this.scriptPaused = false;
 		this.scriptCounterEnabled = false;

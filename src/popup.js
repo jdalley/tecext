@@ -37,6 +37,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 
 	document.getElementById("saveConfig").addEventListener("click", function (e) {
+		// Script params
+		config.selectedScript = document.getElementById("scriptSelect").value;
+		config.weaponItemName = document.getElementById("weaponItemName").value;
+		config.shieldItemName = document.getElementById("shieldItemName").value;
+		config.targetInput = document.getElementById("targetInput").value;
 		// Comms config
 		config.enableComms = document.getElementById("enableComms").checked;
 		config.includeThoughts = document.getElementById("includeThoughts").checked;
@@ -99,6 +104,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		const shouldKill = document.getElementById("shouldKill").checked;
 		const continueOnWalkIn =
 			document.getElementById("continueOnWalkIn").checked;
+
+		// Save current script param inputs in config for re-use:
+		config.selectedScript = scriptName;
+		config.weaponItemName = weaponItemName;
+		config.shieldItemName = shieldItemName;
+		config.targetInput = target;
+		saveConfiguration(config);
 
 		// This will become data driven later, via json/local storage with defaults
 		// TODO: Move options into its own JSON config, load it like scripts are loaded
@@ -233,6 +245,11 @@ function getConfiguration() {
 				// Response will be a config object
 				if (response) {
 					// Hydrate local config for usage throughout the life of the popup window
+					// Script params
+					config.selectedScript = response.selectedScript;
+					config.weaponItemName = response.weaponItemName;
+					config.shieldItemName = response.shieldItemName;
+					config.targetInput = response.targetInput;
 					// Comms config
 					config.enableComms = response.enableComms;
 					config.includeThoughts = response.includeThoughts;
@@ -258,6 +275,11 @@ function getConfiguration() {
 					config.darkModeEnabled = response.darkModeEnabled;
 
 					// Apply configurations to inputs
+					let scriptSelect = document.getElementById("scriptSelect");
+					scriptSelect.value = config.selectedScript || scriptSelect.options[0].value;
+					document.getElementById("weaponItemName").value = config.weaponItemName ?? "";
+					document.getElementById("shieldItemName").value = config.shieldItemName ?? "";
+					document.getElementById("targetInput").value = config.targetInput ?? "";
 					document.getElementById("enableComms").checked = config.enableComms;
 					document.getElementById("includeThoughts").checked =
 						config.includeThoughts;

@@ -700,6 +700,7 @@ function runScriptByName(scriptName, options) {
 		state.entangledCommand = script.entangledCommand;
 		state.currentScriptType = script.scriptType.toLowerCase();
 		state.currentScriptName = script.scriptName;
+		state.currentScriptFriendlyName = script.scriptFriendlyName;
 		state.currentScript = script;
 		state.scriptPaused = false;
 
@@ -758,7 +759,7 @@ function runSimpleRepeatWithDelay(command) {
  */
 function killCurrentScript(msg) {
 	if (state.currentScriptName || state.lastCommandRan) {
-		sendClientMessage(`Stopping script: ${getRunningCommand()} ${msg}`);
+		sendClientMessage(`Stopping script: ${getRunningCommand()} ${msg ?? ""}`);
 	}
 	state.resetState();
 }
@@ -1293,7 +1294,7 @@ function getRunningCommand() {
 	let runningCmd = "";
 
 	if (state.currentScriptName) {
-		runningCmd = `Script - ${state.currentScriptName}`;
+		runningCmd = `${state.currentScriptName} (${state.currentScriptFriendlyName})`;
 	} else {
 		runningCmd = state.lastCommandRan;
 	}
