@@ -373,7 +373,9 @@ function combatScript(data) {
 			data.includes(" lopes in") ||
 			data.includes(" and onto your boat") ||
 			data.includes(" steps out of the nearby shadows.") ||
-			data.includes(" reanimates from")
+			data.includes(" reanimates from" ||
+			data.includes(" scutles in" ||
+			data.includes(" flies in")
 		) {
 			consoleLog("Continue on walk in triggered, sending next command");
 			sendNextCommand(400);
