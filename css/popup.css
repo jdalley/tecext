@@ -59,3 +59,35 @@ body {
 	color: green;
 }
 
+@supports (appearance: base-select) {
+	#scriptSelect,
+	#scriptSelect::picker(select) {
+		appearance: base-select;
+	}
+
+	/* Keep Bootstrap's chevron instead of adding a second one */
+	#scriptSelect::picker-icon {
+		display: none;
+	}
+
+	#scriptSelect::picker(select) {
+		/* Cap the list so it always fits in the popup, and scroll inside it */
+		max-height: min(300px, 60vh);
+		overflow-y: auto;
+		/* If there's more room above than below, open upward */
+		position-try-fallbacks: flip-block;
+		margin: 2px 0;
+		border: 1px solid var(--bs-border-color);
+		background: var(--bs-body-bg);
+		color: var(--bs-body-color);
+	}
+
+	#scriptSelect option {
+		padding: 0.4rem 0.75rem;
+	}
+	#scriptSelect option:hover,
+	#scriptSelect option:checked {
+		background: var(--bs-primary);
+		color: #fff;
+	}
+}
