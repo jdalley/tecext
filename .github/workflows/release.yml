@@ -2,12 +2,88 @@
 name: Release
 
 on:
+  # Pushing a tag releases that tag.
   push:
     tags:
       - '*'
+    # Pushing a manifest.json change to main releases `v<manifest version>`, creating the
+    # tag as part of the release. Skipped if that version has already been released.
+    branches:
+      - main
+    paths:
+      - 'manifest.json'
+  # Manual run from the GitHub UI (Actions > Release > Run workflow).
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Optional. Must match the manifest.json version as v<version> (e.g. v2.4.2). Leave blank to use it.'
+        required: false
+        type: string
+
+permissions:
+  contents: write
 
 jobs:
+  # Work out which tag we're releasing, and whether there's anything to do.
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+      skip: ${{ steps.tag.outputs.skip }}
+      is_tag_push: ${{ steps.tag.outputs.is_tag_push }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine release tag
+        id: tag
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          SKIP=false
+          IS_TAG_PUSH=false
+
+          if [ "$EVENT_NAME" = "push" ] && [ "$REF_TYPE" = "tag" ]; then
+            # Tag push: release the tag that was pushed.
+            IS_TAG_PUSH=true
+            TAG="$GITHUB_REF_NAME"
+          else
+            # Branch push or manual run: use the supplied tag, or `v<manifest version>`.
+            TAG="$INPUT_TAG"
+            EXPECTED="v$(jq -r .version manifest.json)"
+            if [ -z "$TAG" ]; then
+              TAG="$EXPECTED"
+            fi
+
+            # The zip is named from manifest.json, so the tag must match it.
+            if [ "$TAG" != "$EXPECTED" ]; then
+              echo "::error::Tag $TAG doesn't match the manifest.json version ($EXPECTED). Update the manifest or leave the tag blank."
+              exit 1
+            fi
+
+            if git rev-parse -q --verify "refs/tags/$TAG" > /dev/null; then
+              if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+                echo "::error::Tag $TAG already exists. Bump the version in manifest.json or supply a new tag."
+                exit 1
+              fi
+              # A manifest.json change that didn't bump the version: nothing to release.
+              echo "::notice::Tag $TAG already exists, skipping release."
+              SKIP=true
+            fi
+          fi
+
+          echo "Releasing as $TAG (skip=$SKIP)"
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "skip=${SKIP}" >> $GITHUB_OUTPUT
+          echo "is_tag_push=${IS_TAG_PUSH}" >> $GITHUB_OUTPUT
+
   release:
+    needs: prepare
+    if: needs.prepare.outputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -33,16 +109,28 @@ jobs:
           echo "zipfilepath=${zipfile}" >> $GITHUB_OUTPUT
           echo "zipfilename=$(basename ${zipfile})" >> $GITHUB_OUTPUT
 
+      # Tag push: HEAD is the new tag, so exclude it to find the previous one.
+      # Otherwise the new tag doesn't exist yet, so the latest tag is the previous one.
       - name: Get previous tag
         id: previoustag
-        run: echo "previoustag=$(git describe --abbrev=0 --tags --exclude="$(git describe --abbrev=0 --tags)")" >> $GITHUB_OUTPUT
+        env:
+          IS_TAG_PUSH: ${{ needs.prepare.outputs.is_tag_push }}
+        run: |
+          if [ "$IS_TAG_PUSH" = "true" ]; then
+            PREV=$(git describe --abbrev=0 --tags --exclude="$(git describe --abbrev=0 --tags)")
+          else
+            PREV=$(git describe --abbrev=0 --tags)
+          fi
+          echo "previoustag=${PREV}" >> $GITHUB_OUTPUT
 
       - name: Create Release and Upload Assets
         id: createrelease
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.prepare.outputs.tag }}
+          target_commitish: ${{ github.sha }}
           files: ${{ steps.findzip.outputs.zipfilepath }}
-          body: 'Changes: https://github.com/${{ github.repository }}/compare/${{ steps.previoustag.outputs.previoustag }}...${{ github.ref_name }}'
+          body: 'Changes: https://github.com/${{ github.repository }}/compare/${{ steps.previoustag.outputs.previoustag }}...${{ needs.prepare.outputs.tag }}'
           draft: false
           prerelease: false
         env:
