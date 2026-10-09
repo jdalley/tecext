@@ -1,15 +1,14 @@
-
 /*********************************************************************************************/
 /**
- * This is injected into the page to have access to existing javascript variables, events, 
- * data from web sockets, and functions. 
- * 
+ * This is injected into the page to have access to existing javascript variables, events,
+ * data from web sockets, and functions.
+ *
  * It will send messages back and forth to the content script that injected it; which can
  * pipe back to the background script for the extension when necessary.
  */
 
 /*********************************************************************************************/
-/* Function definitions for use in overrides and listeners. */ 
+/* Function definitions for use in overrides and listeners. */
 
 // Contains config received from local storage.
 let injectedConfig = {};
@@ -38,6 +37,33 @@ function doSendOverride(msg) {
 	);
 }
 
+// Get the list of names to mute. Prefers the pre-built array, but falls back to
+// deriving it from the comma-separated string, as configs saved by older versions
+// of the extension may not have commsMuteListArray at all.
+function getMuteList() {
+	if (
+		Array.isArray(injectedConfig.commsMuteListArray) &&
+		injectedConfig.commsMuteListArray.length > 0
+	) {
+		return injectedConfig.commsMuteListArray.filter(Boolean);
+	}
+	if (
+		typeof injectedConfig.commsMuteList === "string" &&
+		injectedConfig.commsMuteList.trim()
+	) {
+		return injectedConfig.commsMuteList
+			.split(",")
+			.map((item) => item.trim())
+			.filter(Boolean);
+	}
+	return [];
+}
+
+// Escape characters that have special meaning in a regular expression.
+function escapeRegex(str) {
+	return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 // Take communication messages and add them to the comms element.
 function pullCommunication(msg) {
 	// Whether to send this message to Orchil's doReceive method.
@@ -51,26 +77,24 @@ function pullCommunication(msg) {
 	let oocMuteMatch = null;
 
 	// Match Thoughts and OOC comments with names from the Mute List, and flag to remove them.
-	if (
-		injectedConfig.commsMuteList !== undefined &&
-		injectedConfig.commsMuteList
-	) {
-		injectedConfig.commsMuteListArray.map(function (mute) {
-			let thoughtMuteReg = new RegExp(
-				`(?:<|&lt;)(\\w.+${mute}) (?:thinks|think) aloud: (.*)(?:>|&gt;)`
-			);
-			let oocMuteReg = new RegExp(`<.+(?:OOC&gt;) (${mute} )(.+)`);
+	for (const name of getMuteList()) {
+		const mute = escapeRegex(name);
+		const thoughtMuteReg = new RegExp(
+			`(?:<|&lt;)(\\w.+${mute}) (?:thinks|think) aloud: (.*)(?:>|&gt;)`
+		);
+		const oocMuteReg = new RegExp(`<.+(?:OOC&gt;) (${mute} )(.+)`);
 
-			thoughtMuteMatch = msg.match(thoughtMuteReg);
-			oocMuteMatch = msg.match(oocMuteReg);
+		const thoughtMatch = msg.match(thoughtMuteReg);
+		const oocMatch = msg.match(oocMuteReg);
 
-			if (thoughtMuteMatch && thoughtMuteMatch.length >= 1) {
-				muteThought = true;
-			}
-			if (oocMuteMatch && oocMuteMatch.length >= 1) {
-				muteOOC = true;
-			}
-		});
+		if (thoughtMatch) {
+			muteThought = true;
+			thoughtMuteMatch = thoughtMatch;
+		}
+		if (oocMatch) {
+			muteOOC = true;
+			oocMuteMatch = oocMatch;
+		}
 	}
 
 	if (muteThought) {
@@ -200,14 +224,14 @@ function createCommsElement() {
 							height: ${injectedConfig.commsBoxHeight}px;
 							border:3px gray inset;
 							border-bottom-width: 5px;
-							overflow:auto; 
-							padding: 0 0.5em; 
+							overflow:auto;
+							padding: 0 0.5em;
 							overflow-wrap:break-word;
 							white-space: normal;
 							background-color: inherit;
 						}
 					</style>
-				
+
 					<div id="comms" class="selectable"></div>
 				`
 			);
@@ -235,16 +259,16 @@ if (typeof doReceive !== "undefined") {
 		consoleLog(msg);
 
 		/* Pull out communication for the comms window, and determine if this message
-		 * should be sent to the main output window or not. 
-		 * 
+		 * should be sent to the main output window or not.
+		 *
 		 * An individual message from the server can contain multiple lines that
-		 * we need to check individually with regex in pullCommunication(). This 
+		 * we need to check individually with regex in pullCommunication(). This
 		 * can cause false positives when trying to remove matches comms messages.
-		 * 
+		 *
 		 * A single message could report both true (blank line) and false (regex
 		 * matched comms message). To correctly avoid sending output to the main
-		 * window, we should collect the result from each line's comms matches, 
-		 * and if any false values are found, don't output the message to the 
+		 * window, we should collect the result from each line's comms matches,
+		 * and if any false values are found, don't output the message to the
 		 * main window.
 		 */
 		let sendToOutput = [true];
@@ -256,7 +280,7 @@ if (typeof doReceive !== "undefined") {
 		if (sendToOutput.every(v => v === true)) {
 			origDoReceive.apply(this, arguments);
 		}
-		
+
 		return;
 	};
 }

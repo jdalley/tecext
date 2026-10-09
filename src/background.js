@@ -59,6 +59,15 @@ const getConfig = async () => {
 					extConfig.aceTheme = 'gruvbox';
 				}
 
+				// Configs saved by older versions may have a mute list string but no
+				// derived array. Rebuild it so consumers can rely on it being an array.
+				if (!Array.isArray(extConfig.commsMuteListArray)) {
+					extConfig.commsMuteListArray = (extConfig.commsMuteList || '')
+						.split(',')
+						.map((item) => item.trim())
+						.filter(Boolean);
+				}
+
 				resolve(extConfig);
 			}
 			else {
@@ -143,7 +152,7 @@ const handleMessages = async (request, sender, sendResponse) => {
 /**
  * Handle messages from other scripts
  */
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	handleMessages(request, sender, sendResponse);
 	// Keep the messaging channel open for sending responses
 	return true;
