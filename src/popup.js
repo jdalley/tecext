@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Script params
 		config.selectedScript = document.getElementById("scriptSelect").value;
 		config.weaponItemName = document.getElementById("weaponItemName").value;
-		config.shieldItemName = document.getElementById("shieldItemName").value;
+		config.offhandItemName = document.getElementById("offhandItemName").value;
 		config.targetInput = document.getElementById("targetInput").value;
 		// Comms config
 		config.enableComms = document.getElementById("enableComms").checked;
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		const scriptName = document.getElementById("scriptSelect").value;
 		const target = document.getElementById("targetInput").value;
 		const weaponItemName = document.getElementById("weaponItemName").value;
-		const shieldItemName = document.getElementById("shieldItemName").value;
+		const offhandItemName = document.getElementById("offhandItemName").value;
 		const shouldKill = document.getElementById("shouldKill").checked;
 		const continueOnWalkIn =
 			document.getElementById("continueOnWalkIn").checked;
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Save current script param inputs in config for re-use:
 		config.selectedScript = scriptName;
 		config.weaponItemName = weaponItemName;
-		config.shieldItemName = shieldItemName;
+		config.offhandItemName = offhandItemName;
 		config.targetInput = target;
 		saveConfiguration(config);
 
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					scriptName: scriptName,
 					target: target,
 					weaponItemName: weaponItemName,
-					shieldItemName: shieldItemName,
+					offhandItemName: offhandItemName,
 					shouldKill: shouldKill,
 					continueOnWalkIn: continueOnWalkIn,
 				},
@@ -248,7 +248,8 @@ function getConfiguration() {
 					// Script params
 					config.selectedScript = response.selectedScript;
 					config.weaponItemName = response.weaponItemName;
-					config.shieldItemName = response.shieldItemName;
+					// Handle original property name before offhands / dual wield were introduced.
+					config.offhandItemName = response.offhandItemName || response.shieldItemName;
 					config.targetInput = response.targetInput;
 					// Comms config
 					config.enableComms = response.enableComms;
@@ -278,7 +279,7 @@ function getConfiguration() {
 					let scriptSelect = document.getElementById("scriptSelect");
 					scriptSelect.value = config.selectedScript || scriptSelect.options[0].value;
 					document.getElementById("weaponItemName").value = config.weaponItemName ?? "";
-					document.getElementById("shieldItemName").value = config.shieldItemName ?? "";
+					document.getElementById("offhandItemName").value = config.offhandItemName ?? "";
 					document.getElementById("targetInput").value = config.targetInput ?? "";
 					document.getElementById("enableComms").checked = config.enableComms;
 					document.getElementById("includeThoughts").checked =
@@ -303,17 +304,17 @@ function getConfiguration() {
 						config.useBackwardsRiseToStand;
 					document.getElementById("useMeleeAdvance").checked =
 						config.useMeleeAdvance;
-					document.getElementById("useCustomApproach").checked = 
+					document.getElementById("useCustomApproach").checked =
 						config.useCustomApproach;
-					document.getElementById("customApproachCommand").value = 
+					document.getElementById("customApproachCommand").value =
 						config.customApproachCommand;
 					document.getElementById("commandDelayMin").value =
 						config.commandDelayMin ?? 900;
 					document.getElementById("commandDelayMax").value =
 						config.commandDelayMax ?? 1100;
-					document.getElementById("commandRetryMs").value = 
+					document.getElementById("commandRetryMs").value =
 						config.commandRetryMs ?? 60000;
-					document.getElementById("scriptCounterStopAt").value = 
+					document.getElementById("scriptCounterStopAt").value =
 						config.scriptCounterStopAt ?? 0;
 					document.getElementById("darkModeEnabled").checked =
 						config.darkModeEnabled ?? false;

@@ -61,7 +61,7 @@ The UI for the extension's popup (after clicking on its icon in the Chrome exten
 
 * The **Choose a script to run** dropdown starts off with a list of script examples that I continually update, found in this repo at [scripts/scriptCollection.json](scripts/scriptCollection.json).
   * **Weapon/item name**: this input is used in scripts as the name of your weapon in case you drop it - it will pick it back up and wield it.
-  * **Shield**: this input is similar to weapon/item, and is used to identify the name of your shield so it can be picked up & wielded when disarmed or knocked away.
+  * **Offhand**: this input is similar to weapon/item, and is used to identify the name of your shield/offhand weapon so it can be picked up & wielded when disarmed or knocked away.
   * **Target**: this input is used in two different ways:
     * With combat scripts, it will be added to the end of your commands: slash target, ie: slash dog|rat.
     * With any script, you can place `<target>` anywhere in a command, and it will be replaced by whatever is in the target input. ie: if 'right arm' is in the input, "command": "bandage `<target>` with bandages" will be: bandage right arm with bandages.
@@ -98,7 +98,7 @@ The following are example scripts of each type (Combat and Non-Combat), with com
 ### Combat Scripts
 
 Combat scripts have special handling logic, which has automatic handling for certain scenarios like:
-* dropping your weapon or shield; picks it up and wields it 
+* dropping your weapon or shield/offhand; picks it up and wields it 
 * being unable to perform an attack due to being entangled; sends `free` 
 * automatically engage enemies when they aren't close enough to hit
   * will use melee advance instead if turned on in settings

@@ -7,7 +7,7 @@ export class State {
 		// Store scripts separately from the cache due to potential size.
 		this.userScripts = null;
 		// Configuration used to set options for the extension, controlled in the popup.
-		this.extConfig = null;	
+		this.extConfig = null;
 		// Simple repeat
 		this.repeatCommand = null;
 		this.runRepeat = false;
@@ -31,7 +31,7 @@ export class State {
 		this.advancingToKill = false;
 		this.attemptingKill = false;
 		this.continueOnWalkIn = false;
-		this.shieldItemName = null;
+		this.offhandItemName = null;
 		this.shouldKill = false;
 		this.shouldKillParse = null;
 		this.customKillCommand = null;
@@ -83,7 +83,7 @@ export class State {
 	resetState() {
 		this.target = '';
 		this.weaponItemName = '';
-		this.shieldItemName = '';
+		this.offhandItemName = '';
 		this.recoveringWeapon = false;
 		this.shouldKill = false;
 		this.shouldKillParse = '';

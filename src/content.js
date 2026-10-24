@@ -459,8 +459,8 @@ function combatGlobals(data) {
 		if (data.includes(state.weaponItemName)) {
 			state.commandOverride = `get ${state.weaponItemName}`;
 			state.recoveringWeapon = true;
-		} else if (state.shieldItemName && data.includes(state.shieldItemName)) {
-			state.commandOverride = `get ${state.shieldItemName}`;
+		} else if (state.offhandItemName && data.includes(state.offhandItemName)) {
+			state.commandOverride = `get ${state.offhandItemName}`;
 			state.recoveringWeapon = true;
 		}
 	}
@@ -469,59 +469,62 @@ function combatGlobals(data) {
 		state.commandOverride = `stand`;
 	}
 
-	// Continuation of the fumble handling after picking up the weapon/shield...
+	// Continuation of the fumble handling after picking up the weapon/shield/offhand...
 	if (
 		(data.includes("You take a") ||
 			data.includes("You are already carrying")) &&	state.recoveringWeapon
 	) {
 
 		let cmds = [];
-		if (data.includes(state.weaponItemName) && !state.shieldItemName) {
-			// No shield, regular wield (two-hand) the weapon.
+		if (data.includes(state.weaponItemName) && !state.offhandItemName) {
+			// No shield or dual-wield, just regular wield (two-hand) the weapon.
 			cmds.push(`wield ${state.weaponItemName}`)
-		} else if (data.includes(state.weaponItemName) && state.shieldItemName) {
-			// Using a shield, 1w the weapon to avoid stowing the shield.
-			cmds.push(`1w ${state.weaponItemName}`);
-		}	else if (state.shieldItemName && data.includes(state.shieldItemName)) {
-			cmds.push(`wield ${state.shieldItemName}`);
+		} else if (data.includes(state.weaponItemName) && state.offhandItemName) {
+			// Using a shield/offhand while picking up your mainhand, use the dualwield command.
+			cmds.push(`dualwield`);
+		} else if (data.includes(state.offhandItemName) && state.offhandItemName) {
+			// Picking up your shield/offhand, use the dualwield command.
+			cmds.push(`dualwield`);
 		}
-		// reset/remove `get {weapon/shield}`
+		// reset/remove `get {weapon/shield/offhand}`
 		state.commandOverride = "";
 		cmds.push(getFormattedCommand());
 		sendDelayedCommands(cmds);
 
 		state.recoveringWeapon = false;
 	}
+
 	// These not-wielding scenarios don't require waiting for no longer busy.
+	if (data.includes("You must be wielding your weapon in two hands")) {
+		sendDelayedCommands([`wield ${state.weaponItemName}`, getFormattedCommand()]);
+	}
 	if (data.includes("You can't do that right now") ||
 		data.includes("You must be carrying something to wield it") ||
 		data.includes("You need to be wielding") ||
 		data.includes("You must be wielding") ||
-		data.includes("You are not wielding")) {
+		data.includes("You are not wielding") ||
+		data.includes("You must be holding an item in each hand to wield both at once") ||
+		data.includes("You must be actively wielding a weapon in each hand to execute this maneuver")) {
 		let cmds = [`get ${state.weaponItemName}`];
-	  if (!state.shieldItemName) {
-			// No shield, regular wield (two-hand) the weapon.
+	  if (!state.offhandItemName) {
+			// No shield/offhand, regular wield (two-hand) the weapon.
 			cmds.push(`wield ${state.weaponItemName}`);
 		}
-		if (state.shieldItemName) {
-			// Using a shield, 1w the weapon to avoid stowing the shield.
-			cmds.push(`1w ${state.weaponItemName}`);
-			cmds.push(`get ${state.shieldItemName}`);
-			cmds.push(`wield ${state.shieldItemName}`);
+		if (state.offhandItemName) {
+			// Using a shield/offhand, use the dualwield command.
+			cmds.push(`get ${state.offhandItemName}`);
+			cmds.push(`dualwield`);
 		}
 		cmds.push(getFormattedCommand());
 		sendDelayedCommands(cmds);
-	}
-	if (data.includes("You must be wielding your weapon in two hands")) {
-		sendDelayedCommands([`wield ${state.weaponItemName}`, getFormattedCommand()]);
 	}
 
 	if (data.includes("You must be wielding a shield to") ||
 		data.includes("What kind of hoplite doesn't wield a shield")
 	) {
 		sendDelayedCommands([
-			`get ${state.shieldItemName}`,
-			`wield ${state.shieldItemName}`,
+			`get ${state.offhandItemName}`,
+			`dualwield`,
 			getFormattedCommand(),
 		]);
 	}
@@ -697,7 +700,7 @@ function runScriptByName(scriptName, options) {
 
 		state.target = options.target || "";
 		state.weaponItemName = options.weaponItemName || "";
-		state.shieldItemName = options.shieldItemName || "";
+		state.offhandItemName = options.offhandItemName || "";
 		state.shouldKill =
 			options.shouldKill !== null ? options.shouldKill : script.shouldKill;
 		state.shouldKillParse = script.shouldKillParse;
@@ -1157,7 +1160,7 @@ function slashCommand(command) {
 				    [scriptName]
 				    [target]
 				    [weaponItemName]
-				    [shieldItemName]
+				    [offhandItemName]
 				    *[shouldKill]
 				    *[continueOnWalkIn]
 					/stop : Stop the currently running script
@@ -1244,7 +1247,7 @@ function slashCommand(command) {
 			const scriptName = commandParams[1];
 			const scriptTarget = commandParams[2];
 			const scriptWeaponItemName = commandParams[3];
-			const scriptShieldItemName = commandParams[4];
+			const scriptOffhandItemName = commandParams[4];
 			let scriptShouldKill = null;
 			let scriptContinueOnWalkIn = null;
 
@@ -1266,7 +1269,7 @@ function slashCommand(command) {
 			runScriptByName(scriptName, {
 				target: scriptTarget,
 				weaponItemName: scriptWeaponItemName,
-				shieldItemName: scriptShieldItemName,
+				offhandItemName: scriptOffhandItemName,
 				shouldKill: scriptShouldKill,
 				continueOnWalkIn: scriptContinueOnWalkIn,
 			});
